@@ -5,5 +5,5 @@
 
 #### 目前应用于框架
 
-https://gitee.com/hzy6/HzyAdmin
+使用请参考这里：https://gitee.com/hzy6/HzyAdmin
 
