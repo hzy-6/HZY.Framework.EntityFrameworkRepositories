@@ -1,0 +1,16 @@
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\bin\Debug\net6.0\HzyEFCoreRepositories.deps.json
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\bin\Debug\net6.0\HzyEFCoreRepositories.runtimeconfig.json
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\bin\Debug\net6.0\HzyEFCoreRepositories.dll
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\bin\Debug\net6.0\HzyEFCoreRepositories.pdb
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\bin\Debug\net6.0\HzyEFCoreRepositories.xml
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\HzyEFCoreRepositories.csproj.AssemblyReference.cache
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\HzyEFCoreRepositories.GeneratedMSBuildEditorConfig.editorconfig
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\HzyEFCoreRepositories.AssemblyInfoInputs.cache
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\HzyEFCoreRepositories.AssemblyInfo.cs
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\HzyEFCoreRepositories.csproj.CoreCompileInputs.cache
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\HzyEFCoreRepositories.dll
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\refint\HzyEFCoreRepositories.dll
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\HzyEFCoreRepositories.xml
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\HzyEFCoreRepositories.pdb
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\HzyEFCoreRepositories.genruntimeconfig.cache
+E:\0-DotNet\hzy-efcore-repositories\src\HzyEFCoreRepositories\obj\Debug\net6.0\ref\HzyEFCoreRepositories.dll
