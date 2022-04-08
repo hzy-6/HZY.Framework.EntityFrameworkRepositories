@@ -15,11 +15,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("HZY")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("EFCore、Repositories 基于 EFCore6 封装仓储,目前应用于框架：https://gitee.com/hzy6/HzyAdmin")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.2")]
 [assembly: System.Reflection.AssemblyProductAttribute("HzyEFCoreRepositories")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HzyEFCoreRepositories")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.2")]
 [assembly: System.Reflection.AssemblyMetadataAttribute("RepositoryUrl", "https://gitee.com/hzy6/hzy-efcore-repositories")]
 
 // 由 MSBuild WriteCodeFragment 类生成。

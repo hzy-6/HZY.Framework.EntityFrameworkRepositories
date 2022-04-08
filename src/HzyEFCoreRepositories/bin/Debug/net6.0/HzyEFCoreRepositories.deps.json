@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "HzyEFCoreRepositories/1.0.0": {
+      "HzyEFCoreRepositories/1.0.2": {
         "dependencies": {
           "Microsoft.AspNetCore.Mvc": "2.2.0",
           "Microsoft.EntityFrameworkCore": "6.0.3",
@@ -2157,7 +2157,7 @@
     }
   },
   "libraries": {
-    "HzyEFCoreRepositories/1.0.0": {
+    "HzyEFCoreRepositories/1.0.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -6,7 +6,7 @@
     <authors>HZY</authors>
     <icon>hzy.jpg</icon>
     <projectUrl>https://gitee.com/hzy6/hzy-efcore-repositories</projectUrl>
-    <description>EFCore、Repositories</description>
+    <description>EFCore、Repositories 基于 EFCore6 封装仓储,目前应用于框架：https://gitee.com/hzy6/HzyAdmin</description>
     <copyright>HZY</copyright>
     <repository type="gitee" url="https://gitee.com/hzy6/hzy-efcore-repositories" />
     <dependencies>

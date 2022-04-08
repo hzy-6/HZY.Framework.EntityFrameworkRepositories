@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2pxj35Ukugw9mFeFNDOoiKVLVVg8RPRtswxo/JbxazJnRj14li1YLmwqJ0YVLzeEXxWkWwBqbIDONvS6L8wOJA==",
+  "dgSpecHash": "L+2u3i9rC+Y/s1cueVz86RYLw3WuAoJNUj9bw1iDwx9IhlIdb+REV8Blv8ghsVF6mxzwCSi6z7P8+bHTe6TEDg==",
   "success": true,
-  "projectFilePath": "e:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj",
+  "projectFilePath": "E:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hzy_1\\.nuget\\packages\\castle.core\\4.4.1\\castle.core.4.4.1.nupkg.sha512",
     "C:\\Users\\hzy_1\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

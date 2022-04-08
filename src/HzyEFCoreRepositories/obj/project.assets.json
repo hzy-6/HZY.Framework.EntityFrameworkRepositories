@@ -9249,7 +9249,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "1.0.0",
+    "version": "1.0.2",
     "restore": {
       "projectUniqueName": "E:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj",
       "projectName": "HzyEFCoreRepositories",

@@ -1,5 +1,5 @@
 ﻿using HzyEFCoreRepositories.Repositories;
-using HzyEFCoreRepositories.Repositories.Interface;
+using HzyEFCoreRepositories.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Threading;
@@ -15,6 +15,10 @@ namespace HzyEFCoreRepositories.DbContexts
     {
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// 基础上下文
+        /// </summary>
+        /// <param name="options"></param>
         public BaseDbContext(DbContextOptions<TDbContext> options) : base(options)
         {
             _unitOfWork = new UnitOfWork();
@@ -69,16 +73,31 @@ namespace HzyEFCoreRepositories.DbContexts
 
         #region 重写 保存
 
+        /// <summary>
+        /// 保存提交变更
+        /// </summary>
+        /// <returns></returns>
         public override int SaveChanges()
         {
             return this._unitOfWork.GetSaveState() ? base.SaveChanges() : 1;
         }
 
+        /// <summary>
+        /// 保存提交变更
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess"></param>
+        /// <returns></returns>
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             return this._unitOfWork.GetSaveState() ? base.SaveChanges(acceptAllChangesOnSuccess) : 1;
         }
 
+        /// <summary>
+        /// 保存提交变更
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken = new CancellationToken())
         {
@@ -87,6 +106,11 @@ namespace HzyEFCoreRepositories.DbContexts
                 : Task.FromResult(1);
         }
 
+        /// <summary>
+        /// 保存提交变更
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             return this._unitOfWork.GetSaveState() ? base.SaveChangesAsync(cancellationToken) : Task.FromResult(1);
