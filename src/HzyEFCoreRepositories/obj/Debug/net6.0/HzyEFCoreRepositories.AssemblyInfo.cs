@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HZY")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("HZY")]
-[assembly: System.Reflection.AssemblyDescriptionAttribute("EFCore、Repositories")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("EFCore、Repositories 基于 EFCore6 封装仓储,目前应用于框架：https://gitee.com/hzy6/HzyAdmin")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("HzyEFCoreRepositories")]

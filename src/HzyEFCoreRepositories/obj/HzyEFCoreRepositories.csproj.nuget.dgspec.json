@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj": {}
+    "e:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj": {}
   },
   "projects": {
-    "E:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj": {
+    "e:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj",
+        "projectUniqueName": "e:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj",
         "projectName": "HzyEFCoreRepositories",
-        "projectPath": "E:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj",
+        "projectPath": "e:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\HzyEFCoreRepositories.csproj",
         "packagesPath": "C:\\Users\\hzy_1\\.nuget\\packages\\",
-        "outputPath": "E:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\obj\\",
+        "outputPath": "e:\\0-DotNet\\hzy-efcore-repositories\\src\\HzyEFCoreRepositories\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
