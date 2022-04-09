@@ -435,7 +435,7 @@ namespace HzyEFCoreRepositories.Repositories
         /// 查询根据sql语句
         /// </summary>
         /// <returns> IQueryable </returns>
-        IQueryable<T> QueryBySql(string sql, params object[] parameters);
+        IQueryable<T> QueryableBySql(string sql, params object[] parameters);
         /// <summary>
         /// 根据 sql 查询表格
         /// </summary>
@@ -470,20 +470,18 @@ namespace HzyEFCoreRepositories.Repositories
         /// <summary>
         /// 查询根据sql语句
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        List<TEntity> QueryBySql<TEntity>(string sql, params object[] parameters) where TEntity : class, new();
+        List<T> QueryBySql(string sql, params object[] parameters);
 
         /// <summary>
         /// 查询根据sql语句
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        Task<List<TEntity>> QueryBySqlAsync<TEntity>(string sql, params object[] parameters) where TEntity : class, new();
+        Task<List<T>> QueryBySqlAsync(string sql, params object[] parameters);
 
         /// <summary>
         /// 查询根据sql返回单个值
@@ -522,6 +520,101 @@ namespace HzyEFCoreRepositories.Repositories
              where TResult : struct;
 
         #endregion
+
+        #region  数据批量拷贝
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        void SqlServerBulkCopy(DataTable dataTable, string tableName);
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName);
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        void SqlServerBulkCopy(List<T> items);
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        Task SqlServerBulkCopyAsync(List<T> items);
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        void MySqlBulkCopy(DataTable dataTable, string tableName);
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        Task MySqlBulkCopyAsync(DataTable dataTable, string tableName);
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="items"></param>
+        void MySqlBulkCopy(List<T> items);
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        Task MySqlBulkCopyAsync(List<T> items);
+        #endregion
+
 
     }
 

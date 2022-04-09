@@ -1,10 +1,12 @@
-﻿using System;
+﻿using System.Xml;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HzyEFCoreRepositories.Extensions
 {
@@ -89,6 +91,16 @@ namespace HzyEFCoreRepositories.Extensions
         public static bool HasKey(PropertyInfo propertyInfo)
             => propertyInfo.GetCustomAttribute(typeof(KeyAttribute)) != null;
 
+        /// <summary>
+        /// 获取 TableAttribute 特性
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static TableAttribute GetTableAttribute(this Type type)
+        {
+            return (TableAttribute)Attribute.GetCustomAttributes(type, true).Where(item => item is TableAttribute).FirstOrDefault();
+        }
+
         #region LINQ 扩展
 
         /// <summary>
@@ -125,6 +137,45 @@ namespace HzyEFCoreRepositories.Extensions
             => query.Skip((page - 1) * rows).Take(rows);
 
         #endregion
+
+        /// <summary>
+        /// 集合转表格
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static DataTable ToDataTable<T>(this List<T> items) where T : class, new()
+        {
+            var propertyInfos = GetPropertyInfos(typeof(T));
+            // var instance = CreateInstance<T>();
+
+            DataTable dataTable = new();
+
+            //列组装
+            foreach (var item in propertyInfos)
+            {
+                if (item.PropertyType.IsGenericType && item.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    dataTable.Columns.Add(item.Name, item.PropertyType.GetGenericArguments()[0]);
+                }
+                else
+                {
+                    dataTable.Columns.Add(item.Name, item.PropertyType);
+                }
+            }
+
+            //数据组装
+            foreach (var item in items)
+            {
+                DataRow dr = dataTable.NewRow();
+                foreach (DataColumn col in dataTable.Columns)
+                {
+                    dr[col.ColumnName] = item.GetType().GetProperty(col.ColumnName, BindingFlags.Instance | BindingFlags.Public).GetValue(item);
+                }
+                dataTable.Rows.Add(dr);
+            }
+
+            return dataTable;
+        }
 
     }
 

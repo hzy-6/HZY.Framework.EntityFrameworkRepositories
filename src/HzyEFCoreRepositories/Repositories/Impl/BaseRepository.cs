@@ -670,9 +670,10 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         /// <summary>
         /// 查询根据sql语句
+        /// EFCore 原生sql查询
         /// </summary>
         /// <returns> IQueryable </returns>
-        public IQueryable<T> QueryBySql(string sql, params object[] parameters)
+        public IQueryable<T> QueryableBySql(string sql, params object[] parameters)
         {
             return _dbSet.FromSqlRaw(sql, parameters);
         }
@@ -724,25 +725,23 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <summary>
         /// 查询根据sql语句
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public List<TEntity> QueryBySql<TEntity>(string sql, params object[] parameters) where TEntity : class, new()
+        public List<T> QueryBySql(string sql, params object[] parameters)
         {
-            return Orm.Database.QueryBySql<TEntity>(sql, parameters);
+            return Orm.Database.QueryBySql<T>(sql, parameters);
         }
 
         /// <summary>
         /// 查询根据sql语句
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<List<TEntity>> QueryBySqlAsync<TEntity>(string sql, params object[] parameters) where TEntity : class, new()
+        public Task<List<T>> QueryBySqlAsync(string sql, params object[] parameters)
         {
-            return Orm.Database.QueryBySqlAsync<TEntity>(sql, parameters);
+            return Orm.Database.QueryBySqlAsync<T>(sql, parameters);
         }
 
         /// <summary>
@@ -796,6 +795,124 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         #endregion
 
 
+        #region 数据批量拷贝
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        public void SqlServerBulkCopy(DataTable dataTable, string tableName)
+        {
+            Orm.Database.SqlServerBulkCopy(dataTable, tableName);
+        }
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName)
+        {
+            return Orm.Database.SqlServerBulkCopyAsync(dataTable, tableName);
+        }
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        public void SqlServerBulkCopy(List<T> items)
+        {
+            Orm.Database.SqlServerBulkCopy(items);
+        }
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        public Task SqlServerBulkCopyAsync(List<T> items)
+        {
+            return Orm.Database.SqlServerBulkCopyAsync(items);
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        public void MySqlBulkCopy(DataTable dataTable, string tableName)
+        {
+            Orm.Database.MySqlBulkCopy(dataTable, tableName);
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public Task MySqlBulkCopyAsync(DataTable dataTable, string tableName)
+        {
+            return Orm.Database.MySqlBulkCopyAsync(dataTable, tableName);
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="items"></param>
+        public void MySqlBulkCopy(List<T> items)
+        {
+            Orm.Database.MySqlBulkCopy(items);
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public Task MySqlBulkCopyAsync(List<T> items)
+        {
+            return Orm.Database.MySqlBulkCopyAsync(items);
+        }
+
+        #endregion
 
 
 
