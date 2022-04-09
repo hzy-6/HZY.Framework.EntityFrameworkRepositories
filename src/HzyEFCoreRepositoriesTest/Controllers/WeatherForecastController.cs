@@ -1,6 +1,6 @@
 using HzyEFCoreRepositories.Extensions;
-using HzyEFCoreRepositories.Repositories;
-using HzyEFCoreRepositories.Repositories.Impl;
+using HzyEFCoreRepositories.Monitor;
+using HzyEFCoreRepositories.Monitor.Models;
 using HzyEFCoreRepositoriesTest.DbContexts;
 using HzyEFCoreRepositoriesTest.Models;
 using HzyEFCoreRepositoriesTest.Repositories;
@@ -20,26 +20,23 @@ namespace HzyEFCoreRepositoriesTest.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public async Task<string> Get()
+        /// <summary>
+        /// sql 查询
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("QueryBySql")]
+        public async Task<string> QueryBySql()
         {
             var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220318;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;")
-                .Options;
+                .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220318;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
 
-            using var context = new AppDbContext(contextOptions);
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+
+            using var context = new AppDbContext(contextOptions.Options);
 
             var list = await context.Set<SysFunction>().FromSqlRaw("select * from SysFunction").ToListAsync();
 
             var repository = new AppRepository<SysFunction>(context);
-
-            //拷贝
-            foreach (var item in list)
-            {
-                item.Id = Guid.NewGuid();
-                item.Name += "批量拷贝";
-            }
-            await repository.Orm.Database.SqlServerBulkCopyAsync(list);
 
             var dt = repository.QueryDataTableBySql("select * from SysFunction");
             var dt1 = await repository.QueryDataTableBySqlAsync("select * from SysFunction");
@@ -53,19 +50,113 @@ namespace HzyEFCoreRepositoriesTest.Controllers
             var id = repository.QuerySingleBySql<Guid>("select id from SysFunction");
             var id1 = await repository.QuerySingleBySqlAsync<Guid>("select id from SysFunction");
 
-            //mysql
-            var contextOptionsMySql = new DbContextOptionsBuilder<AppDbContext>()
-                           .UseMySql(@"Server=localhost; port=3306; Database=HzyAdminSpa; uid=root; pwd=123456; Convert Zero Datetime=False;AllowLoadLocalInfile=true", MySqlServerVersion.LatestSupportedServerVersion, w => w.MinBatchSize(1).MaxBatchSize(1000))
-                           .Options;
+            return "Ok" + list.Count();
 
-            using var context1 = new AppDbContext(contextOptionsMySql);
+        }
 
-            var repositoryMySql = new AppRepository<SysFunction>(context1);
+        /// <summary>
+        /// sqlserver 批量拷贝
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("SqlServerBulkCopyAsync")]
+        public async Task<string> SqlServerBulkCopyAsync()
+        {
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220318;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
 
-            repositoryMySql.Orm.Database.MySqlBulkCopy(list);
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+
+            using var context = new AppDbContext(contextOptions.Options);
+
+            var list = await context.Set<SysFunction>().FromSqlRaw("select * from SysFunction").ToListAsync();
+
+            var repository = new AppRepository<SysFunction>(context);
+
+            //拷贝
+            foreach (var item in list)
+            {
+                item.Id = Guid.NewGuid();
+                item.Name += "批量拷贝";
+            }
+            await repository.Orm.Database.SqlServerBulkCopyAsync(list);
 
             return "Ok" + list.Count();
 
         }
+
+        /// <summary>
+        /// mysql 批量拷贝
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("MySqlBulkCopy")]
+        public string MySqlBulkCopy()
+        {
+            //mysql
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                           .UseMySql(@"Server=localhost; port=3306; Database=HzyAdminSpa; uid=root; pwd=123456; Convert Zero Datetime=False;AllowLoadLocalInfile=true", MySqlServerVersion.LatestSupportedServerVersion, w => w.MinBatchSize(1).MaxBatchSize(1000));
+
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+
+            using var context = new AppDbContext(contextOptions.Options);
+
+            var repository = new AppRepository<SysFunction>(context);
+
+            var list = repository.QueryBySql("select * from SysFunction");
+
+            repository.Orm.Database.MySqlBulkCopy(list);
+
+            return "Ok";
+        }
+
+        /// <summary>
+        /// MyDbCommandInterceptor
+        /// dbcommand 拦截
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("MyDbCommandInterceptor")]
+        public async Task<string> MyDbCommandInterceptor()
+        {
+            //mysql
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                           .UseMySql(@"Server=localhost; port=3306; Database=HzyAdminSpa; uid=root; pwd=123456; Convert Zero Datetime=False;AllowLoadLocalInfile=true", MySqlServerVersion.LatestSupportedServerVersion, w => w.MinBatchSize(1).MaxBatchSize(1000))
+                           ;
+
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+
+            using var context = new AppDbContext(contextOptions.Options);
+
+            var repository = new AppRepository<SysFunction>(context);
+
+            var tableName = $"SysFunction_{DateTime.Now.ToString("yyyyMMdd")}";
+
+            var list = await repository.Select.Where(w => w.ByName == "Insert").AsTable(tableName).ToListAsync();
+            var list1 = await repository.Select.Where(w => w.ByName == "Update").AsTable(tableName).ToListAsync();
+
+            var Count = repository.Select.AsTable(tableName).Count();
+
+            return "Ok";
+        }
+
+        /// <summary>
+        /// EFCoreMonitorContext efcore 程序监控
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("EFCoreMonitorContext")]
+        public EFCoreMonitorContext EFCoreMonitorContext()
+        {
+            return MonitorEFCoreCache.Context;
+        }
+
+        /// <summary>
+        /// SqlMonitorContext sql 监控
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("SqlMonitorContext")]
+        public List<EFCoreMonitorSqlContext> SqlMonitorContext()
+        {
+            return MonitorEFCoreCache.SqlContext;
+        }
+
+
     }
 }

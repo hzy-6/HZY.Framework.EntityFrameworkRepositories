@@ -370,7 +370,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="keys"></param>
         /// <typeparam name="TKey"></typeparam>
         /// <returns></returns>
-        public async Task<int> DeleteByIdsAsync<TKey>(IEnumerable<TKey> keys)
+        public virtual async Task<int> DeleteByIdsAsync<TKey>(IEnumerable<TKey> keys)
         {
             if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
             var exp = ExpressionTreeExtensions.Contains<T, TKey>(_keyPropertyInfo.Name, keys);

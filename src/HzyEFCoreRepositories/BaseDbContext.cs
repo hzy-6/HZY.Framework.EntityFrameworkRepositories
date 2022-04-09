@@ -8,6 +8,7 @@
  * *******************************************************
  */
 
+using HzyEFCoreRepositories.Interceptor;
 using HzyEFCoreRepositories.Repositories;
 using HzyEFCoreRepositories.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +25,44 @@ namespace HzyEFCoreRepositories.DbContexts
     public class BaseDbContext<TDbContext> : DbContext where TDbContext : DbContext
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly bool _isMonitor;
 
         /// <summary>
         /// 基础上下文
         /// </summary>
         /// <param name="options"></param>
-        public BaseDbContext(DbContextOptions<TDbContext> options) : base(options)
+        /// <param name="isMonitor">是否监控数据库操作</param>
+        public BaseDbContext(DbContextOptions<TDbContext> options, bool isMonitor = true) : base(options)
         {
             _unitOfWork = new UnitOfWork();
+            _isMonitor = isMonitor;
+        }
+
+        /// <summary>
+        /// OnConfiguring 重写后，一定要调用此方法
+        /// </summary>
+        /// <param name="optionsBuilder"></param>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(new ShardingDbCommandInterceptor());
+
+            //注册监控程序
+            if (_isMonitor)
+            {
+                optionsBuilder.AddInterceptors(new MonitorDbConnectionInterceptor());
+                optionsBuilder.AddInterceptors(new MonitorDbCommandInterceptor());
+                optionsBuilder.AddInterceptors(new MonitorDbTransactionInterceptor());
+
+            }
+        }
+
+        /// <summary>
+        /// OnModelCreating
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
         }
 
         /// <summary>

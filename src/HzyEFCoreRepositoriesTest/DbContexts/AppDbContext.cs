@@ -11,7 +11,7 @@ namespace HzyEFCoreRepositoriesTest.DbContexts
 
         }
 
-        DbSet<SysFunction> SysFunctions { get; set; }
+        DbSet<SysFunction> SysFunction { get; set; }
 
     }
 }

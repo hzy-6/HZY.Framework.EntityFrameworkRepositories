@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -7,6 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using HzyEFCoreRepositories.Models;
 
 namespace HzyEFCoreRepositories.Extensions
 {
@@ -135,6 +136,37 @@ namespace HzyEFCoreRepositories.Extensions
         /// <returns></returns>
         public static IQueryable<T> Page<T>(this IQueryable<T> query, int page, int rows)
             => query.Skip((page - 1) * rows).Take(rows);
+
+        /// <summary>
+        /// 动态表名 一般用于查询分表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="oldName"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public static IQueryable<T> AsTable<T>(this IQueryable<T> query, string oldName, string newName)
+            => query.TagWith($"{HzyEFCoreRepositoriesConfig.ShardingName}:{oldName}:{newName}");
+
+        /// <summary>
+        /// 动态表名 一般用于查询分表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public static IQueryable<T> AsTable<T>(this IQueryable<T> query, string newName)
+        {
+            var type = typeof(T);
+            var oldName = type.Name;
+            var tableAttribute = GetTableAttribute(type);
+            if (tableAttribute != null)
+            {
+                oldName = tableAttribute.Name;
+            }
+
+            return query.AsTable(oldName, newName);
+        }
 
         #endregion
 
