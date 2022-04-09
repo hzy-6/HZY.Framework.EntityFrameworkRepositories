@@ -25,6 +25,7 @@ using Npgsql;
 
 namespace HzyEFCoreRepositories.Repositories.Impl
 {
+#nullable enable
     /// <summary>
     /// 基础仓储 实现
     /// </summary>
@@ -85,6 +86,11 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #region 插入
 
+        /// <summary>
+        /// 插入
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual T Insert(T model)
         {
             this._dbSet.Add(model);
@@ -92,12 +98,22 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             return model;
         }
 
+        /// <summary>
+        /// 插入 批量
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual int InsertRange(IEnumerable<T> model)
         {
             this._dbSet.AddRange(model);
             return this._context.SaveChanges();
         }
 
+        /// <summary>
+        /// 插入
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual async Task<T> InsertAsync(T model)
         {
             await this._dbSet.AddAsync(model);
@@ -105,6 +121,11 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             return model;
         }
 
+        /// <summary>
+        /// 插入 批量
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual Task<int> InsertRangeAsync(IEnumerable<T> model)
         {
             this._dbSet.AddRangeAsync(model);
@@ -115,12 +136,22 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #region 更新
 
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual int Update(T model)
         {
             this._dbSet.Update(model);
             return this._context.SaveChanges();
         }
 
+        /// <summary>
+        /// 根据实体id更新数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual int UpdateById(T model)
         {
             if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
@@ -130,24 +161,45 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             return this.Update(oldModel, model);
         }
 
+        /// <summary>
+        /// 更新，通过原模型 修改为新模型
+        /// </summary>
+        /// <param name="oldModel"></param>
+        /// <param name="newModel"></param>
+        /// <returns></returns>
         public virtual int Update(T oldModel, T newModel)
         {
             this._context.Entry(oldModel).CurrentValues.SetValues(newModel);
             return this._context.SaveChanges();
         }
 
+        /// <summary>
+        /// 更新 批量
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public virtual int UpdateRange(IEnumerable<T> models)
         {
             this._dbSet.UpdateRange(models);
             return this._context.SaveChanges();
         }
 
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual Task<int> UpdateAsync(T model)
         {
             this._dbSet.Update(model);
             return this._context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 根据实体id更新数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual async Task<int> UpdateByIdAsync(T model)
         {
             if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
@@ -157,12 +209,23 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             return await this.UpdateAsync(oldModel, model);
         }
 
+        /// <summary>
+        /// 更新，通过原模型 修改为新模型
+        /// </summary>
+        /// <param name="oldModel"></param>
+        /// <param name="newModel"></param>
+        /// <returns></returns>
         public virtual Task<int> UpdateAsync(T oldModel, T newModel)
         {
             this._context.Entry(oldModel).CurrentValues.SetValues(newModel);
             return this._context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 更新 批量
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public virtual Task<int> UpdateRangeAsync(IEnumerable<T> models)
         {
             this._dbSet.UpdateRange(models);
@@ -173,6 +236,11 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #region 插入或者更新
 
+        /// <summary>
+        /// 插入或者添加 根据实体 主键判断是否添加还是修改
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual T InsertOrUpdate(T model)
         {
             if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
@@ -185,6 +253,11 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             return model;
         }
 
+        /// <summary>
+        /// 插入或者添加 根据实体 主键判断是否添加还是修改
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual async Task<T> InsertOrUpdateAsync(T model)
         {
             if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
@@ -201,51 +274,105 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #region 删除
 
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual int Delete(T model)
         {
             this._dbSet.Remove(model);
             return this._context.SaveChanges();
         }
 
+        /// <summary>
+        /// 删除 批量
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public virtual int Delete(IEnumerable<T> models)
         {
             this._dbSet.RemoveRange(models);
             return this._context.SaveChanges();
         }
 
+        /// <summary>
+        /// 删除 根据表达式
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual int Delete(Expression<Func<T, bool>> expWhere)
             => this.Delete(this.Query().Where(expWhere));
 
+        /// <summary>
+        /// 删除 根据id
+        /// </summary>
+        /// <param name="key"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public virtual int DeleteById<TKey>(TKey key)
         {
             return this.Delete(this.FindById(key));
         }
 
+        /// <summary>
+        /// 删除 根据 id集合
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public virtual int DeleteByIds<TKey>(IEnumerable<TKey> keys)
         {
             return this.Delete(this.FindByIds(keys));
         }
 
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual Task<int> DeleteAsync(T model)
         {
             this._dbSet.Remove(model);
             return this._context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 删除 批量
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public virtual Task<int> DeleteAsync(IEnumerable<T> models)
         {
             this._dbSet.RemoveRange(models);
             return this._context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 删除 根据表达式
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual Task<int> DeleteAsync(Expression<Func<T, bool>> expWhere)
             => this.DeleteAsync(this.Query().Where(expWhere));
 
+        /// <summary>
+        /// 删除 根据 id
+        /// </summary>
+        /// <param name="key"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public virtual async Task<int> DeleteByIdAsync<TKey>(TKey key)
         {
             return await this.DeleteAsync(await this.FindByIdAsync(key));
         }
 
+        /// <summary>
+        /// 删除 根据id集合
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public async Task<int> DeleteByIdsAsync<TKey>(IEnumerable<TKey> keys)
         {
             if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
@@ -312,12 +439,29 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #region 查询 单条
 
+        /// <summary>
+        /// 查询 根据条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual T Find(Expression<Func<T, bool>> expWhere)
             => this.Query().Where(expWhere).FirstOrDefault();
 
+        /// <summary>
+        /// 查询 根据id
+        /// </summary>
+        /// <param name="key"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public virtual T FindById<TKey>(TKey key)
             => this.Query().FirstOrDefault(this.GetKeyExpression(key));
 
+        /// <summary>
+        /// 查询 根据id集合
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public virtual T FindByIds<TKey>(IEnumerable<TKey> keys)
         {
             if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
@@ -325,12 +469,29 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             return this.Find(exp);
         }
 
+        /// <summary>
+        /// 查询 根据条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual Task<T> FindAsync(Expression<Func<T, bool>> expWhere)
             => this.Query().Where(expWhere).FirstOrDefaultAsync();
 
+        /// <summary>
+        /// 查询 根据id
+        /// </summary>
+        /// <param name="key"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public virtual async Task<T> FindByIdAsync<TKey>(TKey key)
             => await this.Query().FirstOrDefaultAsync(this.GetKeyExpression(key));
 
+        /// <summary>
+        /// /查询 根据id集合
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public virtual Task<T> FindByIdsAsync<TKey>(IEnumerable<TKey> keys)
         {
             if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
@@ -342,15 +503,33 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #region 查询 多条
 
+        /// <summary>
+        /// 获取列表 根据查询条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual List<T> ToList(Expression<Func<T, bool>> expWhere)
             => this.Query().Where(expWhere).ToList();
 
+        /// <summary>
+        /// 获取所有数据
+        /// </summary>
+        /// <returns></returns>
         public virtual List<T> ToListAll()
             => this.Query().ToList();
 
+        /// <summary>
+        /// 获取列表 根据查询条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual Task<List<T>> ToListAsync(Expression<Func<T, bool>> expWhere)
             => this.Query().Where(expWhere).ToListAsync();
 
+        /// <summary>
+        /// 获取所有数据
+        /// </summary>
+        /// <returns></returns>
         public virtual Task<List<T>> ToListAllAsync()
             => this.Query().ToListAsync();
 
@@ -358,33 +537,79 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #region 是否存在 、 数量
 
+        /// <summary>
+        /// 获取数量
+        /// </summary>
+        /// <returns></returns>
         public virtual int Count()
             => this.Query().Count();
 
+        /// <summary>
+        /// 获取数量
+        /// </summary>
+        /// <returns></returns>
         public virtual long CountLong()
             => this.Query().LongCount();
 
+        /// <summary>
+        /// 获取数量 根据条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual int Count(Expression<Func<T, bool>> expWhere)
             => this.Query().Count(expWhere);
 
+        /// <summary>
+        /// 获取数量 根据条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual long CountLong(Expression<Func<T, bool>> expWhere)
             => this.Query().LongCount(expWhere);
 
+        /// <summary>
+        /// 是否存在 根据条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual bool Any(Expression<Func<T, bool>> expWhere)
             => this.Query().Any(expWhere);
 
+        /// <summary>
+        /// 获取数量
+        /// </summary>
+        /// <returns></returns>
         public virtual Task<int> CountAsync()
             => this.Query().CountAsync();
 
+        /// <summary>
+        /// 获取数量
+        /// </summary>
+        /// <returns></returns>
         public virtual Task<long> CountLongAsync()
             => this.Query().LongCountAsync();
 
+        /// <summary>
+        /// 获取数量 根据条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual Task<int> CountAsync(Expression<Func<T, bool>> expWhere)
             => this.Query().CountAsync(expWhere);
 
+        /// <summary>
+        /// 获取数量 根据条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual Task<long> CountLongAsync(Expression<Func<T, bool>> expWhere)
             => this.Query().LongCountAsync(expWhere);
 
+        /// <summary>
+        /// 是否存在 根据条件
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
         public virtual Task<bool> AnyAsync(Expression<Func<T, bool>> expWhere)
             => this.Query().AnyAsync(expWhere);
 
@@ -529,9 +754,9 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public object? QueryScalarBySql(string sql, params object[] parameters)
+        public object? QuerySingleBySql(string sql, params object[] parameters)
         {
-            return Orm.Database.QueryScalarBySql(sql, parameters);
+            return Orm.Database.QuerySingleBySql(sql, parameters);
         }
 
         /// <summary>
@@ -540,9 +765,9 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<object?> QueryScalarBySqlAsync(string sql, params object[] parameters)
+        public Task<object> QuerySingleBySqlAsync(string sql, params object[] parameters)
         {
-            return Orm.Database.QueryScalarBySqlAsync(sql, parameters);
+            return Orm.Database.QuerySingleBySqlAsync(sql, parameters);
         }
 
         /// <summary>
@@ -552,10 +777,10 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public TResult QueryScalarBySql<TResult>(string sql, params object[] parameters)
+        public TResult QuerySingleBySql<TResult>(string sql, params object[] parameters)
             where TResult : struct
         {
-            return Orm.Database.QueryScalarBySql<TResult>(sql, parameters);
+            return Orm.Database.QuerySingleBySql<TResult>(sql, parameters);
         }
 
         /// <summary>
@@ -565,10 +790,10 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<TResult> QueryScalarBySqlAsync<TResult>(string sql, params object[] parameters)
+        public Task<TResult> QuerySingleBySqlAsync<TResult>(string sql, params object[] parameters)
           where TResult : struct
         {
-            return Orm.Database.QueryScalarBySqlAsync<TResult>(sql, parameters);
+            return Orm.Database.QuerySingleBySqlAsync<TResult>(sql, parameters);
         }
 
         #endregion

@@ -491,7 +491,7 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        object? QueryScalarBySql(string sql, params object[] parameters);
+        object QuerySingleBySql(string sql, params object[] parameters);
 
         /// <summary>
         /// 查询根据sql返回单个值
@@ -499,7 +499,7 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        Task<object?> QueryScalarBySqlAsync(string sql, params object[] parameters);
+        Task<object> QuerySingleBySqlAsync(string sql, params object[] parameters);
 
         /// <summary>
         /// 查询根据sql返回单个值
@@ -508,7 +508,7 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        TResult QueryScalarBySql<TResult>(string sql, params object[] parameters)
+        TResult QuerySingleBySql<TResult>(string sql, params object[] parameters)
             where TResult : struct;
 
         /// <summary>
@@ -518,7 +518,7 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        Task<TResult> QueryScalarBySqlAsync<TResult>(string sql, params object[] parameters)
+        Task<TResult> QuerySingleBySqlAsync<TResult>(string sql, params object[] parameters)
              where TResult : struct;
 
         #endregion

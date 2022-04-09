@@ -30,7 +30,6 @@ namespace HzyEFCoreRepositoriesTest.Controllers
 
             var list = await context.Set<SysFunction>().FromSqlRaw("select * from SysFunction").ToListAsync();
 
-
             var repository = new AppRepository<SysFunction>(context);
 
             var dt = repository.QueryDataTableBySql("select * from SysFunction");
@@ -42,8 +41,8 @@ namespace HzyEFCoreRepositoriesTest.Controllers
             var list1 = repository.QueryBySql<SysFunction>("select * from SysFunction");
             var list2 = await repository.QueryBySqlAsync<SysFunction>("select * from SysFunction");
 
-            var id = repository.QueryScalarBySql<Guid>("select id from SysFunction");
-            var id1 = await repository.QueryScalarBySqlAsync<Guid>("select id from SysFunction");
+            var id = repository.QuerySingleBySql<Guid>("select id from SysFunction");
+            var id1 = await repository.QuerySingleBySqlAsync<Guid>("select id from SysFunction");
 
 
 

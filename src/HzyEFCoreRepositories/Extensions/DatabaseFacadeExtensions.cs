@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace HzyEFCoreRepositories.Extensions
 {
+
     /// <summary>
     /// DatabaseFacade 扩展
     /// </summary>
@@ -28,6 +29,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return null;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     command.Connection.Open();
@@ -73,6 +75,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return default;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     await command.Connection.OpenAsync();
@@ -118,6 +121,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return default;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     command.Connection.Open();
@@ -168,6 +172,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return default;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     await command.Connection.OpenAsync();
@@ -220,6 +225,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return default;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     command.Connection.Open();
@@ -278,6 +284,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return default;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     await command.Connection.OpenAsync();
@@ -327,13 +334,14 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static object? QueryScalarBySql(this DatabaseFacade database, string sql, params object[] parameters)
+        public static object QuerySingleBySql(this DatabaseFacade database, string sql, params object[] parameters)
         {
             var dbConnection = database.GetDbConnection();
             using (var command = dbConnection.CreateCommand())
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return default;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     command.Connection.Open();
@@ -356,13 +364,14 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static async Task<object?> QueryScalarBySqlAsync(this DatabaseFacade database, string sql, params object[] parameters)
+        public static async Task<object> QuerySingleBySqlAsync(this DatabaseFacade database, string sql, params object[] parameters)
         {
             var dbConnection = database.GetDbConnection();
             using (var command = dbConnection.CreateCommand())
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return default;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     await command.Connection.OpenAsync();
@@ -386,7 +395,7 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static T QueryScalarBySql<T>(this DatabaseFacade database, string sql, params object[] parameters)
+        public static T QuerySingleBySql<T>(this DatabaseFacade database, string sql, params object[] parameters)
             where T : struct
         {
             var dbConnection = database.GetDbConnection();
@@ -394,6 +403,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return default;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     command.Connection.Open();
@@ -427,7 +437,7 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static async Task<T> QueryScalarBySqlAsync<T>(this DatabaseFacade database, string sql, params object[] parameters)
+        public static async Task<T> QuerySingleBySqlAsync<T>(this DatabaseFacade database, string sql, params object[] parameters)
             where T : struct
         {
             var dbConnection = database.GetDbConnection();
@@ -435,6 +445,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 command.CommandText = sql;
                 command.CommandType = CommandType.Text;
+                if (command.Connection == null) return default;
                 if (command.Connection.State != ConnectionState.Open)
                 {
                     await command.Connection.OpenAsync();
