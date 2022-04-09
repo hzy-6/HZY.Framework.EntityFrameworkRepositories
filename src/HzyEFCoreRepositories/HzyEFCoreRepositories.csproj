@@ -4,16 +4,16 @@
 		<TargetFrameworks>net6.0</TargetFrameworks>
 		<!--<ImplicitUsings>enable</ImplicitUsings>-->
 		<!--<Nullable>enable</Nullable>-->
-		<Description>EFCore、Repositories 基于 EFCore6 封装仓储,目前应用于框架：https://gitee.com/hzy6/HzyAdmin 。目前集成了 Mysql、SqlServer、PgSql</Description>
+		<Description>EFCore、Repositories 基于 EFCore6 封装仓储,目前应用于框架：https://gitee.com/hzy6/HzyAdmin 。目前集成了 Mysql、SqlServer、PgSql | 可实现 efcore 监控 | 查询动态表名称</Description>
 		<Authors>HZY</Authors>
 		<Company>HZY</Company>
 		<Copyright>HZY</Copyright>
 		<PackageProjectUrl>https://gitee.com/hzy6/hzy-efcore-repositories</PackageProjectUrl>
 		<RepositoryUrl>https://gitee.com/hzy6/hzy-efcore-repositories</RepositoryUrl>
 		<RepositoryType>gitee</RepositoryType>
-		<Version>1.0.4</Version>
-		<FileVersion>1.0.4</FileVersion>
-		<AssemblyVersion>1.0.4</AssemblyVersion>
+		<Version>1.0.5</Version>
+		<FileVersion>1.0.5</FileVersion>
+		<AssemblyVersion>1.0.5</AssemblyVersion>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<PackageIcon>hzy.jpg</PackageIcon>
 	</PropertyGroup>
