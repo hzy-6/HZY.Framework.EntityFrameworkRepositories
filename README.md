@@ -3,6 +3,9 @@
 #### 介绍
 基于 EFCore6 封装仓储
 
+#### 安装
+![输入图片说明](doc/image3.png)
+
 #### 目前应用于框架
 
 使用请参考这里：https://gitee.com/hzy6/HzyAdmin
