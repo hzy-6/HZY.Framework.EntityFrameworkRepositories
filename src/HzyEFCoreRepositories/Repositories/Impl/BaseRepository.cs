@@ -620,7 +620,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public int ExecuteSqlRaw(string sql, params object[] parameters)
+        public virtual int ExecuteSqlRaw(string sql, params object[] parameters)
         {
             return Orm.Database.ExecuteSqlRaw(sql, parameters);
         }
@@ -631,7 +631,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public int ExecuteSqlRaw(string sql, IEnumerable<object> parameters)
+        public virtual int ExecuteSqlRaw(string sql, IEnumerable<object> parameters)
         {
             return Orm.Database.ExecuteSqlRaw(sql, parameters);
         }
@@ -642,7 +642,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task<int> ExecuteSqlRawAsync(string sql, CancellationToken cancellationToken = default)
+        public virtual Task<int> ExecuteSqlRawAsync(string sql, CancellationToken cancellationToken = default)
         {
             return Orm.Database.ExecuteSqlRawAsync(sql, cancellationToken);
         }
@@ -652,7 +652,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<int> ExecuteSqlRawAsync(string sql, params object[] parameters)
+        public virtual Task<int> ExecuteSqlRawAsync(string sql, params object[] parameters)
         {
             return Orm.Database.ExecuteSqlRawAsync(sql, parameters);
         }
@@ -663,7 +663,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="parameters"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task<int> ExecuteSqlRawAsync(string sql, IEnumerable<object> parameters, CancellationToken cancellationToken = default)
+        public virtual Task<int> ExecuteSqlRawAsync(string sql, IEnumerable<object> parameters, CancellationToken cancellationToken = default)
         {
             return Orm.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
         }
@@ -673,7 +673,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// EFCore 原生sql查询
         /// </summary>
         /// <returns> IQueryable </returns>
-        public IQueryable<T> QueryableBySql(string sql, params object[] parameters)
+        public virtual IQueryable<T> QueryableBySql(string sql, params object[] parameters)
         {
             return _dbSet.FromSqlRaw(sql, parameters);
         }
@@ -684,7 +684,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public DataTable QueryDataTableBySql(string sql, params object[] parameters)
+        public virtual DataTable QueryDataTableBySql(string sql, params object[] parameters)
         {
             return Orm.Database.QueryDataTableBySql(sql, parameters);
         }
@@ -695,7 +695,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<DataTable> QueryDataTableBySqlAsync(string sql, params object[] parameters)
+        public virtual Task<DataTable> QueryDataTableBySqlAsync(string sql, params object[] parameters)
         {
             return Orm.Database.QueryDataTableBySqlAsync(sql, parameters);
         }
@@ -706,7 +706,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public List<Dictionary<string, object>> QueryDicBySql(string sql, params object[] parameters)
+        public virtual List<Dictionary<string, object>> QueryDicBySql(string sql, params object[] parameters)
         {
             return Orm.Database.QueryDicBySql(sql, parameters);
         }
@@ -717,7 +717,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<List<Dictionary<string, object>>> QueryDicBySqlAsync(string sql, params object[] parameters)
+        public virtual Task<List<Dictionary<string, object>>> QueryDicBySqlAsync(string sql, params object[] parameters)
         {
             return Orm.Database.QueryDicBySqlAsync(sql, parameters);
         }
@@ -728,7 +728,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public List<T> QueryBySql(string sql, params object[] parameters)
+        public virtual List<T> QueryBySql(string sql, params object[] parameters)
         {
             return Orm.Database.QueryBySql<T>(sql, parameters);
         }
@@ -739,7 +739,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<List<T>> QueryBySqlAsync(string sql, params object[] parameters)
+        public virtual Task<List<T>> QueryBySqlAsync(string sql, params object[] parameters)
         {
             return Orm.Database.QueryBySqlAsync<T>(sql, parameters);
         }
@@ -750,7 +750,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public object QuerySingleBySql(string sql, params object[] parameters)
+        public virtual object QuerySingleBySql(string sql, params object[] parameters)
         {
             return Orm.Database.QuerySingleBySql(sql, parameters);
         }
@@ -761,7 +761,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<object> QuerySingleBySqlAsync(string sql, params object[] parameters)
+        public virtual Task<object> QuerySingleBySqlAsync(string sql, params object[] parameters)
         {
             return Orm.Database.QuerySingleBySqlAsync(sql, parameters);
         }
@@ -773,7 +773,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public TResult QuerySingleBySql<TResult>(string sql, params object[] parameters)
+        public virtual TResult QuerySingleBySql<TResult>(string sql, params object[] parameters)
             where TResult : struct
         {
             return Orm.Database.QuerySingleBySql<TResult>(sql, parameters);
@@ -786,7 +786,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<TResult> QuerySingleBySqlAsync<TResult>(string sql, params object[] parameters)
+        public virtual Task<TResult> QuerySingleBySqlAsync<TResult>(string sql, params object[] parameters)
           where TResult : struct
         {
             return Orm.Database.QuerySingleBySqlAsync<TResult>(sql, parameters);
@@ -802,7 +802,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        public void SqlServerBulkCopy(DataTable dataTable, string tableName)
+        public virtual void SqlServerBulkCopy(DataTable dataTable, string tableName)
         {
             Orm.Database.SqlServerBulkCopy(dataTable, tableName);
         }
@@ -813,7 +813,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName)
+        public virtual Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName)
         {
             return Orm.Database.SqlServerBulkCopyAsync(dataTable, tableName);
         }
@@ -822,7 +822,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        public void SqlServerBulkCopy(List<T> items)
+        public virtual void SqlServerBulkCopy(List<T> items)
         {
             Orm.Database.SqlServerBulkCopy(items);
         }
@@ -831,7 +831,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        public Task SqlServerBulkCopyAsync(List<T> items)
+        public virtual Task SqlServerBulkCopyAsync(List<T> items)
         {
             return Orm.Database.SqlServerBulkCopyAsync(items);
         }
@@ -850,7 +850,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        public void MySqlBulkCopy(DataTable dataTable, string tableName)
+        public virtual void MySqlBulkCopy(DataTable dataTable, string tableName)
         {
             Orm.Database.MySqlBulkCopy(dataTable, tableName);
         }
@@ -870,7 +870,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task MySqlBulkCopyAsync(DataTable dataTable, string tableName)
+        public virtual Task MySqlBulkCopyAsync(DataTable dataTable, string tableName)
         {
             return Orm.Database.MySqlBulkCopyAsync(dataTable, tableName);
         }
@@ -888,7 +888,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </para>
         /// </summary>
         /// <param name="items"></param>
-        public void MySqlBulkCopy(List<T> items)
+        public virtual void MySqlBulkCopy(List<T> items)
         {
             Orm.Database.MySqlBulkCopy(items);
         }
@@ -907,7 +907,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
-        public Task MySqlBulkCopyAsync(List<T> items)
+        public virtual Task MySqlBulkCopyAsync(List<T> items)
         {
             return Orm.Database.MySqlBulkCopyAsync(items);
         }
