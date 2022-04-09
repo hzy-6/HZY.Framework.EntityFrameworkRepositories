@@ -22,7 +22,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HzyEFCoreRepositories.Repositories.Impl
 {
-#nullable enable
+
     /// <summary>
     /// 基础仓储 实现
     /// </summary>
@@ -750,7 +750,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public object? QuerySingleBySql(string sql, params object[] parameters)
+        public object QuerySingleBySql(string sql, params object[] parameters)
         {
             return Orm.Database.QuerySingleBySql(sql, parameters);
         }
