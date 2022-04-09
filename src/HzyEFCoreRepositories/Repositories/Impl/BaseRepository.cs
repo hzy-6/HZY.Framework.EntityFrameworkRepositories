@@ -537,6 +537,17 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <summary>
         /// 查询根据sql返回单个值
         /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public Task<object?> QueryScalarBySqlAsync(string sql, params object[] parameters)
+        {
+            return Orm.Database.QueryScalarBySqlAsync(sql, parameters);
+        }
+
+        /// <summary>
+        /// 查询根据sql返回单个值
+        /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>

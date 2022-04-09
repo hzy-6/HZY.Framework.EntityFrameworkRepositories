@@ -352,6 +352,35 @@ namespace HzyEFCoreRepositories.Extensions
         /// <summary>
         /// 查询根据sql返回单个值
         /// </summary>
+        /// <param name="database"></param>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static async Task<object?> QueryScalarBySqlAsync(this DatabaseFacade database, string sql, params object[] parameters)
+        {
+            var dbConnection = database.GetDbConnection();
+            using (var command = dbConnection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.CommandType = CommandType.Text;
+                if (command.Connection.State != ConnectionState.Open)
+                {
+                    await command.Connection.OpenAsync();
+                }
+
+                command.Parameters.AddRange(parameters);
+
+                var result = await command.ExecuteScalarAsync();
+
+                await dbConnection.CloseAsync();
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 查询根据sql返回单个值
+        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="database"></param>
         /// <param name="sql"></param>

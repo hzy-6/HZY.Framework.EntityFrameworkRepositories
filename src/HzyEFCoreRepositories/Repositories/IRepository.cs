@@ -23,7 +23,9 @@ namespace HzyEFCoreRepositories.Repositories
     /// </summary>
     /// <typeparam name="T">实体</typeparam>
     /// <typeparam name="TDbContext">dbcontext 数据上下文</typeparam>
-    public interface IRepository<T, out TDbContext> where T : class where TDbContext : DbContext
+    public interface IRepository<T, out TDbContext>
+        where T : class, new()
+        where TDbContext : DbContext
     {
         /// <summary>
         /// 获取 dbcontext 对象
@@ -490,6 +492,14 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="parameters"></param>
         /// <returns></returns>
         object? QueryScalarBySql(string sql, params object[] parameters);
+
+        /// <summary>
+        /// 查询根据sql返回单个值
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        Task<object?> QueryScalarBySqlAsync(string sql, params object[] parameters);
 
         /// <summary>
         /// 查询根据sql返回单个值

@@ -1,4 +1,14 @@
-﻿using HzyEFCoreRepositories.Repositories;
+﻿/*
+ * *******************************************************
+ *
+ * 作者：hzy
+ *
+ * 开源地址：https://gitee.com/hzy6
+ *
+ * *******************************************************
+ */
+
+using HzyEFCoreRepositories.Repositories;
 using HzyEFCoreRepositories.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
