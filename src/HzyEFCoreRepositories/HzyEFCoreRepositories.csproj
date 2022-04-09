@@ -4,7 +4,7 @@
 		<TargetFrameworks>net6.0</TargetFrameworks>
 		<!--<ImplicitUsings>enable</ImplicitUsings>-->
 		<!--<Nullable>enable</Nullable>-->
-		<Description>EFCore、Repositories 基于 EFCore6 封装仓储,目前应用于框架：https://gitee.com/hzy6/HzyAdmin</Description>
+		<Description>EFCore、Repositories 基于 EFCore6 封装仓储,目前应用于框架：https://gitee.com/hzy6/HzyAdmin 。目前集成了 Mysql、SqlServer、PgSql</Description>
 		<Authors>HZY</Authors>
 		<Company>HZY</Company>
 		<Copyright>HZY</Copyright>
