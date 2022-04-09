@@ -18,10 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HzyEFCoreRepositories.ExpressionTree;
 using HzyEFCoreRepositories.Extensions;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using MySqlConnector;
-using Npgsql;
 
 namespace HzyEFCoreRepositories.Repositories.Impl
 {
