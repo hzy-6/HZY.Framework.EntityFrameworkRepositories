@@ -26,15 +26,18 @@ namespace HzyEFCoreRepositories.DbContexts
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly bool _isMonitor;
+        private readonly bool _isDbContextPool;
 
         /// <summary>
         /// 基础上下文
         /// </summary>
         /// <param name="options"></param>
-        /// <param name="isMonitor">是否监控数据库操作</param>
-        public BaseDbContext(DbContextOptions<TDbContext> options, bool isMonitor = true) : base(options)
+        /// <param name="isDbContextPool">是否将上下文注册为程序池</param>
+        /// <param name="isMonitor">是否监控数据操作</param>
+        public BaseDbContext(DbContextOptions<TDbContext> options, bool isDbContextPool = false, bool isMonitor = true) : base(options)
         {
             _unitOfWork = new UnitOfWork();
+            _isDbContextPool = isDbContextPool;
             _isMonitor = isMonitor;
         }
 
@@ -44,6 +47,8 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <param name="optionsBuilder"></param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (_isDbContextPool) return;
+
             optionsBuilder.AddInterceptors(new ShardingDbCommandInterceptor());
 
             //注册监控程序
