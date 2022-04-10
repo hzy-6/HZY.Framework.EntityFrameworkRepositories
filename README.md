@@ -7,7 +7,9 @@
 
 ### 功能
 1、仓储具有基本的 CRUD
+
 2、分表的情况支持动态表名查询
+
 3、监控EFCore 连接、事务、Sql、Sql耗时等统计信息
 
 #### 安装请使用 Nuget 搜索 HzyEFCoreRepositories
