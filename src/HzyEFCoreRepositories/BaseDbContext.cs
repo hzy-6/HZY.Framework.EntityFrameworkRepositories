@@ -8,7 +8,6 @@
  * *******************************************************
  */
 
-using HzyEFCoreRepositories.Interceptor;
 using HzyEFCoreRepositories.Repositories;
 using HzyEFCoreRepositories.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -25,49 +24,14 @@ namespace HzyEFCoreRepositories.DbContexts
     public class BaseDbContext<TDbContext> : DbContext where TDbContext : DbContext
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly bool _isMonitor;
-        private readonly bool _isDbContextPool;
 
         /// <summary>
         /// 基础上下文
         /// </summary>
         /// <param name="options"></param>
-        /// <param name="isDbContextPool">是否将上下文注册为程序池</param>
-        /// <param name="isMonitor">是否监控数据操作</param>
-        public BaseDbContext(DbContextOptions<TDbContext> options, bool isDbContextPool = false, bool isMonitor = true) : base(options)
+        public BaseDbContext(DbContextOptions<TDbContext> options) : base(options)
         {
             _unitOfWork = new UnitOfWork();
-            _isDbContextPool = isDbContextPool;
-            _isMonitor = isMonitor;
-        }
-
-        /// <summary>
-        /// OnConfiguring 重写后，一定要调用此方法
-        /// </summary>
-        /// <param name="optionsBuilder"></param>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (_isDbContextPool) return;
-
-            optionsBuilder.AddInterceptors(new ShardingDbCommandInterceptor());
-
-            //注册监控程序
-            if (_isMonitor)
-            {
-                optionsBuilder.AddInterceptors(new MonitorDbConnectionInterceptor());
-                optionsBuilder.AddInterceptors(new MonitorDbCommandInterceptor());
-                optionsBuilder.AddInterceptors(new MonitorDbTransactionInterceptor());
-
-            }
-        }
-
-        /// <summary>
-        /// OnModelCreating
-        /// </summary>
-        /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-
         }
 
         /// <summary>

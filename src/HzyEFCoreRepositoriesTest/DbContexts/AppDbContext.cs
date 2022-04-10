@@ -1,10 +1,11 @@
-﻿using HzyEFCoreRepositories.DbContexts;
+﻿using HzyEFCoreRepositories;
+using HzyEFCoreRepositories.DbContexts;
 using HzyEFCoreRepositoriesTest.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HzyEFCoreRepositoriesTest.DbContexts
 {
-    public class AppDbContext : BaseDbContext<AppDbContext>
+    public class AppDbContext : InterceptorBaseDbContext<AppDbContext>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
