@@ -5,6 +5,15 @@
 
 文档地址:https://gitee.com/hzy6/hzy-efcore-repositories/wikis/pages
 
+### 功能
+1、仓储具有基本的 CRUD
+
+2、分表的情况支持动态表名查询
+
+3、监控EFCore 连接、事务、Sql、Sql耗时等统计信息
+
+![输入图片说明](doc/efcore%20%E7%9B%91%E6%8E%A7%E5%8F%B0.png)
+
 #### 安装请使用 Nuget 搜索 HzyEFCoreRepositories
 ![输入图片说明](doc/image3.png)
 
