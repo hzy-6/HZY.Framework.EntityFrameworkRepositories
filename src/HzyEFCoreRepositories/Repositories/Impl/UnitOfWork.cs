@@ -30,7 +30,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <summary>
         /// 打开延迟提交
         /// </summary>
-        public void CommitOpen() => this._saveState = false;
+        public void CommitStart() => this._saveState = false;
+
     }
 
 

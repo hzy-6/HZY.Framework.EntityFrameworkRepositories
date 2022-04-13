@@ -55,25 +55,25 @@ namespace HzyEFCoreRepositories.DbContexts
         public virtual IUnitOfWork UnitOfWork => this._unitOfWork;
 
         /// <summary>
-        /// 开启 提交
+        /// 开始延迟提交
         /// </summary>
-        public virtual void CommitOpen() => this._unitOfWork.CommitOpen();
+        public virtual void CommitStart() => this._unitOfWork.CommitStart();
 
         /// <summary>
-        /// 提交
+        /// 结束延迟提交
         /// </summary>
         /// <returns></returns>
-        public virtual int Commit()
+        public virtual int CommitEnd()
         {
             this._unitOfWork.SetSaveState(true);
             return this.SaveChanges();
         }
 
         /// <summary>
-        /// 提交
+        /// 结束延迟提交
         /// </summary>
         /// <returns></returns>
-        public virtual Task<int> CommitAsync()
+        public virtual Task<int> CommitEndAsync()
         {
             this._unitOfWork.SetSaveState(true);
             return this.SaveChangesAsync();

@@ -27,7 +27,8 @@ namespace HzyEFCoreRepositories.Repositories
         /// <summary>
         /// 打开延迟提交
         /// </summary>
-        void CommitOpen();
+        void CommitStart();
+
     }
 }
 
