@@ -29,27 +29,27 @@
 5、批量数据拷贝 目前支持 mysql 和 sqlserver
 
 
-#### SQL 字符串查询
+#### 1、SQL 字符串查询
 
 ![输入图片说明](doc/image2.png)
 
-#### 动态表名 查询
+#### 2、动态表名 查询
 
 ![输入图片说明](doc/%E5%8A%A8%E6%80%81%E8%A1%A8%E5%90%8D.png)
 
-#### EFCore 监控
+#### 3、EFCore 监控
 
 ![输入图片说明](doc/efcore%20%E7%9B%91%E6%8E%A7%E5%8F%B0.png)
 
-#### 查询过滤 可实现多租户
+#### 4、查询过滤 可实现多租户
 
 ![输入图片说明](doc/%E6%9F%A5%E8%AF%A2%E8%BF%87%E6%BB%A4.png)
 
-#### 批量数据拷贝 目前支持 mysql 和 sqlserver
+#### 5、批量数据拷贝 目前支持 mysql 和 sqlserver
 
 ![输入图片说明](doc/%E6%89%B9%E9%87%8F%E6%95%B0%E6%8D%AE%E6%8B%B7%E8%B4%9D.png)
 
-#### 仓储所有API
+#### 6、仓储所有API
 
 ![输入图片说明](doc/image.png)
 
