@@ -5,7 +5,10 @@
 
 文档地址:https://gitee.com/hzy6/hzy-efcore-repositories/wikis/pages
 
-#### 安装请使用 Nuget 搜索 HzyEFCoreRepositories
+#### 安装
+1、Nuget 搜索 HzyEFCoreRepositories 此包针对 EFCore6
+2、Nuget 搜索 HzyEFCoreRepositoriesNet5 此包针对 EFCore5、EFCore3
+
 ![输入图片说明](doc/image3.png)
 
 
