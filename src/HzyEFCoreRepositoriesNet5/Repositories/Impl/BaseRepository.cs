@@ -69,7 +69,14 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         /// <summary>
         /// 取消了实体对象的追踪操作 需要调用此函数 才能进行对实体数据库操作
-        ///  用于取消旧实体追踪缓存 防止出现 id 重复问题
+        /// <para>
+        /// 用于取消旧实体追踪缓存 防止出现 id 重复问题
+        /// </para>
+        ///  
+        /// <para>
+        /// 此函数解决的问题可以看此案例： https://blog.51cto.com/u_15064638/4401901
+        /// </para>
+        /// 
         /// </summary>
         /// <param name="detachedWhere"></param>
         public virtual void DettachWhenExist(Func<T, bool> detachedWhere)
@@ -300,6 +307,13 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int Delete(T model)
         {
+            //如果未跟踪
+            if (Orm.Entry(model).State == EntityState.Detached)
+            {
+                //变更实体未跟踪修改状态
+                this.SetEntityState(model, EntityState.Deleted);
+            }
+
             this._dbSet.Remove(model);
             return this._context.SaveChanges();
         }
@@ -352,6 +366,13 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> DeleteAsync(T model)
         {
+            //如果未跟踪
+            if (Orm.Entry(model).State == EntityState.Detached)
+            {
+                //变更实体未跟踪修改状态
+                this.SetEntityState(model, EntityState.Deleted);
+            }
+
             this._dbSet.Remove(model);
             return this._context.SaveChangesAsync();
         }

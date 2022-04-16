@@ -41,7 +41,14 @@ namespace HzyEFCoreRepositories.Repositories
 
         /// <summary>
         /// 取消了实体对象的追踪操作 需要调用此函数 才能进行对实体数据库操作
-        ///  用于取消旧实体追踪缓存 防止出现 id 重复问题
+        /// <para>
+        /// 用于取消旧实体追踪缓存 防止出现 id 重复问题
+        /// </para>
+        ///  
+        /// <para>
+        /// 此函数解决的问题可以看此案例： https://blog.51cto.com/u_15064638/4401901
+        /// </para>
+        /// 
         /// </summary>
         /// <param name="detachedWhere"></param>
         void DettachWhenExist(Func<T, bool> detachedWhere);
