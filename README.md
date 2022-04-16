@@ -8,6 +8,11 @@
 #### 安装请使用 Nuget 搜索 HzyEFCoreRepositories
 ![输入图片说明](doc/image3.png)
 
+
+#### 目前应用到此插件的框架
+
+使用请参考这里：https://gitee.com/hzy6/HzyAdmin
+
 ### 功能
 1、仓储具有基本的 CRUD
 
@@ -15,13 +20,10 @@
 
 3、监控EFCore 连接、事务、Sql、Sql耗时等统计信息
 
-4、查询过滤
+4、仓储多租户 查询过滤
 
 5、批量数据拷贝 目前支持 mysql 和 sqlserver
 
-#### 目前应用于框架
-
-使用请参考这里：https://gitee.com/hzy6/HzyAdmin
 
 #### SQL 字符串查询
 
