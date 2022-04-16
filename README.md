@@ -5,6 +5,9 @@
 
 文档地址:https://gitee.com/hzy6/hzy-efcore-repositories/wikis/pages
 
+#### 安装请使用 Nuget 搜索 HzyEFCoreRepositories
+![输入图片说明](doc/image3.png)
+
 ### 功能
 1、仓储具有基本的 CRUD
 
@@ -13,9 +16,6 @@
 3、监控EFCore 连接、事务、Sql、Sql耗时等统计信息
 
 4、查询过滤
-
-#### 安装请使用 Nuget 搜索 HzyEFCoreRepositories
-![输入图片说明](doc/image3.png)
 
 #### 目前应用于框架
 
