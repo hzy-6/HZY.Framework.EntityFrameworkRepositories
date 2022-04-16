@@ -28,7 +28,7 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         public async Task<string> QueryBySql()
         {
             var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220318;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
+                .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220410;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
 
             contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
 
@@ -50,6 +50,12 @@ namespace HzyEFCoreRepositoriesTest.Controllers
             var id = repository.QuerySingleBySql<Guid>("select id from SysFunction");
             var id1 = await repository.QuerySingleBySqlAsync<Guid>("select id from SysFunction");
 
+            var model = await repository.SelectNoTracking.FirstOrDefaultAsync();
+            model.ByName = model.ByName + "1";
+            repository.DettachWhenExist(w => w.Id == model.Id);
+            repository.Update(model);
+
+
             return "Ok" + list.Count();
 
         }
@@ -62,7 +68,7 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         public async Task<string> SqlServerBulkCopyAsync()
         {
             var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220318;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
+                .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220410;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
 
             contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
 

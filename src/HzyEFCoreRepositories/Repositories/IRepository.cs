@@ -37,7 +37,14 @@ namespace HzyEFCoreRepositories.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <param name="entityState"></param>
-        void SetAttach(T model, EntityState entityState);
+        void SetEntityState(T model, EntityState entityState);
+
+        /// <summary>
+        /// 取消了实体对象的追踪操作 需要调用此函数 才能进行对实体数据库操作
+        ///  用于取消旧实体追踪缓存 防止出现 id 重复问题
+        /// </summary>
+        /// <param name="detachedWhere"></param>
+        void DettachWhenExist(Func<T, bool> detachedWhere);
 
         /// <summary>
         /// 传入一个 值 获取实体 key 的 表达式

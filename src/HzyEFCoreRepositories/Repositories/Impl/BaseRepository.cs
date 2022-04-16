@@ -62,14 +62,22 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="model"></param>
         /// <param name="entityState"></param>
-        public virtual void SetAttach(T model, EntityState entityState)
+        public virtual void SetEntityState(T model, EntityState entityState)
         {
-            //Context.Entry(model).State = entityState;
-            //如果 newModel 未被跟踪 则手动 Attach
-            var attach = _context.Attach(model);
-            if (attach != null)
+            Orm.Entry(model).State = entityState;
+        }
+
+        /// <summary>
+        /// 取消了实体对象的追踪操作 需要调用此函数 才能进行对实体数据库操作
+        ///  用于取消旧实体追踪缓存 防止出现 id 重复问题
+        /// </summary>
+        /// <param name="detachedWhere"></param>
+        public virtual void DettachWhenExist(Func<T, bool> detachedWhere)
+        {
+            var local = _dbSet.Local.FirstOrDefault(detachedWhere);
+            if (local != null)
             {
-                attach.State = entityState;
+                this.SetEntityState(local, EntityState.Detached);
             }
         }
 
@@ -140,6 +148,13 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int Update(T model)
         {
+            //如果未跟踪
+            if (Orm.Entry(model).State == EntityState.Detached)
+            {
+                //变更实体未跟踪修改状态
+                this.SetEntityState(model, EntityState.Modified);
+            }
+
             this._dbSet.Update(model);
             return this._context.SaveChanges();
         }
@@ -188,6 +203,13 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> UpdateAsync(T model)
         {
+            //如果未跟踪
+            if (Orm.Entry(model).State == EntityState.Detached)
+            {
+                //变更实体未跟踪修改状态
+                this.SetEntityState(model, EntityState.Modified);
+            }
+
             this._dbSet.Update(model);
             return this._context.SaveChangesAsync();
         }
@@ -278,6 +300,13 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int Delete(T model)
         {
+            //如果未跟踪
+            if (Orm.Entry(model).State == EntityState.Detached)
+            {
+                //变更实体未跟踪修改状态
+                this.SetEntityState(model, EntityState.Deleted);
+            }
+
             this._dbSet.Remove(model);
             return this._context.SaveChanges();
         }
@@ -330,6 +359,13 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> DeleteAsync(T model)
         {
+            //如果未跟踪
+            if (Orm.Entry(model).State == EntityState.Detached)
+            {
+                //变更实体未跟踪修改状态
+                this.SetEntityState(model, EntityState.Deleted);
+            }
+
             this._dbSet.Remove(model);
             return this._context.SaveChangesAsync();
         }

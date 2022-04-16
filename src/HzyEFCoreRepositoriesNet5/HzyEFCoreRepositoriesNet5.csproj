@@ -2,16 +2,27 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-		<Description>EFCore、Repositories 基于 EFCore5 封装仓储,目前应用于框架：https://gitee.com/hzy6/HzyAdmin 。目前集成了 Mysql、SqlServer、PgSql | 可实现 efcore 监控 | 查询动态表名称</Description>
+		<Description>
+			EFCore、Repositories
+
+			1、动态表名查询
+			2、监控EFCore 连接、事务、Sql、Sql耗时等统计信息
+			3、仓储多租户 查询过滤
+			4、批量数据拷贝 目前支持 mysql 和 sqlserver
+			5、Sql 字符串查询
+			6、仓储具有基本的 CRUD
+
+			目前框架使用案例：https://gitee.com/hzy6/HzyAdmin
+		</Description>
 		<Authors>HZY</Authors>
 		<Company>HZY</Company>
 		<Copyright>HZY</Copyright>
 		<PackageProjectUrl>https://gitee.com/hzy6/hzy-efcore-repositories</PackageProjectUrl>
 		<RepositoryUrl>https://gitee.com/hzy6/hzy-efcore-repositories</RepositoryUrl>
 		<RepositoryType>gitee</RepositoryType>
-		<Version>1.0.1</Version>
-		<FileVersion>1.0.1</FileVersion>
-		<AssemblyVersion>1.0.1</AssemblyVersion>
+		<Version>1.0.2</Version>
+		<FileVersion>1.0.2</FileVersion>
+		<AssemblyVersion>1.0.2</AssemblyVersion>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<PackageIcon>hzy.jpg</PackageIcon>
 	</PropertyGroup>
