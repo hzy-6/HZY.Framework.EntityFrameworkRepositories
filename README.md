@@ -17,6 +17,8 @@
 
 4、查询过滤
 
+5、批量数据拷贝 目前支持 mysql 和 sqlserver
+
 #### 目前应用于框架
 
 使用请参考这里：https://gitee.com/hzy6/HzyAdmin
