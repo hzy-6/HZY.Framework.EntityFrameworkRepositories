@@ -37,6 +37,10 @@
 
 ![输入图片说明](doc/%E6%9F%A5%E8%AF%A2%E8%BF%87%E6%BB%A4.png)
 
+#### 批量数据拷贝 目前支持 mysql 和 sqlserver
+
+![输入图片说明](doc/%E6%95%B0%E6%8D%AE%E6%89%B9%E9%87%8F%E6%8B%B7%E8%B4%9D.png)
+
 #### 仓储所有API
 
 ![输入图片说明](doc/image.png)
