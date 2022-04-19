@@ -83,7 +83,7 @@ namespace HzyEFCoreRepositoriesTest.Controllers
                 item.Id = Guid.NewGuid();
                 item.Name += "批量拷贝";
             }
-            await repository.Orm.Database.SqlServerBulkCopyAsync(list);
+            await repository.SqlServerBulkCopyAsync(list);
 
             return "Ok" + list.Count();
 
@@ -108,7 +108,7 @@ namespace HzyEFCoreRepositoriesTest.Controllers
 
             var list = repository.QueryBySql("select * from SysFunction");
 
-            repository.Orm.Database.MySqlBulkCopy(list);
+            repository.MySqlBulkCopy(list);
 
             return "Ok";
         }

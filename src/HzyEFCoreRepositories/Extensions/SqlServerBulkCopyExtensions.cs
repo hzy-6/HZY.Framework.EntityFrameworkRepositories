@@ -20,14 +20,24 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="database"></param>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        public static void SqlServerBulkCopy(this DatabaseFacade database, DataTable dataTable, string tableName)
+        /// <param name="dbTransaction"></param>
+        public static void SqlServerBulkCopy(this DatabaseFacade database, DataTable dataTable, string tableName, IDbTransaction dbTransaction)
         {
             if (!database.IsSqlServer())
             {
                 throw new Exception("当前不是 SqlServer 数据库无法调用此函数!");
             }
             var dbConnection = database.GetDbConnection();
-            SqlBulkCopy sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
+            SqlBulkCopy sqlBulkCopy = null;
+            if (dbTransaction == null)
+            {
+                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
+            }
+            else
+            {
+                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
+            }
+
             sqlBulkCopy.DestinationTableName = tableName;
             sqlBulkCopy.BatchSize = dataTable.Rows.Count;
             foreach (DataColumn item in dataTable.Columns)
@@ -68,14 +78,23 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="database"></param>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        public static async Task SqlServerBulkCopyAsync(this DatabaseFacade database, DataTable dataTable, string tableName)
+        /// <param name="dbTransaction"></param>
+        public static async Task SqlServerBulkCopyAsync(this DatabaseFacade database, DataTable dataTable, string tableName, IDbTransaction dbTransaction)
         {
             if (!database.IsSqlServer())
             {
                 throw new Exception("当前不是 SqlServer 数据库无法调用此函数!");
             }
             var dbConnection = database.GetDbConnection();
-            SqlBulkCopy sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
+            SqlBulkCopy sqlBulkCopy = null;
+            if (dbTransaction == null)
+            {
+                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
+            }
+            else
+            {
+                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
+            }
             sqlBulkCopy.DestinationTableName = tableName;
             sqlBulkCopy.BatchSize = dataTable.Rows.Count;
             foreach (DataColumn item in dataTable.Columns)
@@ -115,9 +134,10 @@ namespace HzyEFCoreRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static void SqlServerBulkCopy<T>(this DatabaseFacade database, List<T> items)
+        public static void SqlServerBulkCopy<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
@@ -128,7 +148,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 tableName = tableAttribute.Name;
             }
-            database.SqlServerBulkCopy(dataTable, tableName);
+            database.SqlServerBulkCopy(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>
@@ -136,9 +156,10 @@ namespace HzyEFCoreRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Task SqlServerBulkCopyAsync<T>(this DatabaseFacade database, List<T> items)
+        public static Task SqlServerBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
@@ -150,7 +171,7 @@ namespace HzyEFCoreRepositories.Extensions
                 tableName = tableAttribute.Name;
             }
 
-            return database.SqlServerBulkCopyAsync(dataTable, tableName);
+            return database.SqlServerBulkCopyAsync(dataTable, tableName, dbTransaction);
         }
 
 

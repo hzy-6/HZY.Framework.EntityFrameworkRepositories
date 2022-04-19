@@ -542,43 +542,31 @@ namespace HzyEFCoreRepositories.Repositories
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        void SqlServerBulkCopy(DataTable dataTable, string tableName);
+        /// <param name="dbTransaction"></param>
+        void SqlServerBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
         /// <returns></returns>
-        Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName);
+        Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        void SqlServerBulkCopy(List<T> items);
+        /// <param name="dbTransaction"></param>
+        void SqlServerBulkCopy(List<T> items, IDbTransaction dbTransaction = null);
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        Task SqlServerBulkCopyAsync(List<T> items);
-
-        /// <summary>
-        /// mysql 批量拷贝数据
-        /// <para>
-        /// 需要开启服务端 mysql 的本地数据加载功能开关
-        /// </para>
-        /// <para>
-        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
-        /// </para>
-        /// <para>
-        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
-        /// </para>
-        /// </summary>
-        /// <param name="dataTable"></param>
-        /// <param name="tableName"></param>
-        void MySqlBulkCopy(DataTable dataTable, string tableName);
+        /// <param name="dbTransaction"></param>
+        Task SqlServerBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
 
         /// <summary>
         /// mysql 批量拷贝数据
@@ -594,8 +582,26 @@ namespace HzyEFCoreRepositories.Repositories
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        void MySqlBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
         /// <returns></returns>
-        Task MySqlBulkCopyAsync(DataTable dataTable, string tableName);
+        Task MySqlBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
 
         /// <summary>
         /// mysql 批量拷贝数据
@@ -610,7 +616,8 @@ namespace HzyEFCoreRepositories.Repositories
         /// </para>
         /// </summary>
         /// <param name="items"></param>
-        void MySqlBulkCopy(List<T> items);
+        /// <param name="dbTransaction"></param>
+        void MySqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null);
 
         /// <summary>
         /// mysql 批量拷贝数据
@@ -625,8 +632,9 @@ namespace HzyEFCoreRepositories.Repositories
         /// </para>
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
         /// <returns></returns>
-        Task MySqlBulkCopyAsync(List<T> items);
+        Task MySqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
         #endregion
 
 

@@ -38,7 +38,8 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="database"></param>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        public static void MySqlBulkCopy(this DatabaseFacade database, DataTable dataTable, string tableName)
+        /// <param name="dbTransaction"></param>
+        public static void MySqlBulkCopy(this DatabaseFacade database, DataTable dataTable, string tableName, IDbTransaction dbTransaction)
         {
             if (!database.IsMySql())
             {
@@ -46,7 +47,7 @@ namespace HzyEFCoreRepositories.Extensions
             }
 
             var dbConnection = database.GetDbConnection();
-            MySqlBulkCopy sqlBulkCopy = new MySqlBulkCopy((MySqlConnection)dbConnection);
+            MySqlBulkCopy sqlBulkCopy = new MySqlBulkCopy((MySqlConnection)dbConnection, (MySqlTransaction)dbTransaction);
             sqlBulkCopy.DestinationTableName = tableName;
 
             if (dbConnection.State != ConnectionState.Open)
@@ -85,9 +86,10 @@ namespace HzyEFCoreRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static void MySqlBulkCopy<T>(this DatabaseFacade database, List<T> items)
+        public static void MySqlBulkCopy<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
@@ -98,7 +100,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 tableName = tableAttribute.Name;
             }
-            database.MySqlBulkCopy(dataTable, tableName);
+            database.MySqlBulkCopy(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>
@@ -116,7 +118,8 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="database"></param>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        public static async Task MySqlBulkCopyAsync(this DatabaseFacade database, DataTable dataTable, string tableName)
+        /// <param name="dbTransaction"></param>
+        public static async Task MySqlBulkCopyAsync(this DatabaseFacade database, DataTable dataTable, string tableName, IDbTransaction dbTransaction)
         {
             if (!database.IsMySql())
             {
@@ -124,7 +127,7 @@ namespace HzyEFCoreRepositories.Extensions
             }
 
             var dbConnection = database.GetDbConnection();
-            MySqlBulkCopy sqlBulkCopy = new MySqlBulkCopy((MySqlConnection)dbConnection);
+            MySqlBulkCopy sqlBulkCopy = new MySqlBulkCopy((MySqlConnection)dbConnection, (MySqlTransaction)dbTransaction);
             sqlBulkCopy.DestinationTableName = tableName;
 
             if (dbConnection.State != ConnectionState.Open)
@@ -163,9 +166,10 @@ namespace HzyEFCoreRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Task MySqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items)
+        public static Task MySqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
@@ -177,7 +181,7 @@ namespace HzyEFCoreRepositories.Extensions
                 tableName = tableAttribute.Name;
             }
 
-            return database.MySqlBulkCopyAsync(dataTable, tableName);
+            return database.MySqlBulkCopyAsync(dataTable, tableName, dbTransaction);
         }
 
 

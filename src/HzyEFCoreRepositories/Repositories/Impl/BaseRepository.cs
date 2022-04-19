@@ -845,9 +845,10 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        public virtual void SqlServerBulkCopy(DataTable dataTable, string tableName)
+        /// <param name="dbTransaction"></param>
+        public virtual void SqlServerBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
         {
-            Orm.Database.SqlServerBulkCopy(dataTable, tableName);
+            Orm.Database.SqlServerBulkCopy(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>
@@ -855,47 +856,31 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
         /// <returns></returns>
-        public virtual Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName)
+        public virtual Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
         {
-            return Orm.Database.SqlServerBulkCopyAsync(dataTable, tableName);
+            return Orm.Database.SqlServerBulkCopyAsync(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        public virtual void SqlServerBulkCopy(List<T> items)
+        /// <param name="dbTransaction"></param>
+        public virtual void SqlServerBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
         {
-            Orm.Database.SqlServerBulkCopy(items);
+            Orm.Database.SqlServerBulkCopy(items, dbTransaction);
         }
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        public virtual Task SqlServerBulkCopyAsync(List<T> items)
+        /// <param name="dbTransaction"></param>
+        public virtual Task SqlServerBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
         {
-            return Orm.Database.SqlServerBulkCopyAsync(items);
-        }
-
-        /// <summary>
-        /// mysql 批量拷贝数据
-        /// <para>
-        /// 需要开启服务端 mysql 的本地数据加载功能开关
-        /// </para>
-        /// <para>
-        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
-        /// </para>
-        /// <para>
-        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
-        /// </para>
-        /// </summary>
-        /// <param name="dataTable"></param>
-        /// <param name="tableName"></param>
-        public virtual void MySqlBulkCopy(DataTable dataTable, string tableName)
-        {
-            Orm.Database.MySqlBulkCopy(dataTable, tableName);
+            return Orm.Database.SqlServerBulkCopyAsync(items, dbTransaction);
         }
 
         /// <summary>
@@ -912,10 +897,31 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        /// <returns></returns>
-        public virtual Task MySqlBulkCopyAsync(DataTable dataTable, string tableName)
+        /// <param name="dbTransaction"></param>
+        public virtual void MySqlBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
         {
-            return Orm.Database.MySqlBulkCopyAsync(dataTable, tableName);
+            Orm.Database.MySqlBulkCopy(dataTable, tableName, dbTransaction);
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        /// <returns></returns>
+        public virtual Task MySqlBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
+        {
+            return Orm.Database.MySqlBulkCopyAsync(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>
@@ -931,9 +937,10 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </para>
         /// </summary>
         /// <param name="items"></param>
-        public virtual void MySqlBulkCopy(List<T> items)
+        /// <param name="dbTransaction"></param>
+        public virtual void MySqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
         {
-            Orm.Database.MySqlBulkCopy(items);
+            Orm.Database.MySqlBulkCopy(items, dbTransaction);
         }
 
         /// <summary>
@@ -949,10 +956,11 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </para>
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
         /// <returns></returns>
-        public virtual Task MySqlBulkCopyAsync(List<T> items)
+        public virtual Task MySqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
         {
-            return Orm.Database.MySqlBulkCopyAsync(items);
+            return Orm.Database.MySqlBulkCopyAsync(items, dbTransaction);
         }
 
         #endregion
