@@ -202,7 +202,7 @@ namespace HzyEFCoreRepositories.Extensions
                 DataRow dr = dataTable.NewRow();
                 foreach (DataColumn col in dataTable.Columns)
                 {
-                    dr[col.ColumnName] = item.GetType().GetProperty(col.ColumnName, BindingFlags.Instance | BindingFlags.Public).GetValue(item);
+                    dr[col.ColumnName] = item.GetType().GetProperty(col.ColumnName, BindingFlags.Instance | BindingFlags.Public).GetValue(item) ?? DBNull.Value;
                 }
                 dataTable.Rows.Add(dr);
             }
