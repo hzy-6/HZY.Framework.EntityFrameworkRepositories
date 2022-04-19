@@ -14,6 +14,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using HzyEFCoreRepositories.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace HzyEFCoreRepositories.Repositories
@@ -23,14 +24,19 @@ namespace HzyEFCoreRepositories.Repositories
     /// </summary>
     /// <typeparam name="T">实体</typeparam>
     /// <typeparam name="TDbContext">dbcontext 数据上下文</typeparam>
-    public interface IRepository<T, out TDbContext>
+    public interface IBaseRepository<T, TDbContext>
         where T : class, new()
-        where TDbContext : DbContext
+        where TDbContext : BaseDbContext<TDbContext>
     {
         /// <summary>
         /// 获取 dbcontext 对象
         /// </summary>
         TDbContext Orm => default;
+
+        /// <summary>
+        /// 工作单元
+        /// </summary>
+        IUnitOfWork<BaseDbContext<TDbContext>> UnitOfWork => default;
 
         /// <summary>
         /// 设置 Attach
@@ -241,17 +247,17 @@ namespace HzyEFCoreRepositories.Repositories
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        IRepository<T, TDbContext> AddQueryFilter(Expression<Func<T, bool>> filter = null);
+        IBaseRepository<T, TDbContext> AddQueryFilter(Expression<Func<T, bool>> filter = null);
         /// <summary>
         /// 忽略查询过滤条件
         /// </summary>
         /// <returns></returns>
-        IRepository<T, TDbContext> IgnoreQueryFilter();
+        IBaseRepository<T, TDbContext> IgnoreQueryFilter();
         /// <summary>
         /// 恢复忽略查询过滤条件
         /// </summary>
         /// <returns></returns>
-        IRepository<T, TDbContext> RecoveryQueryFilter();
+        IBaseRepository<T, TDbContext> RecoveryQueryFilter();
         /// <summary>
         /// 查询
         /// </summary>

@@ -8,29 +8,101 @@
  * *******************************************************
  */
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace HzyEFCoreRepositories.Repositories.Impl
 {
     /// <summary>
     /// 工作单元
     /// </summary>
-    public sealed class UnitOfWork : IUnitOfWork
+    public class UnitOfWork<TDbContext> : IUnitOfWork<TDbContext> where TDbContext : DbContext
     {
         private bool _saveState = true;
+        private readonly TDbContext _dbContext;
+
         /// <summary>
-        /// 获取保存状态
+        /// 工作单元 构造
+        /// </summary>
+        /// <param name="dbContext"></param>
+        public UnitOfWork(TDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        /// <summary>
+        /// 获取延迟保存状态
         /// </summary>
         /// <returns></returns>
-        public bool GetSaveState() => this._saveState;
+        public virtual bool GetDelaySaveState() => this._saveState;
+
         /// <summary>
-        /// 设置保存状态
+        /// 设置延迟保存状态
         /// </summary>
         /// <param name="saveSate"></param>
-        public void SetSaveState(bool saveSate) => this._saveState = saveSate;
+        public virtual void SetDelaySaveState(bool saveSate) => this._saveState = saveSate;
+
         /// <summary>
         /// 打开延迟提交
         /// </summary>
-        public void CommitStart() => this._saveState = false;
+        public virtual void CommitDelayStart() => this._saveState = false;
+
+        /// <summary>
+        /// 延迟提交结束
+        /// </summary>
+        /// <returns></returns>
+        public virtual int CommitDelayEnd()
+        {
+            this.SetDelaySaveState(true);
+            return this._dbContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// 延迟提交结束
+        /// </summary>
+        /// <returns></returns>
+        public virtual Task<int> CommitEndAsync()
+        {
+            this.SetDelaySaveState(true);
+            return this._dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 开始事务
+        /// </summary>
+        /// <returns></returns>
+        public virtual IDbContextTransaction BeginTransaction() => this._dbContext.Database.BeginTransaction();
+
+        /// <summary>
+        /// 开始事务
+        /// </summary>
+        /// <returns></returns>
+        public virtual Task<IDbContextTransaction> BeginTransactionAsync() => this._dbContext.Database.BeginTransactionAsync();
+
+        /// <summary>
+        /// 获取当前 dbcontext 事务
+        /// </summary>
+        public virtual IDbContextTransaction CurrentDbContextTransaction => this._dbContext.Database.CurrentTransaction;
+
+        /// <summary>
+        /// 获取当前 事务
+        /// </summary>
+        public virtual IDbTransaction CurrentDbTransaction => this.GetDbTransaction(this._dbContext.Database.CurrentTransaction);
+
+        /// <summary>
+        /// 获取当前 事务 根据 IDbContextTransaction 事务
+        /// </summary>
+        /// <param name="dbContextTransaction"></param>
+        /// <returns></returns>
+        public virtual IDbTransaction GetDbTransaction(IDbContextTransaction dbContextTransaction)
+        {
+            return dbContextTransaction.GetDbTransaction();
+        }
+
+
+
 
     }
 

@@ -16,6 +16,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using HzyEFCoreRepositories.DbContexts;
 using HzyEFCoreRepositories.ExpressionTree;
 using HzyEFCoreRepositories.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -28,9 +29,9 @@ namespace HzyEFCoreRepositories.Repositories.Impl
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDbContext"></typeparam>
-    public abstract class BaseRepository<T, TDbContext> : IRepository<T, TDbContext>
+    public abstract class BaseRepository<T, TDbContext> : IBaseRepository<T, TDbContext>
         where T : class, new()
-        where TDbContext : DbContext
+        where TDbContext : BaseDbContext<TDbContext>
     {
         private readonly TDbContext _context;
         private readonly DbSet<T> _dbSet;
@@ -56,6 +57,11 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// DbContext 对象
         /// </summary>
         public virtual TDbContext Orm => this._context;
+
+        /// <summary>
+        /// 工作单元
+        /// </summary>
+        public virtual IUnitOfWork<BaseDbContext<TDbContext>> UnitOfWork => this._context.UnitOfWork;
 
         /// <summary>
         /// 设置 跟踪 Attachq
@@ -429,7 +435,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public virtual IRepository<T, TDbContext> AddQueryFilter(Expression<Func<T, bool>> filter = null)
+        public virtual IBaseRepository<T, TDbContext> AddQueryFilter(Expression<Func<T, bool>> filter = null)
         {
             this._filter = filter;
             return this;
@@ -439,7 +445,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// 忽略查询过滤条件
         /// </summary>
         /// <returns></returns>
-        public virtual IRepository<T, TDbContext> IgnoreQueryFilter()
+        public virtual IBaseRepository<T, TDbContext> IgnoreQueryFilter()
         {
             isIgnoreQueryFilter = true;
             return this;
@@ -449,7 +455,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// 恢复忽略查询过滤条件
         /// </summary>
         /// <returns></returns>
-        public virtual IRepository<T, TDbContext> RecoveryQueryFilter()
+        public virtual IBaseRepository<T, TDbContext> RecoveryQueryFilter()
         {
             isIgnoreQueryFilter = false;
             return this;

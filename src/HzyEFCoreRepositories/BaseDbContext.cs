@@ -11,7 +11,6 @@
 using HzyEFCoreRepositories.Repositories;
 using HzyEFCoreRepositories.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +22,7 @@ namespace HzyEFCoreRepositories.DbContexts
     /// <typeparam name="TDbContext"></typeparam>
     public class BaseDbContext<TDbContext> : DbContext where TDbContext : DbContext
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork<BaseDbContext<TDbContext>> _unitOfWork;
 
         /// <summary>
         /// 基础上下文
@@ -31,55 +30,13 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <param name="options"></param>
         public BaseDbContext(DbContextOptions<TDbContext> options) : base(options)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = new UnitOfWork<BaseDbContext<TDbContext>>(this);
         }
-
-        /// <summary>
-        /// 事务
-        /// </summary>
-        /// <returns></returns>
-        public virtual IDbContextTransaction BeginTransaction() => this.Database.BeginTransaction();
-
-        /// <summary>
-        /// 事务
-        /// </summary>
-        /// <returns></returns>
-        public virtual Task<IDbContextTransaction> BeginTransactionAsync() => this.Database.BeginTransactionAsync();
-
-        #region IUnitOfWork
 
         /// <summary>
         /// 工作单元
         /// </summary>
-        /// <returns></returns>
-        public virtual IUnitOfWork UnitOfWork => this._unitOfWork;
-
-        /// <summary>
-        /// 开始延迟提交
-        /// </summary>
-        public virtual void CommitStart() => this._unitOfWork.CommitStart();
-
-        /// <summary>
-        /// 结束延迟提交
-        /// </summary>
-        /// <returns></returns>
-        public virtual int CommitEnd()
-        {
-            this._unitOfWork.SetSaveState(true);
-            return this.SaveChanges();
-        }
-
-        /// <summary>
-        /// 结束延迟提交
-        /// </summary>
-        /// <returns></returns>
-        public virtual Task<int> CommitEndAsync()
-        {
-            this._unitOfWork.SetSaveState(true);
-            return this.SaveChangesAsync();
-        }
-
-        #endregion
+        public IUnitOfWork<BaseDbContext<TDbContext>> UnitOfWork;
 
         #region 重写 保存
 
@@ -89,7 +46,7 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <returns></returns>
         public override int SaveChanges()
         {
-            return this._unitOfWork.GetSaveState() ? base.SaveChanges() : 1;
+            return this._unitOfWork.GetDelaySaveState() ? base.SaveChanges() : 1;
         }
 
         /// <summary>
@@ -99,7 +56,7 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <returns></returns>
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            return this._unitOfWork.GetSaveState() ? base.SaveChanges(acceptAllChangesOnSuccess) : 1;
+            return this._unitOfWork.GetDelaySaveState() ? base.SaveChanges(acceptAllChangesOnSuccess) : 1;
         }
 
         /// <summary>
@@ -111,7 +68,7 @@ namespace HzyEFCoreRepositories.DbContexts
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            return this._unitOfWork.GetSaveState()
+            return this._unitOfWork.GetDelaySaveState()
                 ? base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken)
                 : Task.FromResult(1);
         }
@@ -123,7 +80,7 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <returns></returns>
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            return this._unitOfWork.GetSaveState() ? base.SaveChangesAsync(cancellationToken) : Task.FromResult(1);
+            return this._unitOfWork.GetDelaySaveState() ? base.SaveChangesAsync(cancellationToken) : Task.FromResult(1);
         }
 
         #endregion
