@@ -36,7 +36,7 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <summary>
         /// 工作单元
         /// </summary>
-        public IUnitOfWork<BaseDbContext<TDbContext>> UnitOfWork;
+        public IUnitOfWork<BaseDbContext<TDbContext>> UnitOfWork => _unitOfWork;
 
         #region 重写 保存
 

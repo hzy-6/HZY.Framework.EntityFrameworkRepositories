@@ -18,8 +18,8 @@ namespace HzyEFCoreRepositories.Repositories
     /// <summary>
     /// 工作单元
     /// </summary>
-    public interface IUnitOfWork<TBaseDbContext>
-        where TBaseDbContext : DbContext
+    public interface IUnitOfWork<TDbContext>
+        where TDbContext : DbContext
     {
         /// <summary>
         /// 获取保存状态
