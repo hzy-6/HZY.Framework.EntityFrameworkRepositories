@@ -21,6 +21,62 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Update")]
+        public async Task<string> Update()
+        {
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                  .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220410;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+            using var context = new AppDbContext(contextOptions.Options);
+            var repository = new AppRepository<SysFunction>(context);
+            var sysFunction = await repository.Query().FirstOrDefaultAsync();
+
+            if (sysFunction == null) return "OK";
+
+            var resultCount = repository.UpdateBulk(w => new SysFunction
+            {
+                Name = sysFunction.Name
+
+            },
+            // where 条件
+            w => w.Id == sysFunction.Id && w.Name == sysFunction.Name,
+            option =>
+            {
+                // 忽略被 set 字段
+                option.AddIgnore(w => w.Id);
+            });
+
+            return "Ok" + resultCount;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Delete")]
+        public async Task<string> Delete()
+        {
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                  .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220410;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+            using var context = new AppDbContext(contextOptions.Options);
+            var repository = new AppRepository<SysFunction>(context);
+            var sysFunction = await repository.Query().FirstOrDefaultAsync();
+
+            if (sysFunction == null) return "OK";
+
+            var resultCount = await repository.DeleteBulkAsync(w => w.Id == sysFunction.Id && w.Name == sysFunction.Name);
+
+            sysFunction = repository.Insert(sysFunction);
+
+            return "Ok" + resultCount;
+        }
+
+        /// <summary>
         /// sql 查询
         /// </summary>
         /// <returns></returns>

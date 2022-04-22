@@ -9,7 +9,7 @@ namespace HzyEFCoreRepositoriesTest.Models;
 /// </summary>
 public class SysFunction
 {
-    public Guid Id { get; set; }
+
 
     /// <summary>
     /// 编号
@@ -40,4 +40,7 @@ public class SysFunction
     /// 创建时间
     /// </summary>
     public virtual DateTime CreationTime { get; set; }
+
+    [Key]
+    public Guid Id { get; set; }
 }

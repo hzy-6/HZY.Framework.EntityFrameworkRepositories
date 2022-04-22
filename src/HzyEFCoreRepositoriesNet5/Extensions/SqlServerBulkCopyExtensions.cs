@@ -31,11 +31,11 @@ namespace HzyEFCoreRepositories.Extensions
             SqlBulkCopy sqlBulkCopy = null;
             if (dbTransaction == null)
             {
-                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
+                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
             }
             else
             {
-                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
+                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
             }
 
             sqlBulkCopy.DestinationTableName = tableName;
@@ -89,11 +89,11 @@ namespace HzyEFCoreRepositories.Extensions
             SqlBulkCopy sqlBulkCopy = null;
             if (dbTransaction == null)
             {
-                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
+                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
             }
             else
             {
-                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
+                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
             }
             sqlBulkCopy.DestinationTableName = tableName;
             sqlBulkCopy.BatchSize = dataTable.Rows.Count;

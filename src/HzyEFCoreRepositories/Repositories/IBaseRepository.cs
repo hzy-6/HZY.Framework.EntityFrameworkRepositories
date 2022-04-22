@@ -15,6 +15,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using HzyEFCoreRepositories.DbContexts;
+using HzyEFCoreRepositories.Extensions.Parser;
 using Microsoft.EntityFrameworkCore;
 
 namespace HzyEFCoreRepositories.Repositories
@@ -123,6 +124,22 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="models"></param>
         /// <returns></returns>
         int UpdateRange(IEnumerable<T> models);
+        /// <summary>
+        /// 更新部分字段 根据where 条件
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="where"></param>
+        /// <param name="ignoreCols"></param>
+        /// <returns></returns>
+        int UpdateBulk(Expression<Func<T, T>> model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null);
+        /// <summary>
+        /// 更新部分字段 根据where 条件
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="where"></param>
+        /// <param name="ignoreCols"></param>
+        /// <returns></returns>
+        int UpdateBulk(T model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null);
 
         /// <summary>
         /// 更新
@@ -149,6 +166,22 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="models"></param>
         /// <returns></returns>
         Task<int> UpdateRangeAsync(IEnumerable<T> models);
+        /// <summary>
+        /// 更新部分字段 根据where 条件
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="where"></param>
+        /// <param name="ignoreCols"></param>
+        /// <returns></returns>
+        Task<int> UpdateBulkAsync(Expression<Func<T, T>> model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null);
+        /// <summary>
+        /// 更新部分字段 根据where 条件
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="where"></param>
+        /// <param name="ignoreCols"></param>
+        /// <returns></returns>
+        Task<int> UpdateBulkAsync(T model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null);
 
         #endregion
 
@@ -191,6 +224,12 @@ namespace HzyEFCoreRepositories.Repositories
         /// <returns></returns>
         int Delete(Expression<Func<T, bool>> expWhere);
         /// <summary>
+        /// 删除 根据表达式 直接 生成 delete from table  where 语句操作
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
+        int DeleteBulk(Expression<Func<T, bool>> expWhere);
+        /// <summary>
         /// 删除 根据id
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
@@ -223,6 +262,12 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="expWhere"></param>
         /// <returns></returns>
         Task<int> DeleteAsync(Expression<Func<T, bool>> expWhere);
+        /// <summary>
+        /// 删除 根据表达式 直接 生成 delete from table  where 语句操作
+        /// </summary>
+        /// <param name="expWhere"></param>
+        /// <returns></returns>
+        Task<int> DeleteBulkAsync(Expression<Func<T, bool>> expWhere);
         /// <summary>
         /// 删除 根据 id
         /// </summary>

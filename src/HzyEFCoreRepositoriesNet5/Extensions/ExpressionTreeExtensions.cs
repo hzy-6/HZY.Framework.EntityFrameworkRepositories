@@ -1,3 +1,5 @@
+using HzyEFCoreRepositories.ExpressionTree;
+using HzyEFCoreRepositories.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,7 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace HzyEFCoreRepositories.ExpressionTree
+namespace HzyEFCoreRepositories.Extensions
 {
     /// <summary>
     /// 表达式树扩展
@@ -165,6 +167,34 @@ namespace HzyEFCoreRepositories.ExpressionTree
 
             return Expression.Lambda(body, parameter);
         }
+
+        /// <summary>
+        /// Eval
+        /// </summary>
+        /// <param name="_Expression"></param>
+        /// <returns></returns>
+        public static object Eval(Expression _Expression)
+        {
+            var cast = Expression.Convert(_Expression, typeof(object));
+            return Expression.Lambda<Func<object>>(cast).Compile().Invoke();
+        }
+
+        /// <summary>
+        /// 将 一个实体类 转换为 MemberInitExpression 类型
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static MemberInitExpression ModelToMemberInitExpression<T>(T model)
+        {
+            var proInfos = EFCoreRepositoryExtensions.GetPropertyInfos(typeof(T));
+            var list = new List<MemberBinding>();
+            foreach (var item in proInfos) list.Add(Expression.Bind(item, Expression.Constant(item.GetValue(model), item.PropertyType)));
+            var newExpr = Expression.New(typeof(T));
+            return Expression.MemberInit(newExpr, list);
+        }
+
+
 
 
     }
