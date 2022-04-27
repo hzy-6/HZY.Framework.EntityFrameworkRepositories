@@ -79,6 +79,13 @@ namespace HzyEFCoreRepositories.Repositories
         /// <returns></returns>
         IDbTransaction GetDbTransaction(IDbContextTransaction dbContextTransaction);
 
+        /// <summary>
+        /// 获取 dbset 对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        DbSet<T> DbSet<T>() where T : class, new() => default;
+
     }
 }
 

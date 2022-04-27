@@ -20,9 +20,9 @@
 		<PackageProjectUrl>https://gitee.com/hzy6/hzy-efcore-repositories</PackageProjectUrl>
 		<RepositoryUrl>https://gitee.com/hzy6/hzy-efcore-repositories</RepositoryUrl>
 		<RepositoryType>gitee</RepositoryType>
-		<Version>1.0.7</Version>
-		<FileVersion>1.0.7</FileVersion>
-		<AssemblyVersion>1.0.7</AssemblyVersion>
+		<Version>1.0.8</Version>
+		<FileVersion>1.0.8</FileVersion>
+		<AssemblyVersion>1.0.8</AssemblyVersion>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<PackageIcon>hzy.jpg</PackageIcon>
 	</PropertyGroup>

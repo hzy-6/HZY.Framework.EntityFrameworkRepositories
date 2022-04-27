@@ -101,7 +101,12 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             return dbContextTransaction.GetDbTransaction();
         }
 
-
+        /// <summary>
+        /// 获取 dbset 对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public DbSet<T> DbSet<T>() where T : class, new() => _dbContext.Set<T>();
 
 
     }
