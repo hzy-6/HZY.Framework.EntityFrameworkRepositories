@@ -67,18 +67,6 @@ namespace HzyEFCoreRepositories.Extensions.Parser
             return stringBuilder.ToString();
         }
 
-        /// <summary>
-        /// 解析 sql 并分析出 Update 语句
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sourceSql"></param>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public string Parser<T>(string sourceSql, T model)
-        {
-            return Parser(sourceSql, ExpressionTreeExtensions.ModelToMemberInitExpression(model));
-        }
-
 
     }
 }

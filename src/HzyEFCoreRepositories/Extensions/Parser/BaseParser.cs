@@ -29,7 +29,7 @@ namespace HzyEFCoreRepositories.Extensions.Parser
         /// <summary>
         /// 关键字处理
         /// </summary>
-        /// <param name="context"></param>
+        /// <returns></returns>
         public (string SymbolStart, string SymbolEnd, string ParametricSymbols) KeywordHandle()
         {
             string symbolStart = string.Empty, symbolEnd = string.Empty, parametricSymbols = string.Empty;
