@@ -1,4 +1,4 @@
-﻿/*
+/*
  * *******************************************************
  *
  * 作者：hzy
@@ -630,6 +630,9 @@ namespace HzyEFCoreRepositories.Repositories
         /// <para>
         /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
         /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
@@ -646,6 +649,9 @@ namespace HzyEFCoreRepositories.Repositories
         /// </para>
         /// <para>
         /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
         /// </para>
         /// </summary>
         /// <param name="dataTable"></param>
@@ -665,6 +671,9 @@ namespace HzyEFCoreRepositories.Repositories
         /// <para>
         /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
         /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
         /// </summary>
         /// <param name="items"></param>
         /// <param name="dbTransaction"></param>
@@ -680,6 +689,9 @@ namespace HzyEFCoreRepositories.Repositories
         /// </para>
         /// <para>
         /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
         /// </para>
         /// </summary>
         /// <param name="items"></param>
