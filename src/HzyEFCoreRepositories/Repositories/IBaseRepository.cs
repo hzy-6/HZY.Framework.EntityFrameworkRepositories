@@ -25,7 +25,7 @@ namespace HzyEFCoreRepositories.Repositories
     /// </summary>
     /// <typeparam name="T">实体</typeparam>
     /// <typeparam name="TDbContext">dbcontext 数据上下文</typeparam>
-    public interface IBaseRepository<T, TDbContext>
+    public interface IBaseRepository<T, TDbContext> : IDisposable
         where T : class, new()
         where TDbContext : BaseDbContext<TDbContext>
     {

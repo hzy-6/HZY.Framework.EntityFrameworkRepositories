@@ -1069,7 +1069,39 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #endregion
 
+        /// <summary>
+        /// 供程序员显式调用的Dispose方法
+        /// </summary>
+        public virtual void Dispose()
+        {
+            //调用带参数的Dispose方法，释放托管和非托管资源
+            Dispose(true);
+            //手动调用了Dispose释放资源，那么析构函数就是不必要的了，这里阻止GC调用析构函数
+            System.GC.SuppressFinalize(this);
+        }
 
+        /// <summary>
+        /// protected的Dispose方法，保证不会被外部调用。
+        /// 传入bool值disposing以确定是否释放托管资源
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // TODO:在这里加入清理"托管资源"的代码，应该是xxx.Dispose();
+                _context.Dispose();
+            }
+            // TODO:在这里加入清理"非托管资源"的代码
+        }
+
+        /// <summary>
+        /// 供GC调用的析构函数
+        /// </summary>
+        ~BaseRepository()
+        {
+            Dispose(false);//释放非托管资源
+        }
 
 
 
