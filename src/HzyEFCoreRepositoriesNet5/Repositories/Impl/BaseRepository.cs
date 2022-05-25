@@ -615,8 +615,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="key"></param>
         /// <typeparam name="TKey"></typeparam>
         /// <returns></returns>
-        public virtual async Task<T> FindByIdAsync<TKey>(TKey key)
-            => await this.Query().FirstOrDefaultAsync(this.GetKeyExpression(key));
+        public virtual Task<T> FindByIdAsync<TKey>(TKey key)
+            => this.Query().FirstOrDefaultAsync(this.GetKeyExpression(key));
 
         /// <summary>
         /// /查询 根据id集合
