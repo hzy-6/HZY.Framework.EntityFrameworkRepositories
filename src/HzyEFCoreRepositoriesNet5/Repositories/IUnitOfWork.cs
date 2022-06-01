@@ -48,7 +48,7 @@ namespace HzyEFCoreRepositories.Repositories
         /// 延迟提交结束
         /// </summary>
         /// <returns></returns>
-        Task<int> CommitEndAsync();
+        Task<int> CommitDelayEndAsync();
 
         /// <summary>
         /// 开始事务

@@ -63,7 +63,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// 延迟提交结束
         /// </summary>
         /// <returns></returns>
-        public virtual Task<int> CommitEndAsync()
+        public virtual Task<int> CommitDelayEndAsync()
         {
             this.SetDelaySaveState(true);
             return this._dbContext.SaveChangesAsync();
