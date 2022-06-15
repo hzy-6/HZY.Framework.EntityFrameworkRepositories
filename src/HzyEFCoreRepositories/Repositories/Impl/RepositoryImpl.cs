@@ -28,7 +28,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDbContext"></typeparam>
-    public abstract class BaseRepository<T, TDbContext> : IBaseRepository<T, TDbContext>
+    public abstract class RepositoryImpl<T, TDbContext> : IRepository<T, TDbContext>
         where T : class, new()
         where TDbContext : BaseDbContext<TDbContext>
     {
@@ -43,7 +43,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="context">dbcontext 上下文</param>
         /// <param name="filter">过滤条件</param>
-        public BaseRepository(TDbContext context, Expression<Func<T, bool>> filter = null)
+        public RepositoryImpl(TDbContext context, Expression<Func<T, bool>> filter = null)
         {
             this._context = context;
             _dbSet = context.Set<T>();
@@ -60,7 +60,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <summary>
         /// 工作单元
         /// </summary>
-        public virtual IUnitOfWork<BaseDbContext<TDbContext>> UnitOfWork => this._context.UnitOfWork;
+        public virtual IUnitOfWork UnitOfWork => this._context.UnitOfWork;
 
         /// <summary>
         /// 设置 跟踪 Attachq
@@ -100,6 +100,41 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Expression<Func<T, bool>> GetKeyExpression(object value)
             => ExpressionTreeExtensions.Equal<T, object>(this._keyPropertyInfo.Name, value);
+
+        #region 过滤
+
+        /// <summary>
+        /// 添加检索过滤
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public virtual IRepository<T, TDbContext> AddQueryFilter(Expression<Func<T, bool>> filter = null)
+        {
+            this._filter = filter;
+            return this;
+        }
+
+        /// <summary>
+        /// 忽略查询过滤条件
+        /// </summary>
+        /// <returns></returns>
+        public virtual IRepository<T, TDbContext> IgnoreQueryFilter()
+        {
+            isIgnoreQueryFilter = true;
+            return this;
+        }
+
+        /// <summary>
+        /// 恢复忽略查询过滤条件
+        /// </summary>
+        /// <returns></returns>
+        public virtual IRepository<T, TDbContext> RecoveryQueryFilter()
+        {
+            isIgnoreQueryFilter = false;
+            return this;
+        }
+
+        #endregion
 
         #region 插入
 
@@ -515,37 +550,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         #endregion
 
         #region 查询 复杂型
-
-        /// <summary>
-        /// 添加检索过滤
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public virtual IBaseRepository<T, TDbContext> AddQueryFilter(Expression<Func<T, bool>> filter = null)
-        {
-            this._filter = filter;
-            return this;
-        }
-
-        /// <summary>
-        /// 忽略查询过滤条件
-        /// </summary>
-        /// <returns></returns>
-        public virtual IBaseRepository<T, TDbContext> IgnoreQueryFilter()
-        {
-            isIgnoreQueryFilter = true;
-            return this;
-        }
-
-        /// <summary>
-        /// 恢复忽略查询过滤条件
-        /// </summary>
-        /// <returns></returns>
-        public virtual IBaseRepository<T, TDbContext> RecoveryQueryFilter()
-        {
-            isIgnoreQueryFilter = false;
-            return this;
-        }
 
         /// <summary>
         /// 查询
@@ -1098,7 +1102,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <summary>
         /// 供GC调用的析构函数
         /// </summary>
-        ~BaseRepository()
+        ~RepositoryImpl()
         {
             Dispose(false);//释放非托管资源
         }

@@ -22,7 +22,7 @@ namespace HzyEFCoreRepositories.DbContexts
     /// <typeparam name="TDbContext"></typeparam>
     public class BaseDbContext<TDbContext> : DbContext where TDbContext : DbContext
     {
-        private readonly IUnitOfWork<BaseDbContext<TDbContext>> _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// 基础上下文
@@ -30,13 +30,13 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <param name="options"></param>
         public BaseDbContext(DbContextOptions<TDbContext> options) : base(options)
         {
-            _unitOfWork = new UnitOfWork<BaseDbContext<TDbContext>>(this);
+            _unitOfWork = new UnitOfWorkImpl<BaseDbContext<TDbContext>>(this);
         }
 
         /// <summary>
         /// 工作单元
         /// </summary>
-        public IUnitOfWork<BaseDbContext<TDbContext>> UnitOfWork => _unitOfWork;
+        public IUnitOfWork UnitOfWork => _unitOfWork;
 
         #region 重写 保存
 
