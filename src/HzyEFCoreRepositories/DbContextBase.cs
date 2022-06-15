@@ -11,6 +11,9 @@
 using HzyEFCoreRepositories.Repositories;
 using HzyEFCoreRepositories.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,24 +22,40 @@ namespace HzyEFCoreRepositories.DbContexts
     /// <summary>
     /// 基础上下文
     /// </summary>
-    /// <typeparam name="TDbContext"></typeparam>
-    public class BaseDbContext<TDbContext> : DbContext where TDbContext : DbContext
+    public class DbContextBase : DbContext
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private IUnitOfWork _unitOfWork;
+
+        /// <summary>
+        /// 基础上下文
+        /// </summary>
+        protected DbContextBase() : base()
+        {
+        }
 
         /// <summary>
         /// 基础上下文
         /// </summary>
         /// <param name="options"></param>
-        public BaseDbContext(DbContextOptions<TDbContext> options) : base(options)
+        public DbContextBase(DbContextOptions options) : base(options)
         {
-            _unitOfWork = new UnitOfWorkImpl<BaseDbContext<TDbContext>>(this);
         }
 
         /// <summary>
         /// 工作单元
         /// </summary>
-        public IUnitOfWork UnitOfWork => _unitOfWork;
+        public IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                if (_unitOfWork == null)
+                {
+                    _unitOfWork = new UnitOfWorkImpl<DbContextBase>(this);
+                }
+
+                return _unitOfWork;
+            }
+        }
 
         #region 重写 保存
 
@@ -84,6 +103,7 @@ namespace HzyEFCoreRepositories.DbContexts
         }
 
         #endregion
+
 
     }
 

@@ -15,7 +15,7 @@ namespace HzyEFCoreRepositoriesTest.Controllers
     {
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(AppDbContext1 appDbContext1, ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
         }
@@ -27,11 +27,7 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         [HttpGet("Update")]
         public async Task<string> Update()
         {
-            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                  .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220410;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
-            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
-            using var context = new AppDbContext(contextOptions.Options);
-            var repository = new AppRepository<SysFunction>(context);
+            var repository = new AppRepository1<SysFunction>();
             var sysFunction = await repository.Query().FirstOrDefaultAsync();
 
             if (sysFunction == null) return "OK";

@@ -5,10 +5,19 @@ using System.Linq.Expressions;
 
 namespace HzyEFCoreRepositoriesTest.Repositories
 {
-    public class AppRepository<T> : RepositoryImpl<T, AppDbContext> where T : class, new()
+    public class AppRepository1<T> : AppRepositoryImpl<T> where T : class, new()
     {
-        public AppRepository(AppDbContext context, Expression<Func<T, bool>> filter = null) : base(context, filter)
+        public AppRepository1(Expression<Func<T, bool>> filter = null) : base(filter)
         {
+
+        }
+    }
+
+    public class AppRepository<T> : AppRepositoryImpl<T, AppDbContext> where T : class, new()
+    {
+        public AppRepository(AppDbContext appDbContext, Expression<Func<T, bool>> filter = null) : base(appDbContext, filter)
+        {
+
         }
     }
 }

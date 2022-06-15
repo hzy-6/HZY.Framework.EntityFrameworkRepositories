@@ -210,27 +210,6 @@ namespace HzyEFCoreRepositories.Extensions
             return dataTable;
         }
 
-        /// <summary>
-        /// 添加 EFCore 拦截器 用于动态表 和 监控
-        /// </summary>
-        /// <param name="optionsBuilder"></param>
-        /// <param name="_isMonitor"></param>
-        /// <returns></returns>
-        public static DbContextOptionsBuilder AddEFCoreInterceptor(this DbContextOptionsBuilder optionsBuilder, bool _isMonitor = true)
-        {
-            optionsBuilder.AddInterceptors(new ShardingDbCommandInterceptor());
-
-            //注册监控程序
-            if (_isMonitor)
-            {
-                optionsBuilder.AddInterceptors(new MonitorDbConnectionInterceptor());
-                optionsBuilder.AddInterceptors(new MonitorDbCommandInterceptor());
-                optionsBuilder.AddInterceptors(new MonitorDbTransactionInterceptor());
-            }
-
-            return optionsBuilder;
-        }
-
 
 
     }

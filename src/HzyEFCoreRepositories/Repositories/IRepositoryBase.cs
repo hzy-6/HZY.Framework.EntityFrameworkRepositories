@@ -24,7 +24,7 @@ namespace HzyEFCoreRepositories.Repositories
     /// 仓储接口
     /// </summary>
     /// <typeparam name="T">实体</typeparam>
-    public interface IBaseRepository<T> : IDisposable
+    public interface IRepositoryBase<T> : IDisposable
     {
         /// <summary>
         /// 设置 Attach
@@ -53,6 +53,19 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="value"></param>
         /// <returns> w => w.Id = 1 </returns>
         Expression<Func<T, bool>> GetKeyExpression(object value);
+
+        /// <summary>
+        /// 获取数据上下文
+        /// </summary>
+        /// <returns></returns>
+        object GetDbContext();
+
+        /// <summary>
+        /// 获取数据上下文
+        /// </summary>
+        /// <typeparam name="TDbContext"></typeparam>
+        /// <returns></returns>
+        TDbContext GetDbContext<TDbContext>() where TDbContext : DbContext;
 
         #region 插入
 
