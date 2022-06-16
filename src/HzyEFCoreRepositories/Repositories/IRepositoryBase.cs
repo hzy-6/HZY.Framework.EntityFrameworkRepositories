@@ -67,6 +67,12 @@ namespace HzyEFCoreRepositories.Repositories
         /// <returns></returns>
         TDbContext GetDbContext<TDbContext>() where TDbContext : DbContextBase;
 
+        /// <summary>
+        /// 获取数据上下文 基础对象 DbContextBase
+        /// </summary>
+        /// <returns></returns>
+        DbContextBase DbContextBase => default;
+
         #region 插入
 
         /// <summary>
