@@ -65,7 +65,7 @@ namespace HzyEFCoreRepositories.Repositories
         /// </summary>
         /// <typeparam name="TDbContext"></typeparam>
         /// <returns></returns>
-        TDbContext GetDbContext<TDbContext>() where TDbContext : DbContext;
+        TDbContext GetDbContext<TDbContext>() where TDbContext : DbContextBase;
 
         #region 插入
 

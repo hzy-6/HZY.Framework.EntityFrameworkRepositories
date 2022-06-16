@@ -1,3 +1,4 @@
+using HzyEFCoreRepositories;
 using HzyEFCoreRepositories.Extensions;
 using HzyEFCoreRepositories.Monitor;
 using HzyEFCoreRepositories.Monitor.Models;
@@ -14,10 +15,14 @@ namespace HzyEFCoreRepositoriesTest.Controllers
     public class WeatherForecastController : ControllerBase
     {
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly AppDbContext _appDbContext;
+        private readonly AppDbContext1 _appDbContext1;
 
-        public WeatherForecastController(AppDbContext1 appDbContext1, ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, AppDbContext appDbContext)
         {
             _logger = logger;
+            _appDbContext = appDbContext;
+            //_appDbContext1 = appDbContext1;
         }
 
         /// <summary>
@@ -27,8 +32,14 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         [HttpGet("Update")]
         public async Task<string> Update()
         {
-            var repository = new AppRepository1<SysFunction>();
+            var service = HzyEFCoreUtil.GetServiceProvider().GetService(HzyEFCoreUtil.GetDbContextType(typeof(SysFunction).FullName));
+
+            var repository = new AppRepository<SysFunction>(_appDbContext);
             var sysFunction = await repository.Query().FirstOrDefaultAsync();
+
+            sysFunction.CreationTime = DateTime.Now;
+
+            repository.Update(sysFunction);
 
             if (sysFunction == null) return "OK";
 

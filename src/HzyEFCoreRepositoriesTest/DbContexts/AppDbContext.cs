@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HzyEFCoreRepositoriesTest.DbContexts
 {
-    public class AppDbContext : InterceptorDbContextBase
+    public class AppDbContext : DbContextBase
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

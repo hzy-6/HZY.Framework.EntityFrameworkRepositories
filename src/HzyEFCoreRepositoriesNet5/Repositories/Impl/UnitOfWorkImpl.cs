@@ -18,7 +18,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
     /// <summary>
     /// 工作单元
     /// </summary>
-    public class UnitOfWork<TDbContext> : IUnitOfWork<TDbContext> where TDbContext : DbContext
+    public class UnitOfWorkImpl<TDbContext> : IUnitOfWork where TDbContext : DbContext
     {
         private bool _saveState = true;
         private readonly TDbContext _dbContext;
@@ -27,7 +27,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// 工作单元 构造
         /// </summary>
         /// <param name="dbContext"></param>
-        public UnitOfWork(TDbContext dbContext)
+        public UnitOfWorkImpl(TDbContext dbContext)
         {
             _dbContext = dbContext;
         }

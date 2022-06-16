@@ -11,10 +11,12 @@ builder.Services.AddControllers().AddControllersAsServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContextPool<AppDbContext1>((serviceProvider, options) =>
+//取消域验证
+builder.Host.UseDefaultServiceProvider(options => { options.ValidateScopes = false; });
+builder.Services.AddDbContextPool<AppDbContext>((serviceProvider, options) =>
    {
        //
-       //options.AddHzyEFCore(serviceProvider);
+       //options.AddHzyEFCore();
 
        options.UseSqlServer(@"Server=.;Database=hzy_admin_sqlserver_20220526;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
        options.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));

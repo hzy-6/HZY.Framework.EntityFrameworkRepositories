@@ -24,21 +24,8 @@ namespace HzyEFCoreRepositories.Repositories
     /// 仓储接口
     /// </summary>
     /// <typeparam name="T">实体</typeparam>
-    /// <typeparam name="TDbContext">dbcontext 数据上下文</typeparam>
-    public interface IBaseRepository<T, TDbContext> : IDisposable
-        where T : class, new()
-        where TDbContext : BaseDbContext<TDbContext>
+    public interface IRepositoryBase<T> : IDisposable
     {
-        /// <summary>
-        /// 获取 dbcontext 对象
-        /// </summary>
-        TDbContext Orm => default;
-
-        /// <summary>
-        /// 工作单元
-        /// </summary>
-        IUnitOfWork<BaseDbContext<TDbContext>> UnitOfWork => default;
-
         /// <summary>
         /// 设置 Attach
         /// </summary>
@@ -66,6 +53,19 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="value"></param>
         /// <returns> w => w.Id = 1 </returns>
         Expression<Func<T, bool>> GetKeyExpression(object value);
+
+        /// <summary>
+        /// 获取数据上下文
+        /// </summary>
+        /// <returns></returns>
+        object GetDbContext();
+
+        /// <summary>
+        /// 获取数据上下文
+        /// </summary>
+        /// <typeparam name="TDbContext"></typeparam>
+        /// <returns></returns>
+        TDbContext GetDbContext<TDbContext>() where TDbContext : DbContextBase;
 
         #region 插入
 
@@ -287,22 +287,6 @@ namespace HzyEFCoreRepositories.Repositories
 
         #region 查询 复杂型
 
-        /// <summary>
-        /// 加入查询过滤条件
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        IBaseRepository<T, TDbContext> AddQueryFilter(Expression<Func<T, bool>> filter = null);
-        /// <summary>
-        /// 忽略查询过滤条件
-        /// </summary>
-        /// <returns></returns>
-        IBaseRepository<T, TDbContext> IgnoreQueryFilter();
-        /// <summary>
-        /// 恢复忽略查询过滤条件
-        /// </summary>
-        /// <returns></returns>
-        IBaseRepository<T, TDbContext> RecoveryQueryFilter();
         /// <summary>
         /// 查询
         /// </summary>

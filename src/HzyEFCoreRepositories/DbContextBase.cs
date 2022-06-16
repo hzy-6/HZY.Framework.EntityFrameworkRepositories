@@ -11,9 +11,6 @@
 using HzyEFCoreRepositories.Repositories;
 using HzyEFCoreRepositories.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using System;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,7 +62,7 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <returns></returns>
         public override int SaveChanges()
         {
-            return this._unitOfWork.GetDelaySaveState() ? base.SaveChanges() : 1;
+            return this.UnitOfWork.GetDelaySaveState() ? base.SaveChanges() : 1;
         }
 
         /// <summary>
@@ -75,7 +72,7 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <returns></returns>
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            return this._unitOfWork.GetDelaySaveState() ? base.SaveChanges(acceptAllChangesOnSuccess) : 1;
+            return this.UnitOfWork.GetDelaySaveState() ? base.SaveChanges(acceptAllChangesOnSuccess) : 1;
         }
 
         /// <summary>
@@ -87,7 +84,7 @@ namespace HzyEFCoreRepositories.DbContexts
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            return this._unitOfWork.GetDelaySaveState()
+            return this.UnitOfWork.GetDelaySaveState()
                 ? base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken)
                 : Task.FromResult(1);
         }
@@ -99,7 +96,7 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <returns></returns>
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            return this._unitOfWork.GetDelaySaveState() ? base.SaveChangesAsync(cancellationToken) : Task.FromResult(1);
+            return this.UnitOfWork.GetDelaySaveState() ? base.SaveChangesAsync(cancellationToken) : Task.FromResult(1);
         }
 
         #endregion

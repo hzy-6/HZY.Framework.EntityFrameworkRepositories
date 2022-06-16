@@ -19,24 +19,40 @@ namespace HzyEFCoreRepositories.DbContexts
     /// <summary>
     /// 基础上下文
     /// </summary>
-    /// <typeparam name="TDbContext"></typeparam>
-    public class BaseDbContext<TDbContext> : DbContext where TDbContext : DbContext
+    public class DbContextBase : DbContext
     {
-        private readonly IUnitOfWork<BaseDbContext<TDbContext>> _unitOfWork;
+        private IUnitOfWork _unitOfWork;
+
+        /// <summary>
+        /// 基础上下文
+        /// </summary>
+        protected DbContextBase() : base()
+        {
+        }
 
         /// <summary>
         /// 基础上下文
         /// </summary>
         /// <param name="options"></param>
-        public BaseDbContext(DbContextOptions<TDbContext> options) : base(options)
+        public DbContextBase(DbContextOptions options) : base(options)
         {
-            _unitOfWork = new UnitOfWork<BaseDbContext<TDbContext>>(this);
         }
 
         /// <summary>
         /// 工作单元
         /// </summary>
-        public IUnitOfWork<BaseDbContext<TDbContext>> UnitOfWork => _unitOfWork;
+        public IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                if (_unitOfWork == null)
+                {
+                    _unitOfWork = new UnitOfWorkImpl<DbContextBase>(this);
+                }
+
+                return _unitOfWork;
+            }
+        }
 
         #region 重写 保存
 
@@ -46,7 +62,7 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <returns></returns>
         public override int SaveChanges()
         {
-            return this._unitOfWork.GetDelaySaveState() ? base.SaveChanges() : 1;
+            return this.UnitOfWork.GetDelaySaveState() ? base.SaveChanges() : 1;
         }
 
         /// <summary>
@@ -56,7 +72,7 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <returns></returns>
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            return this._unitOfWork.GetDelaySaveState() ? base.SaveChanges(acceptAllChangesOnSuccess) : 1;
+            return this.UnitOfWork.GetDelaySaveState() ? base.SaveChanges(acceptAllChangesOnSuccess) : 1;
         }
 
         /// <summary>
@@ -68,7 +84,7 @@ namespace HzyEFCoreRepositories.DbContexts
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            return this._unitOfWork.GetDelaySaveState()
+            return this.UnitOfWork.GetDelaySaveState()
                 ? base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken)
                 : Task.FromResult(1);
         }
@@ -80,10 +96,11 @@ namespace HzyEFCoreRepositories.DbContexts
         /// <returns></returns>
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            return this._unitOfWork.GetDelaySaveState() ? base.SaveChangesAsync(cancellationToken) : Task.FromResult(1);
+            return this.UnitOfWork.GetDelaySaveState() ? base.SaveChangesAsync(cancellationToken) : Task.FromResult(1);
         }
 
         #endregion
+
 
     }
 
