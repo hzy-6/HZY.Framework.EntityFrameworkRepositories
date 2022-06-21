@@ -22,9 +22,9 @@
 		<PackageProjectUrl>https://gitee.com/hzy6/hzy-efcore-repositories</PackageProjectUrl>
 		<RepositoryUrl>https://gitee.com/hzy6/hzy-efcore-repositories</RepositoryUrl>
 		<RepositoryType>gitee</RepositoryType>
-		<Version>1.1.9.7</Version>
-		<FileVersion>1.1.9.7</FileVersion>
-		<AssemblyVersion>1.1.9.7</AssemblyVersion>
+		<Version>1.1.9.8</Version>
+		<FileVersion>1.1.9.8</FileVersion>
+		<AssemblyVersion>1.1.9.8</AssemblyVersion>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<PackageIcon>hzy.jpg</PackageIcon>
 		<!--带有调试-->
@@ -49,7 +49,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.4" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
 		<PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.61" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.1" />
 

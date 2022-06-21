@@ -27,13 +27,15 @@ namespace HzyEFCoreRepositories.Repositories.Impl
     /// 基础仓储 实现
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class RepositoryBaseImpl<T> : IRepositoryBase<T>
+    /// <typeparam name="TDbContext"></typeparam>
+    public abstract class RepositoryBaseImpl<T, TDbContext> : IRepositoryBase<T, TDbContext>
         where T : class, new()
+        where TDbContext : class
     {
         /// <summary>
         /// 数据上下文
         /// </summary>
-        protected object _context { get; set; }
+        protected TDbContext _context { get; set; }
         /// <summary>
         /// dbset
         /// </summary>
@@ -56,7 +58,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="filter"></param>
-        public RepositoryBaseImpl(object dbContext, Expression<Func<T, bool>> filter = null)
+        public RepositoryBaseImpl(TDbContext dbContext, Expression<Func<T, bool>> filter = null)
         {
             _context = dbContext;
             _dbSet = DbContextBase.Set<T>();
@@ -75,8 +77,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             DbContextBase.Entry(model).State = entityState;
         }
 
-
-
         /// <summary>
         /// 取消了实体对象的追踪操作 需要调用此函数 才能进行对实体数据库操作
         /// <para>
@@ -92,10 +92,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual void DettachWhenExist(Func<T, bool> detachedWhere)
         {
             var local = _dbSet.Local.FirstOrDefault(detachedWhere);
-            if (local != null)
-            {
-                this.SetEntityState(local, EntityState.Detached);
-            }
+            if (local == null) return;
+            this.SetEntityState(local, EntityState.Detached);
         }
 
         /// <summary>
@@ -110,26 +108,26 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// 获取 dbcontext 对象
         /// </summary>
         /// <returns></returns>
-        public virtual object GetDbContext()
-        {
-            return this._context;
-        }
+        public virtual TDbContext Orm => this._context;
 
         /// <summary>
         /// 获取 dbcontext 对象
         /// </summary>
-        /// <typeparam name="TDbContext"></typeparam>
+        /// <typeparam name="TDbContextResult"></typeparam>
         /// <returns></returns>
-        public virtual TDbContext GetDbContext<TDbContext>() where TDbContext : DbContextBase
-        {
-            return (TDbContext)this._context;
-        }
+        public virtual TDbContextResult GetDbContext<TDbContextResult>() where TDbContextResult : DbContextBase
+            => this._context as TDbContextResult;
 
         /// <summary>
         /// 获取上下文基础对象 DbContextBase
         /// </summary>
         /// <returns></returns>
         public virtual DbContextBase DbContextBase => GetDbContext<DbContextBase>();
+
+        /// <summary>
+        /// 工作单元
+        /// </summary>
+        public virtual IUnitOfWork UnitOfWork => this.DbContextBase.UnitOfWork;
 
         #region 插入
 
@@ -141,7 +139,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual T Insert(T model)
         {
             this._dbSet.Add(model);
-            this.GetDbContext<DbContextBase>().SaveChanges();
+            this.DbContextBase.SaveChanges();
             return model;
         }
 
@@ -153,7 +151,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual int InsertRange(IEnumerable<T> model)
         {
             this._dbSet.AddRange(model);
-            return this.GetDbContext<DbContextBase>().SaveChanges();
+            return this.DbContextBase.SaveChanges();
         }
 
         /// <summary>
@@ -164,7 +162,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual async Task<T> InsertAsync(T model)
         {
             await this._dbSet.AddAsync(model);
-            await this.GetDbContext<DbContextBase>().SaveChangesAsync();
+            await this.DbContextBase.SaveChangesAsync();
             return model;
         }
 
@@ -176,7 +174,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual Task<int> InsertRangeAsync(IEnumerable<T> model)
         {
             this._dbSet.AddRangeAsync(model);
-            return this.GetDbContext<DbContextBase>().SaveChangesAsync();
+            return this.DbContextBase.SaveChangesAsync();
         }
 
         #endregion

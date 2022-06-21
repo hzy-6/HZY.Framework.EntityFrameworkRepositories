@@ -23,8 +23,11 @@ namespace HzyEFCoreRepositories.Repositories
     /// <summary>
     /// 仓储接口
     /// </summary>
-    /// <typeparam name="T">实体</typeparam>
-    public interface IRepositoryBase<T> : IDisposable
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TDbContext"></typeparam>
+    public interface IRepositoryBase<T, TDbContext> : IDisposable
+        where T : class, new()
+        where TDbContext : class
     {
         /// <summary>
         /// 设置 Attach
@@ -58,20 +61,25 @@ namespace HzyEFCoreRepositories.Repositories
         /// 获取数据上下文
         /// </summary>
         /// <returns></returns>
-        object GetDbContext();
+        TDbContext Orm => default;
 
         /// <summary>
         /// 获取数据上下文
         /// </summary>
-        /// <typeparam name="TDbContext"></typeparam>
+        /// <typeparam name="TDbContextResult"></typeparam>
         /// <returns></returns>
-        TDbContext GetDbContext<TDbContext>() where TDbContext : DbContextBase;
+        TDbContextResult GetDbContext<TDbContextResult>() where TDbContextResult : DbContextBase;
 
         /// <summary>
         /// 获取数据上下文 基础对象 DbContextBase
         /// </summary>
         /// <returns></returns>
         DbContextBase DbContextBase => default;
+
+        /// <summary>
+        /// 工作单元
+        /// </summary>
+        IUnitOfWork UnitOfWork => this.DbContextBase.UnitOfWork;
 
         #region 插入
 

@@ -13,20 +13,10 @@ namespace HzyEFCoreRepositories.Repositories
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDbContext"></typeparam>
-    public interface IAppRepository<T, TDbContext> : IRepositoryBase<T>, IDisposable
+    public interface IAppRepository<T, TDbContext> : IRepositoryBase<T, TDbContext>, IDisposable
         where T : class, new()
         where TDbContext : DbContextBase
     {
-        /// <summary>
-        /// 获取 dbcontext 对象
-        /// </summary>
-        TDbContext Orm => default;
-
-        /// <summary>
-        /// 工作单元
-        /// </summary>
-        IUnitOfWork UnitOfWork => default;
-
         #region 过滤
 
         /// <summary>
@@ -54,14 +44,9 @@ namespace HzyEFCoreRepositories.Repositories
     /// 仓储接口
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IAppRepository<T> : IRepositoryBase<T>, IDisposable
+    public interface IAppRepository<T> : IRepositoryBase<T, object>, IDisposable
         where T : class, new()
     {
-        /// <summary>
-        /// 工作单元
-        /// </summary>
-        IUnitOfWork UnitOfWork => default;
-
         #region 过滤
 
         /// <summary>
