@@ -13,13 +13,12 @@ using HzyEFCoreRepositories.DbContexts;
 
 namespace HzyEFCoreRepositories.Repositories.Impl
 {
-
     /// <summary>
     /// 基础仓储 实现
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDbContext"></typeparam>
-    public class AppRepositoryImpl<T, TDbContext> : RepositoryBaseImpl<T>, IAppRepository<T, TDbContext>
+    public class AppRepositoryImpl<T, TDbContext> : RepositoryBaseImpl<T, TDbContext>, IAppRepository<T, TDbContext>
         where T : class, new()
         where TDbContext : DbContextBase
     {
@@ -32,16 +31,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         {
 
         }
-
-        /// <summary>
-        /// DbContext 对象
-        /// </summary>
-        public virtual TDbContext Orm => this.GetDbContext<TDbContext>();
-
-        /// <summary>
-        /// 工作单元
-        /// </summary>
-        public virtual IUnitOfWork UnitOfWork => Orm.UnitOfWork;
 
         #region 过滤
 
@@ -77,15 +66,13 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         }
 
         #endregion
-
-
     }
 
     /// <summary>
     /// 基础仓储 实现
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class AppRepositoryImpl<T> : RepositoryBaseImpl<T>, IAppRepository<T>
+    public class AppRepositoryImpl<T> : RepositoryBaseImpl<T, object>, IAppRepository<T>
         where T : class, new()
     {
         /// <summary>
@@ -97,11 +84,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         {
 
         }
-
-        /// <summary>
-        /// 工作单元
-        /// </summary>
-        public virtual IUnitOfWork UnitOfWork => this.GetDbContext<DbContextBase>().UnitOfWork;
 
         #region 过滤
 
