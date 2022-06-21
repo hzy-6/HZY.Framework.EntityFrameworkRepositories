@@ -35,7 +35,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <summary>
         /// 数据上下文
         /// </summary>
-        protected TDbContext _context { get; set; }
+        protected readonly TDbContext _context;
         /// <summary>
         /// dbset
         /// </summary>
