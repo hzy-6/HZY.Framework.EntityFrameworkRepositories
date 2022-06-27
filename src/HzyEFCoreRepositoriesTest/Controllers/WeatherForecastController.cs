@@ -32,7 +32,7 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         [HttpGet("Update")]
         public async Task<string> Update()
         {
-            var service = HzyEFCoreUtil.GetServiceProvider().GetService(HzyEFCoreUtil.GetDbContextType(typeof(SysFunction).FullName));
+            var service = HzyEFCoreUtil.GetServiceProvider().GetService(HzyEFCoreUtil.GetDbContextTypeByKey(typeof(SysFunction).FullName));
 
             var repository = new AppRepository<SysFunction>(_appDbContext);
             var sysFunction = await repository.Query().FirstOrDefaultAsync();

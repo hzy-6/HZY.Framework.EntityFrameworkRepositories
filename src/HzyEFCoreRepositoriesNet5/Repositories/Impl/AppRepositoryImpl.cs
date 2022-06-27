@@ -80,7 +80,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="filter">过滤条件</param>
         public AppRepositoryImpl(Expression<Func<T, bool>> filter = null)
-            : base(HzyEFCoreUtil.GetServiceProvider().GetService(HzyEFCoreUtil.GetDbContextType(typeof(T).FullName)), filter)
+            : base(HzyEFCoreUtil.GetServiceProvider().GetService(HzyEFCoreUtil.GetDbContextTypeByKey(typeof(T).FullName)), filter)
         {
 
         }

@@ -1,8 +1,6 @@
-﻿using HzyEFCoreRepositories.DbContexts;
-using HzyEFCoreRepositories.Interceptor;
+﻿using HzyEFCoreRepositories.Interceptor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +14,17 @@ namespace HzyEFCoreRepositories
     public static class HzyEFCoreUtil
     {
         private static Dictionary<string, Type> _dbContextTypes = null;
+        private static List<Type> _allDbContextTypes = null;
 
         static HzyEFCoreUtil()
         {
             if (_dbContextTypes == null)
             {
                 _dbContextTypes = new Dictionary<string, Type>();
+            }
+            if (_allDbContextTypes == null)
+            {
+                _allDbContextTypes = new List<Type>();
             }
         }
 
@@ -30,7 +33,7 @@ namespace HzyEFCoreRepositories
         /// </summary>
         /// <param name="key"></param>
         /// <param name="dbContextType"></param>
-        public static void AddDbContextType(string key, Type dbContextType)
+        public static void AddDbContextTypeByKey(string key, Type dbContextType)
         {
             _dbContextTypes.Add(key, dbContextType);
         }
@@ -40,9 +43,18 @@ namespace HzyEFCoreRepositories
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static Type GetDbContextType(string key)
+        public static Type GetDbContextTypeByKey(string key)
         {
             return _dbContextTypes[key];
+        }
+
+        /// <summary>
+        /// 获取所有的 dbcontext
+        /// </summary>
+        /// <returns></returns>
+        public static List<Type> GetAllDbContextType()
+        {
+            return _allDbContextTypes;
         }
 
         #region HzyEFCore
@@ -85,7 +97,7 @@ namespace HzyEFCoreRepositories
         /// 使用 HzyEFCore
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="dbContextTypes"></param>
+        /// <param name="dbContextTypes">数据上下文类型</param>
         /// <returns></returns>
         public static void UseHzyEFCore(this IServiceProvider serviceProvider, params Type[] dbContextTypes)
         {
@@ -93,6 +105,11 @@ namespace HzyEFCoreRepositories
 
             foreach (var item in dbContextTypes)
             {
+                if (!_allDbContextTypes.Any(w => w.FullName == item.FullName))
+                {
+                    _allDbContextTypes.Add(item);
+                }
+
                 //扫描类型下面的 dbset model
                 var propertyInfos = item.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
@@ -103,7 +120,7 @@ namespace HzyEFCoreRepositories
                     if (dbset.PropertyType.GenericTypeArguments.Length <= 0) continue;
 
                     var model = dbset.PropertyType.GenericTypeArguments[0];
-                    AddDbContextType(model.FullName, item);
+                    AddDbContextTypeByKey(model.FullName, item);
                 }
             }
 
