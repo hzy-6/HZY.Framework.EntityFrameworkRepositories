@@ -25,7 +25,7 @@ namespace HzyEFCoreRepositories.Repositories
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDbContext"></typeparam>
-    public interface IRepositoryBase<T, TDbContext> : IDisposable
+    public interface IRepositoryBase<T, TDbContext> : IDisposable, IAsyncDisposable
         where T : class, new()
         where TDbContext : class
     {

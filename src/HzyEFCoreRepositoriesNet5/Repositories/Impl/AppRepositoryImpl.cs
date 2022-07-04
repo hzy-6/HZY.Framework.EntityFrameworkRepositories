@@ -72,15 +72,14 @@ namespace HzyEFCoreRepositories.Repositories.Impl
     /// 基础仓储 实现
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class AppRepositoryImpl<T> : RepositoryBaseImpl<T, object>, IAppRepository<T>
+    public class AppRepositoryImpl<T> : RepositoryBaseImpl<T, DbContextBase>, IAppRepository<T>
         where T : class, new()
     {
         /// <summary>
         /// 基础仓储
         /// </summary>
         /// <param name="filter">过滤条件</param>
-        public AppRepositoryImpl(Expression<Func<T, bool>> filter = null)
-            : base(HzyEFCoreUtil.GetServiceProvider().GetService(HzyEFCoreUtil.GetDbContextTypeByKey(typeof(T).FullName)), filter)
+        public AppRepositoryImpl(Expression<Func<T, bool>> filter = null) : base(null, filter)
         {
 
         }
@@ -120,6 +119,16 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #endregion
 
+        /// <summary>
+        /// DbContext 对象
+        /// </summary>
+        public override DbContextBase Orm
+        {
+            get
+            {
+                return (DbContextBase)HzyEFCoreUtil.GetServiceProvider().GetService(HzyEFCoreUtil.GetDbContextTypeByKey(typeof(T).FullName));
+            }
+        }
 
     }
 

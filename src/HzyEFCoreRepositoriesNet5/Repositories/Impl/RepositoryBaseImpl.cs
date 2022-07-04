@@ -39,7 +39,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <summary>
         /// dbset
         /// </summary>
-        protected readonly DbSet<T> _dbSet;
+        protected DbSet<T> DbSet => this.DbContextBase.Set<T>();
         /// <summary>
         /// 主键的 PropertyInfo 对象
         /// </summary>
@@ -61,7 +61,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public RepositoryBaseImpl(TDbContext dbContext, Expression<Func<T, bool>> filter = null)
         {
             _context = dbContext;
-            _dbSet = DbContextBase.Set<T>();
             _keyPropertyInfo = typeof(T).GetKeyProperty(false);
             _filter = filter;
             isIgnoreQueryFilter = false;
@@ -91,7 +90,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="detachedWhere"></param>
         public virtual void DettachWhenExist(Func<T, bool> detachedWhere)
         {
-            var local = _dbSet.Local.FirstOrDefault(detachedWhere);
+            var local = DbSet.Local.FirstOrDefault(detachedWhere);
             if (local == null) return;
             this.SetEntityState(local, EntityState.Detached);
         }
@@ -108,7 +107,13 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// 获取 dbcontext 对象
         /// </summary>
         /// <returns></returns>
-        public virtual TDbContext Orm => this._context;
+        public virtual TDbContext Orm
+        {
+            get
+            {
+                return _context;
+            }
+        }
 
         /// <summary>
         /// 获取 dbcontext 对象
@@ -116,7 +121,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <typeparam name="TDbContextResult"></typeparam>
         /// <returns></returns>
         public virtual TDbContextResult GetDbContext<TDbContextResult>() where TDbContextResult : DbContextBase
-            => this._context as TDbContextResult;
+            => this.Orm as TDbContextResult;
 
         /// <summary>
         /// 获取上下文基础对象 DbContextBase
@@ -138,7 +143,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual T Insert(T model)
         {
-            this._dbSet.Add(model);
+            this.DbSet.Add(model);
             this.DbContextBase.SaveChanges();
             return model;
         }
@@ -150,7 +155,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int InsertRange(IEnumerable<T> model)
         {
-            this._dbSet.AddRange(model);
+            this.DbSet.AddRange(model);
             return this.DbContextBase.SaveChanges();
         }
 
@@ -161,7 +166,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual async Task<T> InsertAsync(T model)
         {
-            await this._dbSet.AddAsync(model);
+            await this.DbSet.AddAsync(model);
             await this.DbContextBase.SaveChangesAsync();
             return model;
         }
@@ -173,7 +178,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> InsertRangeAsync(IEnumerable<T> model)
         {
-            this._dbSet.AddRangeAsync(model);
+            this.DbSet.AddRangeAsync(model);
             return this.DbContextBase.SaveChangesAsync();
         }
 
@@ -195,7 +200,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
                 this.SetEntityState(model, EntityState.Modified);
             }
 
-            this._dbSet.Update(model);
+            this.DbSet.Update(model);
             return DbContextBase.SaveChanges();
         }
 
@@ -232,7 +237,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int UpdateRange(IEnumerable<T> models)
         {
-            this._dbSet.UpdateRange(models);
+            this.DbSet.UpdateRange(models);
             return this.DbContextBase.SaveChanges();
         }
 
@@ -282,7 +287,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
                 this.SetEntityState(model, EntityState.Modified);
             }
 
-            this._dbSet.Update(model);
+            this.DbSet.Update(model);
             return this.DbContextBase.SaveChangesAsync();
         }
 
@@ -319,7 +324,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> UpdateRangeAsync(IEnumerable<T> models)
         {
-            this._dbSet.UpdateRange(models);
+            this.DbSet.UpdateRange(models);
             return this.DbContextBase.SaveChangesAsync();
         }
 
@@ -412,7 +417,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
                 this.SetEntityState(model, EntityState.Deleted);
             }
 
-            this._dbSet.Remove(model);
+            this.DbSet.Remove(model);
             return this.DbContextBase.SaveChanges();
         }
 
@@ -423,7 +428,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int Delete(IEnumerable<T> models)
         {
-            this._dbSet.RemoveRange(models);
+            this.DbSet.RemoveRange(models);
             return this.DbContextBase.SaveChanges();
         }
 
@@ -482,7 +487,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
                 this.SetEntityState(model, EntityState.Deleted);
             }
 
-            this._dbSet.Remove(model);
+            this.DbSet.Remove(model);
             return this.DbContextBase.SaveChangesAsync();
         }
 
@@ -493,7 +498,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> DeleteAsync(IEnumerable<T> models)
         {
-            this._dbSet.RemoveRange(models);
+            this.DbSet.RemoveRange(models);
             return this.DbContextBase.SaveChangesAsync();
         }
 
@@ -551,8 +556,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual IQueryable<T> Query(bool isTracking = true)
             => isTracking ?
-            this._dbSet.WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsQueryable() :
-            this._dbSet.WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsNoTracking();
+            this.DbSet.WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsQueryable() :
+            this.DbSet.WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsNoTracking();
 
         /// <summary>
         /// 查询 有跟踪
@@ -807,7 +812,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns> IQueryable </returns>
         public virtual IQueryable<T> QueryableBySql(string sql, params object[] parameters)
         {
-            return _dbSet.FromSqlRaw(sql, parameters);
+            return DbSet.FromSqlRaw(sql, parameters);
         }
 
         /// <summary>
@@ -1065,6 +1070,18 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         }
 
         #endregion
+
+        /// <summary>
+        /// 供程序员显式调用的Dispose方法
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async ValueTask DisposeAsync()
+        {
+            await DbContextBase.DisposeAsync();
+            //手动调用了Dispose释放资源，那么析构函数就是不必要的了，这里阻止GC调用析构函数
+            System.GC.SuppressFinalize(this);
+        }
 
         /// <summary>
         /// 供程序员显式调用的Dispose方法
