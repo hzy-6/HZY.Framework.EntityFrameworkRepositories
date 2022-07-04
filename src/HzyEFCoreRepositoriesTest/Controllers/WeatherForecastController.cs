@@ -17,11 +17,13 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly AppDbContext _appDbContext;
         private readonly AppDbContext1 _appDbContext1;
+        private readonly IServiceProvider _serviceProvider;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, AppDbContext appDbContext)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, AppDbContext appDbContext, IServiceProvider serviceProvider)
         {
             _logger = logger;
             _appDbContext = appDbContext;
+            _serviceProvider = serviceProvider;
             //_appDbContext1 = appDbContext1;
         }
 
@@ -32,8 +34,6 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         [HttpGet("Update")]
         public async Task<string> Update()
         {
-            var service = HzyEFCoreUtil.GetServiceProvider().GetService(HzyEFCoreUtil.GetDbContextTypeByKey(typeof(SysFunction).FullName));
-
             var repository = new AppRepository<SysFunction>(_appDbContext);
             var sysFunction = await repository.Query().FirstOrDefaultAsync();
 

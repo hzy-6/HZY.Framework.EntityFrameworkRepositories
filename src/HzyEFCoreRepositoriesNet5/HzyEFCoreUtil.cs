@@ -1,4 +1,5 @@
 ﻿using HzyEFCoreRepositories.Interceptor;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -59,27 +60,13 @@ namespace HzyEFCoreRepositories
 
         #region HzyEFCore
 
-        private static IServiceProvider _serviceProvider;
-
-        /// <summary>
-        /// 获取服务提供者
-        /// </summary>
-        /// <returns></returns>
-        public static IServiceProvider GetServiceProvider() => _serviceProvider;
-
-        /// <summary>
-        /// 创建服务域
-        /// </summary>
-        /// <returns></returns>
-        public static IServiceScope CreateScope() => _serviceProvider.CreateScope();
-
         /// <summary>
         /// 注册 HzyEFCore
         /// </summary>
         /// <param name="dbContextOptionsBuilder"></param>
         /// <param name="_isMonitor"></param>
         /// <returns></returns>
-        public static DbContextOptionsBuilder AddHzyEFCore(this DbContextOptionsBuilder dbContextOptionsBuilder, bool _isMonitor = true)
+        public static DbContextOptionsBuilder AddHzyEFCoreRepository(this DbContextOptionsBuilder dbContextOptionsBuilder, bool _isMonitor = true)
         {
             dbContextOptionsBuilder.AddInterceptors(new ShardingDbCommandInterceptor());
             //注册监控程序
@@ -96,13 +83,11 @@ namespace HzyEFCoreRepositories
         /// <summary>
         /// 使用 HzyEFCore
         /// </summary>
-        /// <param name="serviceProvider"></param>
+        /// <param name="app"></param>
         /// <param name="dbContextTypes">数据上下文类型</param>
         /// <returns></returns>
-        public static void UseHzyEFCore(this IServiceProvider serviceProvider, params Type[] dbContextTypes)
+        public static void UseHzyEFCoreRepository(this IApplicationBuilder app, params Type[] dbContextTypes)
         {
-            _serviceProvider = serviceProvider;
-
             foreach (var item in dbContextTypes)
             {
                 if (!_allDbContextTypes.Any(w => w.FullName == item.FullName))

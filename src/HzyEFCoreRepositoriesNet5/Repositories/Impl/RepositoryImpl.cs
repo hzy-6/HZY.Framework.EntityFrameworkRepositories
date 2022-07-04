@@ -28,7 +28,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDbContext"></typeparam>
-    public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T, TDbContext>, IRepositoryBase<T, TDbContext>
+    public abstract class RepositoryImpl<T, TDbContext> : QueryRepositoryImpl<T, TDbContext>, IRepository<T, TDbContext>
         where T : class, new()
         where TDbContext : class
     {
@@ -38,7 +38,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="filter"></param>
-        public RepositoryBaseImpl(TDbContext dbContext, Expression<Func<T, bool>> filter = null)
+        public RepositoryImpl(TDbContext dbContext, Expression<Func<T, bool>> filter = null)
             : base(dbContext, filter, true)
         {
 

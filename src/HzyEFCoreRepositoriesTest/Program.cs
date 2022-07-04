@@ -32,7 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.Services.UseHzyEFCore(typeof(AppDbContext1));
+app.UseHzyEFCoreRepository(typeof(AppDbContext1));
 
 app.UseHttpsRedirection();
 
