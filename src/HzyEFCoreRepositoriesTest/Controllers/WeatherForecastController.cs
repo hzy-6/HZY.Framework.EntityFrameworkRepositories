@@ -36,9 +36,7 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         {
             var repository = new AppRepository<SysFunction>(_appDbContext);
             var sysFunction = await repository.Query().FirstOrDefaultAsync();
-
             sysFunction.CreationTime = DateTime.Now;
-
             repository.Update(sysFunction);
 
             if (sysFunction == null) return "OK";
