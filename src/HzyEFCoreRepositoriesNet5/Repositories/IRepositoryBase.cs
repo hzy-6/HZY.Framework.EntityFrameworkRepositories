@@ -246,6 +246,163 @@ namespace HzyEFCoreRepositories.Repositories
 
         #endregion
 
+        #region  原生 sql 操作 添加、修改、删除
+
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        int ExecuteSqlRaw(string sql, params object[] parameters);
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        int ExecuteSqlRaw(string sql, IEnumerable<object> parameters);
+
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<int> ExecuteSqlRawAsync(string sql, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        Task<int> ExecuteSqlRawAsync(string sql, params object[] parameters);
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<int> ExecuteSqlRawAsync(string sql, IEnumerable<object> parameters, CancellationToken cancellationToken = default);
+
+        #endregion
+
+        #region  数据批量拷贝
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        void SqlServerBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        /// <returns></returns>
+        Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        void SqlServerBulkCopy(List<T> items, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        Task SqlServerBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        void MySqlBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        /// <returns></returns>
+        Task MySqlBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        void MySqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        /// <returns></returns>
+        Task MySqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
+        #endregion
+
+
     }
 
 }

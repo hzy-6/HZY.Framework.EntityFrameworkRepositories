@@ -457,6 +457,206 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #endregion
 
+        #region  原生 sql 操作 添加、修改、删除
+
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public virtual int ExecuteSqlRaw(string sql, params object[] parameters)
+        {
+            return DbContextBase.Database.ExecuteSqlRaw(sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public virtual int ExecuteSqlRaw(string sql, IEnumerable<object> parameters)
+        {
+            return DbContextBase.Database.ExecuteSqlRaw(sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual Task<int> ExecuteSqlRawAsync(string sql, CancellationToken cancellationToken = default)
+        {
+            return DbContextBase.Database.ExecuteSqlRawAsync(sql, cancellationToken);
+        }
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public virtual Task<int> ExecuteSqlRawAsync(string sql, params object[] parameters)
+        {
+            return DbContextBase.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+        /// <summary>
+        /// 执行sql 返回受影响的行数 insert|update|delete
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual Task<int> ExecuteSqlRawAsync(string sql, IEnumerable<object> parameters, CancellationToken cancellationToken = default)
+        {
+            return DbContextBase.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
+        }
+
+
+        #endregion
+
+        #region 数据批量拷贝
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        public virtual void SqlServerBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
+        {
+            DbContextBase.Database.SqlServerBulkCopy(dataTable, tableName, dbTransaction);
+        }
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        /// <returns></returns>
+        public virtual Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
+        {
+            return DbContextBase.Database.SqlServerBulkCopyAsync(dataTable, tableName, dbTransaction);
+        }
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        public virtual void SqlServerBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
+        {
+            DbContextBase.Database.SqlServerBulkCopy(items, dbTransaction);
+        }
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        public virtual Task SqlServerBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
+        {
+            return DbContextBase.Database.SqlServerBulkCopyAsync(items, dbTransaction);
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        public virtual void MySqlBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
+        {
+            DbContextBase.Database.MySqlBulkCopy(dataTable, tableName, dbTransaction);
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        /// <returns></returns>
+        public virtual Task MySqlBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
+        {
+            return DbContextBase.Database.MySqlBulkCopyAsync(dataTable, tableName, dbTransaction);
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        public virtual void MySqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
+        {
+            DbContextBase.Database.MySqlBulkCopy(items, dbTransaction);
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// <para>
+        /// 3、连接字符串中添加此属性：AllowLoadLocalInfile=true
+        /// </para>
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        /// <returns></returns>
+        public virtual Task MySqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
+        {
+            return DbContextBase.Database.MySqlBulkCopyAsync(items, dbTransaction);
+        }
+
+        #endregion
+
+
+
     }
 
 }
