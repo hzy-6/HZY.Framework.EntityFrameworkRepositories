@@ -38,12 +38,17 @@ namespace HzyEFCoreRepositories.Extensions.Parser
         {
             var sqlList = _sourceSql.Split("\r\n\r\n");
             var declare = sqlList[0];
-            var selectSqlString = "";
+            var selectSqlString = string.Empty;
             for (int i = 0; i < sqlList.Length; i++)
             {
                 var item = sqlList[i];
                 if (string.IsNullOrWhiteSpace(item) || i == 0) continue;
                 selectSqlString += item;
+            }
+
+            if (string.IsNullOrWhiteSpace(selectSqlString))
+            {
+                selectSqlString = _sourceSql;
             }
 
             var tableName = selectSqlString
@@ -59,7 +64,10 @@ namespace HzyEFCoreRepositories.Extensions.Parser
             whereSqlString = reg.Replace(whereSqlString, "");
 
             var stringBuilder = new StringBuilder();
-            stringBuilder.Append($"{declare} \r\n\r\n");
+            if (!string.IsNullOrWhiteSpace(declare))
+            {
+                stringBuilder.Append($"{declare} \r\n\r\n");
+            }
             //语句主体
             stringBuilder.Append($"DELETE{tableName} \r\n");
             stringBuilder.Append($"{whereSqlString} \r\n");

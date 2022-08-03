@@ -1,5 +1,6 @@
 using HzyEFCoreRepositories;
 using HzyEFCoreRepositories.Extensions;
+using HzyEFCoreRepositories.Interceptor;
 using HzyEFCoreRepositories.Monitor;
 using HzyEFCoreRepositories.Monitor.Models;
 using HzyEFCoreRepositoriesTest.DbContexts;
@@ -66,11 +67,12 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         public async Task<string> Delete()
         {
             var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                  .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220410;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
+                  .UseSqlServer(@"Server=.;Database=hzy_admin_sqlserver_20220730;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
             contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+            contextOptions.AddInterceptors(new ShardingDbCommandInterceptor());
             using var context = new AppDbContext(contextOptions.Options);
             var repository = new AppRepository<SysFunction>(context);
-            var sysFunction = await repository.Query().FirstOrDefaultAsync();
+            var sysFunction = await repository.Query().AsTable("sys_function").FirstOrDefaultAsync();
 
             if (sysFunction == null) return "OK";
 
