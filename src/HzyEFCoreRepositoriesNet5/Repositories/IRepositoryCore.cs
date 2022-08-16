@@ -1,5 +1,4 @@
-﻿using HzyEFCoreRepositories.DbContexts;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,18 +57,18 @@ namespace HzyEFCoreRepositories.Repositories
         /// </summary>
         /// <typeparam name="TDbContextResult"></typeparam>
         /// <returns></returns>
-        TDbContextResult GetDbContext<TDbContextResult>() where TDbContextResult : DbContextBase;
+        TDbContextResult GetContext<TDbContextResult>() where TDbContextResult : DbContext;
 
         /// <summary>
-        /// 获取数据上下文 基础对象 DbContextBase
+        /// 获取数据上下文 基础对象 DbContext
         /// </summary>
         /// <returns></returns>
-        DbContextBase DbContextBase => default;
+        DbContext Context => default;
 
         /// <summary>
         /// 工作单元
         /// </summary>
-        IUnitOfWork UnitOfWork => this.DbContextBase.UnitOfWork;
+        IUnitOfWork UnitOfWork => default;
 
 
     }

@@ -81,8 +81,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual IQueryable<T> Query(bool? isTracking = null)
             => (isTracking == null ? _isTracking : isTracking.Value) ?
-            this.DbSet.WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsQueryable() :
-            this.DbSet.WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsNoTracking();
+            this.UnitOfWork.DbSet<T>().WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsQueryable() :
+            this.UnitOfWork.DbSet<T>().WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsNoTracking();
 
         /// <summary>
         /// 查询 有跟踪
@@ -283,7 +283,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns> IQueryable </returns>
         public virtual IQueryable<T> QueryableBySql(string sql, params object[] parameters)
         {
-            return DbSet.FromSqlRaw(sql, parameters);
+            return this.UnitOfWork.DbSet<T>().FromSqlRaw(sql, parameters);
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual DataTable QueryDataTableBySql(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.QueryDataTableBySql(sql, parameters);
+            return Context.Database.QueryDataTableBySql(sql, parameters);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<DataTable> QueryDataTableBySqlAsync(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.QueryDataTableBySqlAsync(sql, parameters);
+            return Context.Database.QueryDataTableBySqlAsync(sql, parameters);
         }
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual List<Dictionary<string, object>> QueryDicBySql(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.QueryDicBySql(sql, parameters);
+            return Context.Database.QueryDicBySql(sql, parameters);
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<List<Dictionary<string, object>>> QueryDicBySqlAsync(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.QueryDicBySqlAsync(sql, parameters);
+            return Context.Database.QueryDicBySqlAsync(sql, parameters);
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual List<T> QueryBySql(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.QueryBySql<T>(sql, parameters);
+            return Context.Database.QueryBySql<T>(sql, parameters);
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<List<T>> QueryBySqlAsync(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.QueryBySqlAsync<T>(sql, parameters);
+            return Context.Database.QueryBySqlAsync<T>(sql, parameters);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual object QuerySingleBySql(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.QuerySingleBySql(sql, parameters);
+            return Context.Database.QuerySingleBySql(sql, parameters);
         }
 
         /// <summary>
@@ -371,7 +371,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<object> QuerySingleBySqlAsync(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.QuerySingleBySqlAsync(sql, parameters);
+            return Context.Database.QuerySingleBySqlAsync(sql, parameters);
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual TResult QuerySingleBySql<TResult>(string sql, params object[] parameters)
             where TResult : struct
         {
-            return DbContextBase.Database.QuerySingleBySql<TResult>(sql, parameters);
+            return Context.Database.QuerySingleBySql<TResult>(sql, parameters);
         }
 
         /// <summary>
@@ -397,7 +397,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual Task<TResult> QuerySingleBySqlAsync<TResult>(string sql, params object[] parameters)
           where TResult : struct
         {
-            return DbContextBase.Database.QuerySingleBySqlAsync<TResult>(sql, parameters);
+            return Context.Database.QuerySingleBySqlAsync<TResult>(sql, parameters);
         }
 
         #endregion

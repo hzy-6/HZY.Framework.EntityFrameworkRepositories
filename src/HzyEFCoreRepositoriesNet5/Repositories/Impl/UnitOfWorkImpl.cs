@@ -11,6 +11,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HzyEFCoreRepositories.Repositories.Impl
@@ -106,9 +107,56 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public DbSet<T> DbSet<T>() where T : class, new() => _dbContext.Set<T>();
+        public virtual DbSet<T> DbSet<T>() where T : class, new() => _dbContext.Set<T>();
 
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <returns></returns>
+        public virtual int SaveChanges()
+        {
+            return this.GetDelaySaveState() ? _dbContext.SaveChanges() : 1;
+        }
 
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess"></param>
+        /// <returns></returns>
+        public virtual int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            return this.GetDelaySaveState() ? _dbContext.SaveChanges(acceptAllChangesOnSuccess) : 1;
+        }
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <returns></returns>
+        public virtual Task<int> SaveChangesAsync()
+        {
+            return this.GetDelaySaveState() ? _dbContext.SaveChangesAsync() : Task.FromResult(1);
+        }
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            return this.GetDelaySaveState() ? _dbContext.SaveChangesAsync(cancellationToken) : Task.FromResult(1);
+        }
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+        {
+            return this.GetDelaySaveState() ? _dbContext.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken) : Task.FromResult(1);
+        }
     }
 
 

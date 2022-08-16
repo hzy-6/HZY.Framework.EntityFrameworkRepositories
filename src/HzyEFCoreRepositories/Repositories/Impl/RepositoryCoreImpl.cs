@@ -1,5 +1,4 @@
-﻿using HzyEFCoreRepositories.DbContexts;
-using HzyEFCoreRepositories.Extensions;
+﻿using HzyEFCoreRepositories.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,15 +19,10 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         where T : class, new()
         where TDbContext : class
     {
-
         /// <summary>
         /// 数据上下文
         /// </summary>
         protected readonly TDbContext _context;
-        /// <summary>
-        /// dbset
-        /// </summary>
-        protected DbSet<T> DbSet => this.DbContextBase.Set<T>();
         /// <summary>
         /// 主键的 PropertyInfo 对象
         /// </summary>
@@ -62,7 +56,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="entityState"></param>
         public virtual void SetEntityState(T model, EntityState entityState)
         {
-            DbContextBase.Entry(model).State = entityState;
+            Context.Entry(model).State = entityState;
         }
 
         /// <summary>
@@ -79,7 +73,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="detachedWhere"></param>
         public virtual void DettachWhenExist(Func<T, bool> detachedWhere)
         {
-            var local = DbSet.Local.FirstOrDefault(detachedWhere);
+            var local = this.UnitOfWork.DbSet<T>().Local.FirstOrDefault(detachedWhere);
             if (local == null) return;
             this.SetEntityState(local, EntityState.Detached);
         }
@@ -109,19 +103,31 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <typeparam name="TDbContextResult"></typeparam>
         /// <returns></returns>
-        public virtual TDbContextResult GetDbContext<TDbContextResult>() where TDbContextResult : DbContextBase
+        public virtual TDbContextResult GetContext<TDbContextResult>() where TDbContextResult : DbContext
             => this.Orm as TDbContextResult;
 
         /// <summary>
-        /// 获取上下文基础对象 DbContextBase
+        /// 获取上下文基础对象 DbContext
         /// </summary>
         /// <returns></returns>
-        public virtual DbContextBase DbContextBase => GetDbContext<DbContextBase>();
+        public virtual DbContext Context => GetContext<DbContext>();
 
+        private IUnitOfWork _unitOfWork;
         /// <summary>
         /// 工作单元
         /// </summary>
-        public virtual IUnitOfWork UnitOfWork => this.DbContextBase.UnitOfWork;
+        public virtual IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                if (_unitOfWork == null)
+                {
+                    _unitOfWork = new UnitOfWorkImpl<DbContext>(this.Context);
+                }
+
+                return _unitOfWork;
+            }
+        }
 
         /// <summary>
         /// 供程序员显式调用的Dispose方法
@@ -130,7 +136,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <exception cref="NotImplementedException"></exception>
         public async ValueTask DisposeAsync()
         {
-            await DbContextBase.DisposeAsync();
+            await Context.DisposeAsync();
             //手动调用了Dispose释放资源，那么析构函数就是不必要的了，这里阻止GC调用析构函数
             System.GC.SuppressFinalize(this);
         }
@@ -156,7 +162,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             if (disposing)
             {
                 // TODO:在这里加入清理"托管资源"的代码，应该是xxx.Dispose();
-                DbContextBase.Dispose();
+                Context.Dispose();
             }
             // TODO:在这里加入清理"非托管资源"的代码
         }

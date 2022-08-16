@@ -15,7 +15,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using HzyEFCoreRepositories.DbContexts;
 using HzyEFCoreRepositories.Extensions;
 using HzyEFCoreRepositories.Extensions.Parser;
 using Microsoft.EntityFrameworkCore;
@@ -53,8 +52,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual T Insert(T model)
         {
-            this.DbSet.Add(model);
-            this.DbContextBase.SaveChanges();
+            this.UnitOfWork.DbSet<T>().Add(model);
+            this.UnitOfWork.SaveChanges();
             return model;
         }
 
@@ -65,8 +64,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int InsertRange(IEnumerable<T> model)
         {
-            this.DbSet.AddRange(model);
-            return this.DbContextBase.SaveChanges();
+            this.UnitOfWork.DbSet<T>().AddRange(model);
+            return this.UnitOfWork.SaveChanges();
         }
 
         /// <summary>
@@ -76,8 +75,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual async Task<T> InsertAsync(T model)
         {
-            await this.DbSet.AddAsync(model);
-            await this.DbContextBase.SaveChangesAsync();
+            await this.UnitOfWork.DbSet<T>().AddAsync(model);
+            await this.UnitOfWork.SaveChangesAsync(); ;
             return model;
         }
 
@@ -88,8 +87,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> InsertRangeAsync(IEnumerable<T> model)
         {
-            this.DbSet.AddRangeAsync(model);
-            return this.DbContextBase.SaveChangesAsync();
+            this.UnitOfWork.DbSet<T>().AddRangeAsync(model);
+            return this.UnitOfWork.SaveChangesAsync();
         }
 
         #endregion
@@ -104,14 +103,14 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual int Update(T model)
         {
             //如果未跟踪
-            if (DbContextBase.Entry(model).State == EntityState.Detached)
+            if (Context.Entry(model).State == EntityState.Detached)
             {
                 //变更实体未跟踪修改状态
                 this.SetEntityState(model, EntityState.Modified);
             }
 
-            this.DbSet.Update(model);
-            return DbContextBase.SaveChanges();
+            this.UnitOfWork.DbSet<T>().Update(model);
+            return this.UnitOfWork.SaveChanges();
         }
 
         /// <summary>
@@ -136,8 +135,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int Update(T oldModel, T newModel)
         {
-            this.DbContextBase.Entry(oldModel).CurrentValues.SetValues(newModel);
-            return this.DbContextBase.SaveChanges();
+            this.Context.Entry(oldModel).CurrentValues.SetValues(newModel);
+            return this.UnitOfWork.SaveChanges();
         }
 
         /// <summary>
@@ -147,8 +146,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int UpdateRange(IEnumerable<T> models)
         {
-            this.DbSet.UpdateRange(models);
-            return this.DbContextBase.SaveChanges();
+            this.UnitOfWork.DbSet<T>().UpdateRange(models);
+            return this.UnitOfWork.SaveChanges();
         }
 
         /// <summary>
@@ -163,7 +162,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             var updateIgnoreParser = new UpdateIgnoreParser<T>();
             ignoreCols?.Invoke(updateIgnoreParser);
 
-            var updateParser = new UpdateParser(DbContextBase, this.Select.Where(where).ToQueryString(), model.Body as MemberInitExpression, updateIgnoreParser.GetIgnoreColumns());
+            var updateParser = new UpdateParser(Context, this.Select.Where(where).ToQueryString(), model.Body as MemberInitExpression, updateIgnoreParser.GetIgnoreColumns());
             return this.ExecuteSqlRaw(updateParser.Parser(), updateParser.GetDataParameters());
         }
 
@@ -179,7 +178,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             var updateIgnoreParser = new UpdateIgnoreParser<T>();
             ignoreCols?.Invoke(updateIgnoreParser);
 
-            var updateParser = new UpdateParser(DbContextBase, this.Select.Where(where).ToQueryString(), ExpressionTreeExtensions.ModelToMemberInitExpression(model), updateIgnoreParser.GetIgnoreColumns());
+            var updateParser = new UpdateParser(Context, this.Select.Where(where).ToQueryString(), ExpressionTreeExtensions.ModelToMemberInitExpression(model), updateIgnoreParser.GetIgnoreColumns());
             return this.ExecuteSqlRaw(updateParser.Parser(), updateParser.GetDataParameters());
         }
 
@@ -191,14 +190,14 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual Task<int> UpdateAsync(T model)
         {
             //如果未跟踪
-            if (DbContextBase.Entry(model).State == EntityState.Detached)
+            if (Context.Entry(model).State == EntityState.Detached)
             {
                 //变更实体未跟踪修改状态
                 this.SetEntityState(model, EntityState.Modified);
             }
 
-            this.DbSet.Update(model);
-            return this.DbContextBase.SaveChangesAsync();
+            this.UnitOfWork.DbSet<T>().Update(model);
+            return this.UnitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
@@ -223,8 +222,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> UpdateAsync(T oldModel, T newModel)
         {
-            this.DbContextBase.Entry(oldModel).CurrentValues.SetValues(newModel);
-            return this.DbContextBase.SaveChangesAsync();
+            this.Context.Entry(oldModel).CurrentValues.SetValues(newModel);
+            return this.UnitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
@@ -234,8 +233,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> UpdateRangeAsync(IEnumerable<T> models)
         {
-            this.DbSet.UpdateRange(models);
-            return this.DbContextBase.SaveChangesAsync();
+            this.UnitOfWork.DbSet<T>().UpdateRange(models);
+            return this.UnitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
@@ -250,7 +249,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             var updateIgnoreParser = new UpdateIgnoreParser<T>();
             ignoreCols?.Invoke(updateIgnoreParser);
 
-            var updateParser = new UpdateParser(DbContextBase, this.Select.Where(where).ToQueryString(), model.Body as MemberInitExpression, updateIgnoreParser.GetIgnoreColumns());
+            var updateParser = new UpdateParser(Context, this.Select.Where(where).ToQueryString(), model.Body as MemberInitExpression, updateIgnoreParser.GetIgnoreColumns());
             return this.ExecuteSqlRawAsync(updateParser.Parser(), updateParser.GetDataParameters());
         }
 
@@ -266,7 +265,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             var updateIgnoreParser = new UpdateIgnoreParser<T>();
             ignoreCols?.Invoke(updateIgnoreParser);
 
-            var updateParser = new UpdateParser(DbContextBase, this.Select.Where(where).ToQueryString(), ExpressionTreeExtensions.ModelToMemberInitExpression(model), updateIgnoreParser.GetIgnoreColumns());
+            var updateParser = new UpdateParser(Context, this.Select.Where(where).ToQueryString(), ExpressionTreeExtensions.ModelToMemberInitExpression(model), updateIgnoreParser.GetIgnoreColumns());
             return this.ExecuteSqlRawAsync(updateParser.Parser(), updateParser.GetDataParameters());
         }
 
@@ -321,14 +320,14 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual int Delete(T model)
         {
             //如果未跟踪
-            if (DbContextBase.Entry(model).State == EntityState.Detached)
+            if (Context.Entry(model).State == EntityState.Detached)
             {
                 //变更实体未跟踪修改状态
                 this.SetEntityState(model, EntityState.Deleted);
             }
 
-            this.DbSet.Remove(model);
-            return this.DbContextBase.SaveChanges();
+            this.UnitOfWork.DbSet<T>().Remove(model);
+            return this.UnitOfWork.SaveChanges();
         }
 
         /// <summary>
@@ -338,8 +337,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int Delete(IEnumerable<T> models)
         {
-            this.DbSet.RemoveRange(models);
-            return this.DbContextBase.SaveChanges();
+            this.UnitOfWork.DbSet<T>().RemoveRange(models);
+            return this.UnitOfWork.SaveChanges();
         }
 
         /// <summary>
@@ -357,7 +356,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int DeleteBulk(Expression<Func<T, bool>> expWhere)
         {
-            var deleteParser = new DeleteParser(DbContextBase, this.Select.Where(expWhere).ToQueryString());
+            var deleteParser = new DeleteParser(Context, this.Select.Where(expWhere).ToQueryString());
             return this.ExecuteSqlRaw(deleteParser.Parser());
         }
 
@@ -391,14 +390,14 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         public virtual Task<int> DeleteAsync(T model)
         {
             //如果未跟踪
-            if (DbContextBase.Entry(model).State == EntityState.Detached)
+            if (Context.Entry(model).State == EntityState.Detached)
             {
                 //变更实体未跟踪修改状态
                 this.SetEntityState(model, EntityState.Deleted);
             }
 
-            this.DbSet.Remove(model);
-            return this.DbContextBase.SaveChangesAsync();
+            this.UnitOfWork.DbSet<T>().Remove(model);
+            return this.UnitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
@@ -408,8 +407,8 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> DeleteAsync(IEnumerable<T> models)
         {
-            this.DbSet.RemoveRange(models);
-            return this.DbContextBase.SaveChangesAsync();
+            this.UnitOfWork.DbSet<T>().RemoveRange(models);
+            return this.UnitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
@@ -427,7 +426,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> DeleteBulkAsync(Expression<Func<T, bool>> expWhere)
         {
-            var deleteParser = new DeleteParser(DbContextBase, this.Select.Where(expWhere).ToQueryString());
+            var deleteParser = new DeleteParser(Context, this.Select.Where(expWhere).ToQueryString());
             return this.ExecuteSqlRawAsync(deleteParser.Parser());
         }
 
@@ -467,7 +466,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int ExecuteSqlRaw(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.ExecuteSqlRaw(sql, parameters);
+            return Context.Database.ExecuteSqlRaw(sql, parameters);
         }
 
         /// <summary>
@@ -478,7 +477,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int ExecuteSqlRaw(string sql, IEnumerable<object> parameters)
         {
-            return DbContextBase.Database.ExecuteSqlRaw(sql, parameters);
+            return Context.Database.ExecuteSqlRaw(sql, parameters);
         }
 
         /// <summary>
@@ -489,7 +488,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> ExecuteSqlRawAsync(string sql, CancellationToken cancellationToken = default)
         {
-            return DbContextBase.Database.ExecuteSqlRawAsync(sql, cancellationToken);
+            return Context.Database.ExecuteSqlRawAsync(sql, cancellationToken);
         }
         /// <summary>
         /// 执行sql 返回受影响的行数 insert|update|delete
@@ -499,7 +498,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> ExecuteSqlRawAsync(string sql, params object[] parameters)
         {
-            return DbContextBase.Database.ExecuteSqlRawAsync(sql, parameters);
+            return Context.Database.ExecuteSqlRawAsync(sql, parameters);
         }
         /// <summary>
         /// 执行sql 返回受影响的行数 insert|update|delete
@@ -510,7 +509,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> ExecuteSqlRawAsync(string sql, IEnumerable<object> parameters, CancellationToken cancellationToken = default)
         {
-            return DbContextBase.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
+            return Context.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
         }
 
 
@@ -526,7 +525,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="dbTransaction"></param>
         public virtual void SqlServerBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
         {
-            DbContextBase.Database.SqlServerBulkCopy(dataTable, tableName, dbTransaction);
+            Context.Database.SqlServerBulkCopy(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>
@@ -538,7 +537,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task SqlServerBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
         {
-            return DbContextBase.Database.SqlServerBulkCopyAsync(dataTable, tableName, dbTransaction);
+            return Context.Database.SqlServerBulkCopyAsync(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>
@@ -548,7 +547,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="dbTransaction"></param>
         public virtual void SqlServerBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
         {
-            DbContextBase.Database.SqlServerBulkCopy(items, dbTransaction);
+            Context.Database.SqlServerBulkCopy(items, dbTransaction);
         }
 
         /// <summary>
@@ -558,7 +557,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="dbTransaction"></param>
         public virtual Task SqlServerBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
         {
-            return DbContextBase.Database.SqlServerBulkCopyAsync(items, dbTransaction);
+            return Context.Database.SqlServerBulkCopyAsync(items, dbTransaction);
         }
 
         /// <summary>
@@ -581,7 +580,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="dbTransaction"></param>
         public virtual void MySqlBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
         {
-            DbContextBase.Database.MySqlBulkCopy(dataTable, tableName, dbTransaction);
+            Context.Database.MySqlBulkCopy(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>
@@ -605,7 +604,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task MySqlBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
         {
-            return DbContextBase.Database.MySqlBulkCopyAsync(dataTable, tableName, dbTransaction);
+            return Context.Database.MySqlBulkCopyAsync(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>
@@ -627,7 +626,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="dbTransaction"></param>
         public virtual void MySqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
         {
-            DbContextBase.Database.MySqlBulkCopy(items, dbTransaction);
+            Context.Database.MySqlBulkCopy(items, dbTransaction);
         }
 
         /// <summary>
@@ -650,7 +649,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task MySqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
         {
-            return DbContextBase.Database.MySqlBulkCopyAsync(items, dbTransaction);
+            return Context.Database.MySqlBulkCopyAsync(items, dbTransaction);
         }
 
         #endregion

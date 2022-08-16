@@ -1,11 +1,10 @@
 ﻿using HzyEFCoreRepositories;
-using HzyEFCoreRepositories.DbContexts;
 using HzyEFCoreRepositoriesTest.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HzyEFCoreRepositoriesTest.DbContexts
 {
-    public class AppDbContext : DbContextBase
+    public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

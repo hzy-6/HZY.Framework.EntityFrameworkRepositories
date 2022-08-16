@@ -11,6 +11,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HzyEFCoreRepositories.Repositories
@@ -84,6 +85,44 @@ namespace HzyEFCoreRepositories.Repositories
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         DbSet<T> DbSet<T>() where T : class, new() => default;
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <returns></returns>
+        int SaveChanges();
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess"></param>
+        /// <returns></returns>
+        int SaveChanges(bool acceptAllChangesOnSuccess);
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <returns></returns>
+        Task<int> SaveChangesAsync();
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken());
+
+
+
+
 
     }
 }
