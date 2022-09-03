@@ -46,8 +46,9 @@ namespace HzyEFCoreRepositories.Extensions
                 throw new Exception("当前不是 MySql 数据库无法调用此函数!");
             }
 
-            var dbConnection = database.GetDbConnection();
-            MySqlBulkCopy sqlBulkCopy = new MySqlBulkCopy((MySqlConnection)dbConnection, (MySqlTransaction)dbTransaction);
+            var dbConnection = (MySqlConnection)database.GetDbConnection();
+
+            MySqlBulkCopy sqlBulkCopy = new(dbConnection, (MySqlTransaction)dbTransaction);
             sqlBulkCopy.DestinationTableName = tableName;
 
             if (dbConnection.State != ConnectionState.Open)
@@ -85,37 +86,6 @@ namespace HzyEFCoreRepositories.Extensions
         /// </para>
         /// </summary>
         /// <param name="database"></param>
-        /// <param name="items"></param>
-        /// <param name="dbTransaction"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static void MySqlBulkCopy<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
-            where T : class, new()
-        {
-            var dataTable = items.ToDataTable();
-            var type = typeof(T);
-            var tableName = type.Name;
-            var tableAttribute = type.GetTableAttribute();
-            if (tableAttribute != null)
-            {
-                tableName = tableAttribute.Name;
-            }
-            database.MySqlBulkCopy(dataTable, tableName, dbTransaction);
-        }
-
-        /// <summary>
-        /// mysql 批量拷贝数据
-        /// <para>
-        /// 需要开启服务端 mysql 的本地数据加载功能开关
-        /// </para>
-        /// <para>
-        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
-        /// </para>
-        /// <para>
-        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
-        /// </para>
-        /// </summary>
-        /// <param name="database"></param>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
@@ -126,8 +96,9 @@ namespace HzyEFCoreRepositories.Extensions
                 throw new Exception("当前不是 MySql 数据库无法调用此函数!");
             }
 
-            var dbConnection = database.GetDbConnection();
-            MySqlBulkCopy sqlBulkCopy = new MySqlBulkCopy((MySqlConnection)dbConnection, (MySqlTransaction)dbTransaction);
+            var dbConnection = (MySqlConnection)database.GetDbConnection();
+
+            MySqlBulkCopy sqlBulkCopy = new(dbConnection, (MySqlTransaction)dbTransaction);
             sqlBulkCopy.DestinationTableName = tableName;
 
             if (dbConnection.State != ConnectionState.Open)
@@ -150,6 +121,37 @@ namespace HzyEFCoreRepositories.Extensions
                     await dbConnection.CloseAsync();
                 }
             }
+        }
+
+        /// <summary>
+        /// mysql 批量拷贝数据
+        /// <para>
+        /// 需要开启服务端 mysql 的本地数据加载功能开关
+        /// </para>
+        /// <para>
+        /// 1、请先查看本地加载数据是否开启使用此命令：SHOW GLOBAL VARIABLES LIKE 'local_infile';
+        /// </para>
+        /// <para>
+        /// 2、使用此命令修改为 true 开启本地数据加载功能：SET GLOBAL local_infile = true;
+        /// </para>
+        /// </summary>
+        /// <param name="database"></param>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static void MySqlBulkCopy<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
+            where T : class, new()
+        {
+            var dataTable = items.ToDataTable();
+            var type = typeof(T);
+            var tableName = type.Name;
+            var tableAttribute = type.GetTableAttribute();
+            if (tableAttribute != null)
+            {
+                tableName = tableAttribute.Name;
+            }
+            database.MySqlBulkCopy(dataTable, tableName, dbTransaction);
         }
 
         /// <summary>

@@ -194,6 +194,42 @@ namespace HzyEFCoreRepositories.Extensions
             return Expression.MemberInit(newExpr, list);
         }
 
+        /// <summary>
+        /// 字段表达式
+        /// 生成包含表达式
+        /// 例如：w => w.Id
+        /// </summary>
+        /// <param name="propertyName">类似 Id</param>
+        /// <param name="lambdaParameterName">实体变量名称 默认: w </param>
+        /// <typeparam name="T">实体类型<peparam>
+        /// <typeparam name="TKey">字段类型<peparam>
+        /// <returns></returns>
+        public static Expression<Func<T, TKey>> Field<T, TKey>(this string propertyName, string lambdaParameterName = "w")
+        {
+            var parameter = Expression.Parameter(typeof(T), lambdaParameterName);
+
+            // 如果是一个object类型  拼接lambda时 先将Property类型转换为object类型的
+            if (typeof(TKey).Name.ToLower() == "object")
+            {
+                return Expression.Lambda<Func<T, TKey>>(Expression.Convert(Expression.Property(parameter, propertyName), typeof(object)), parameter);
+            }
+
+            return Expression.Lambda<Func<T, TKey>>(Expression.Property(parameter, propertyName), parameter);
+        }
+
+        /// <summary>
+        /// 字段表达式
+        /// 生成包含表达式
+        /// 例如：w => w.Id
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <param name="lambdaParameterName"></param>
+        /// <returns></returns>
+        public static Expression<Func<T, object>> Field<T>(this string propertyName, string lambdaParameterName = "w")
+        {
+            return propertyName.Field<T, object>(lambdaParameterName);
+        }
 
 
 

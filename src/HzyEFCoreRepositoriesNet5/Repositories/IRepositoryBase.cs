@@ -288,7 +288,7 @@ namespace HzyEFCoreRepositories.Repositories
 
         #endregion
 
-        #region  数据批量拷贝
+        #region Sqlserver 数据批量拷贝
 
         /// <summary>
         /// Sqlserver 数据拷贝
@@ -320,6 +320,10 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="items"></param>
         /// <param name="dbTransaction"></param>
         Task SqlServerBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
+
+        #endregion
+
+        #region Mysql 数据批量拷贝
 
         /// <summary>
         /// mysql 批量拷贝数据
@@ -400,9 +404,43 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="dbTransaction"></param>
         /// <returns></returns>
         Task MySqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
+
         #endregion
 
+        #region Npgsql 数据批量拷贝
 
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        void NpgsqlBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        /// <returns></returns>
+        Task NpgsqlBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        void NpgsqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null);
+
+        /// <summary>
+        /// Sqlserver 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        Task NpgsqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
+
+        #endregion
     }
 
 }

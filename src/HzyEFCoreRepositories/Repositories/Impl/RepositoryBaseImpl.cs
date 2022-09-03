@@ -515,7 +515,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #endregion
 
-        #region 数据批量拷贝
+        #region Sqlserver 数据批量拷贝
 
         /// <summary>
         /// Sqlserver 数据拷贝
@@ -559,6 +559,11 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         {
             return Context.Database.SqlServerBulkCopyAsync(items, dbTransaction);
         }
+
+        #endregion
+
+        #region MySql 数据批量拷贝
+
 
         /// <summary>
         /// mysql 批量拷贝数据
@@ -654,7 +659,52 @@ namespace HzyEFCoreRepositories.Repositories.Impl
 
         #endregion
 
+        #region Npgsql 数据批量拷贝
 
+        /// <summary>
+        /// Npgsql 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        public virtual void NpgsqlBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
+        {
+            Context.Database.NpgsqlBulkCopy(dataTable, tableName, dbTransaction);
+        }
+
+        /// <summary>
+        /// Npgsql 数据拷贝
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dbTransaction"></param>
+        /// <returns></returns>
+        public virtual Task NpgsqlBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
+        {
+            return Context.Database.NpgsqlBulkCopyAsync(dataTable, tableName, dbTransaction);
+        }
+
+        /// <summary>
+        /// Npgsql 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        public virtual void NpgsqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
+        {
+            Context.Database.NpgsqlBulkCopy(items, dbTransaction);
+        }
+
+        /// <summary>
+        /// Npgsql 数据拷贝
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="dbTransaction"></param>
+        public virtual Task NpgsqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
+        {
+            return Context.Database.NpgsqlBulkCopyAsync(items, dbTransaction);
+        }
+
+        #endregion
 
     }
 

@@ -27,15 +27,16 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 throw new Exception("当前不是 SqlServer 数据库无法调用此函数!");
             }
-            var dbConnection = database.GetDbConnection();
-            SqlBulkCopy sqlBulkCopy = null;
+            var dbConnection = (SqlConnection)database.GetDbConnection();
+
+            SqlBulkCopy sqlBulkCopy;
             if (dbTransaction == null)
             {
-                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
+                sqlBulkCopy = new SqlBulkCopy(dbConnection);
             }
             else
             {
-                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
+                sqlBulkCopy = new SqlBulkCopy(dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
             }
 
             sqlBulkCopy.DestinationTableName = tableName;
@@ -85,15 +86,16 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 throw new Exception("当前不是 SqlServer 数据库无法调用此函数!");
             }
-            var dbConnection = database.GetDbConnection();
-            SqlBulkCopy sqlBulkCopy = null;
+            var dbConnection = (SqlConnection)database.GetDbConnection();
+
+            SqlBulkCopy sqlBulkCopy;
             if (dbTransaction == null)
             {
-                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection);
+                sqlBulkCopy = new SqlBulkCopy(dbConnection);
             }
             else
             {
-                sqlBulkCopy = new SqlBulkCopy((SqlConnection)dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
+                sqlBulkCopy = new SqlBulkCopy(dbConnection, SqlBulkCopyOptions.Default, (SqlTransaction)dbTransaction);
             }
             sqlBulkCopy.DestinationTableName = tableName;
             sqlBulkCopy.BatchSize = dataTable.Rows.Count;
