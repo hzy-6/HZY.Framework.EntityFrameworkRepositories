@@ -48,7 +48,7 @@ namespace HzyEFCoreRepositories.Extensions
 
             var dbConnection = (MySqlConnection)database.GetDbConnection();
 
-            MySqlBulkCopy sqlBulkCopy = new MySqlBulkCopy(dbConnection, (MySqlTransaction)dbTransaction);
+            var sqlBulkCopy = new MySqlBulkCopy(dbConnection, (MySqlTransaction)dbTransaction);
             sqlBulkCopy.DestinationTableName = tableName;
 
             if (dbConnection.State != ConnectionState.Open)
@@ -98,7 +98,7 @@ namespace HzyEFCoreRepositories.Extensions
 
             var dbConnection = (MySqlConnection)database.GetDbConnection();
 
-            MySqlBulkCopy sqlBulkCopy = new MySqlBulkCopy(dbConnection, (MySqlTransaction)dbTransaction);
+            var sqlBulkCopy = new MySqlBulkCopy(dbConnection, (MySqlTransaction)dbTransaction);
             sqlBulkCopy.DestinationTableName = tableName;
 
             if (dbConnection.State != ConnectionState.Open)

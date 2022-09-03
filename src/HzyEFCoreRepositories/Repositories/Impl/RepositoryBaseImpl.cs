@@ -666,10 +666,10 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        /// <param name="dbTransaction"></param>
-        public virtual void NpgsqlBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
+        /// <param name="ignoreColumns"></param>
+        public virtual void NpgsqlBulkCopy(DataTable dataTable, string tableName, params string[] ignoreColumns)
         {
-            Context.Database.NpgsqlBulkCopy(dataTable, tableName, dbTransaction);
+            Context.Database.NpgsqlBulkCopy(dataTable, tableName, ignoreColumns);
         }
 
         /// <summary>
@@ -677,31 +677,31 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        /// <param name="dbTransaction"></param>
+        /// <param name="ignoreColumns"></param>
         /// <returns></returns>
-        public virtual Task NpgsqlBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null)
+        public virtual Task NpgsqlBulkCopyAsync(DataTable dataTable, string tableName, params string[] ignoreColumns)
         {
-            return Context.Database.NpgsqlBulkCopyAsync(dataTable, tableName, dbTransaction);
+            return Context.Database.NpgsqlBulkCopyAsync(dataTable, tableName, default, ignoreColumns);
         }
 
         /// <summary>
         /// Npgsql 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        /// <param name="dbTransaction"></param>
-        public virtual void NpgsqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
+        /// <param name="ignoreColumns"></param>
+        public virtual void NpgsqlBulkCopy(List<T> items, params string[] ignoreColumns)
         {
-            Context.Database.NpgsqlBulkCopy(items, dbTransaction);
+            Context.Database.NpgsqlBulkCopy(items, ignoreColumns);
         }
 
         /// <summary>
         /// Npgsql 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        /// <param name="dbTransaction"></param>
-        public virtual Task NpgsqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
+        /// <param name="ignoreColumns"></param>
+        public virtual Task NpgsqlBulkCopyAsync(List<T> items, params string[] ignoreColumns)
         {
-            return Context.Database.NpgsqlBulkCopyAsync(items, dbTransaction);
+            return Context.Database.NpgsqlBulkCopyAsync(items, ignoreColumns);
         }
 
         #endregion

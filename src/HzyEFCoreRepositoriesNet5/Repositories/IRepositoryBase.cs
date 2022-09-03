@@ -414,31 +414,31 @@ namespace HzyEFCoreRepositories.Repositories
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        /// <param name="dbTransaction"></param>
-        void NpgsqlBulkCopy(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
+        /// <param name="ignoreColumns"></param>
+        void NpgsqlBulkCopy(DataTable dataTable, string tableName, params string[] ignoreColumns);
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        /// <param name="dbTransaction"></param>
+        /// <param name="ignoreColumns"></param>
         /// <returns></returns>
-        Task NpgsqlBulkCopyAsync(DataTable dataTable, string tableName, IDbTransaction dbTransaction = null);
+        Task NpgsqlBulkCopyAsync(DataTable dataTable, string tableName, params string[] ignoreColumns);
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        /// <param name="dbTransaction"></param>
-        void NpgsqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null);
+        /// <param name="ignoreColumns"></param>
+        void NpgsqlBulkCopy(List<T> items, params string[] ignoreColumns);
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
-        /// <param name="dbTransaction"></param>
-        Task NpgsqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
+        /// <param name="ignoreColumns"></param>
+        Task NpgsqlBulkCopyAsync(List<T> items, params string[] ignoreColumns);
 
         #endregion
     }

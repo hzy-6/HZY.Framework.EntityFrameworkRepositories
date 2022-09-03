@@ -1,14 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Npgsql;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Npgsql;
 
 namespace HzyEFCoreRepositories.Extensions
 {
@@ -24,8 +22,9 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="database"></param>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        /// <param name="dbTransaction"></param>
-        public static void NpgsqlBulkCopy(this DatabaseFacade database, DataTable dataTable, string tableName, IDbTransaction dbTransaction)
+        /// <param name="ignoreColumns"></param>
+        /// <exception cref="Exception"></exception>
+        public static void NpgsqlBulkCopy(this DatabaseFacade database, DataTable dataTable, string tableName, params string[] ignoreColumns)
         {
             if (!database.IsNpgsql())
             {
@@ -33,42 +32,37 @@ namespace HzyEFCoreRepositories.Extensions
             }
             var dbConnection = (NpgsqlConnection)database.GetDbConnection();
 
-            int curIndex = 0;
-            int batchSize = 10000;
-            int totalCount = dataTable.Rows.Count;
-            var fields = new List<string>();
+            //忽略某列
+            foreach (var item in ignoreColumns)
+            {
+                if (!dataTable.Columns.Contains(item)) continue;
+                dataTable.Columns.Remove(item);
+            }
 
+            var fields = new List<string>();
             foreach (DataColumn item in dataTable.Columns)
             {
-                fields.Add(item.ColumnName);
+                fields.Add($"\"{item.ColumnName}\"");
             }
 
             try
             {
                 // 构建导入SQL
                 var commandFormat = string.Format("COPY \"{0}\"({1}) FROM STDIN BINARY", tableName, string.Join(",", fields));
-                while (curIndex < totalCount)
+
+                if (dbConnection.State != ConnectionState.Open)
                 {
-                    var batchEntities = dataTable.AsEnumerable().Skip(curIndex).Take(batchSize);
-                    var copyTable = new DataTable();
-                    copyTable.LoadDataRow(batchEntities.ToArray(), true);
+                    dbConnection.Open();
+                }
 
-                    if (dbConnection.State != ConnectionState.Open)
+                using (var writer = dbConnection.BeginBinaryImport(commandFormat))
+                {
+                    foreach (DataRow item in dataTable.Rows)
                     {
-                        dbConnection.Open();
+                        writer.WriteRow(item.ItemArray);
                     }
 
-                    using (var writer = dbConnection.BeginBinaryImport(commandFormat))
-                    {
-                        foreach (DataRow item in copyTable.Rows)
-                        {
-                            writer.WriteRow(item.ItemArray);
-                        }
-
-                        writer.Complete();
-                    }
-
-                    curIndex += batchSize;
+                    writer.Complete();
                 }
             }
             catch (Exception)
@@ -90,9 +84,11 @@ namespace HzyEFCoreRepositories.Extensions
         /// <param name="database"></param>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        /// <param name="dbTransaction"></param>
         /// <param name="cancellationToken"></param>
-        public static async Task NpgsqlBulkCopyAsync(this DatabaseFacade database, DataTable dataTable, string tableName, IDbTransaction dbTransaction, CancellationToken cancellationToken = default)
+        /// <param name="ignoreColumns"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static async Task NpgsqlBulkCopyAsync(this DatabaseFacade database, DataTable dataTable, string tableName, CancellationToken cancellationToken = default, params string[] ignoreColumns)
         {
             if (!database.IsNpgsql())
             {
@@ -100,42 +96,37 @@ namespace HzyEFCoreRepositories.Extensions
             }
             var dbConnection = (NpgsqlConnection)database.GetDbConnection();
 
-            int curIndex = 0;
-            int batchSize = 10000;
-            int totalCount = dataTable.Rows.Count;
-            var fields = new List<string>();
+            //忽略某列
+            foreach (var item in ignoreColumns)
+            {
+                if (!dataTable.Columns.Contains(item)) continue;
+                dataTable.Columns.Remove(item);
+            }
 
+            var fields = new List<string>();
             foreach (DataColumn item in dataTable.Columns)
             {
-                fields.Add(item.ColumnName);
+                fields.Add($"\"{item.ColumnName}\"");
             }
 
             try
             {
                 // 构建导入SQL
                 var commandFormat = string.Format("COPY \"{0}\"({1}) FROM STDIN BINARY", tableName, string.Join(",", fields));
-                while (curIndex < totalCount)
+
+                if (dbConnection.State != ConnectionState.Open)
                 {
-                    var batchEntities = dataTable.AsEnumerable().Skip(curIndex).Take(batchSize);
-                    var copyTable = new DataTable();
-                    copyTable.LoadDataRow(batchEntities.ToArray(), true);
+                    await dbConnection.OpenAsync();
+                }
 
-                    if (dbConnection.State != ConnectionState.Open)
+                using (var writer = dbConnection.BeginBinaryImport(commandFormat))
+                {
+                    foreach (DataRow item in dataTable.Rows)
                     {
-                        await dbConnection.OpenAsync();
+                        await writer.WriteRowAsync(cancellationToken, item.ItemArray);
                     }
 
-                    using (var writer = dbConnection.BeginBinaryImport(commandFormat))
-                    {
-                        foreach (DataRow item in copyTable.Rows)
-                        {
-                            await writer.WriteRowAsync(cancellationToken, item.ItemArray);
-                        }
-
-                        await writer.CompleteAsync(cancellationToken);
-                    }
-
-                    curIndex += batchSize;
+                    await writer.CompleteAsync(cancellationToken);
                 }
             }
             catch (Exception)
@@ -156,10 +147,10 @@ namespace HzyEFCoreRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
-        /// <param name="dbTransaction"></param>
+        /// <param name="ignoreColumns"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static void NpgsqlBulkCopy<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
+        public static void NpgsqlBulkCopy<T>(this DatabaseFacade database, List<T> items, params string[] ignoreColumns)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
@@ -170,7 +161,7 @@ namespace HzyEFCoreRepositories.Extensions
             {
                 tableName = tableAttribute.Name;
             }
-            database.NpgsqlBulkCopy(dataTable, tableName, dbTransaction);
+            database.NpgsqlBulkCopy(dataTable, tableName, ignoreColumns);
         }
 
         /// <summary>
@@ -178,10 +169,10 @@ namespace HzyEFCoreRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
-        /// <param name="dbTransaction"></param>
+        /// <param name="ignoreColumns"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Task NpgsqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
+        public static Task NpgsqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, params string[] ignoreColumns)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
@@ -193,15 +184,7 @@ namespace HzyEFCoreRepositories.Extensions
                 tableName = tableAttribute.Name;
             }
 
-            return database.NpgsqlBulkCopyAsync(dataTable, tableName, dbTransaction);
+            return database.NpgsqlBulkCopyAsync(dataTable, tableName, default, ignoreColumns);
         }
-
-
-
-
-
-
-
-
     }
 }
