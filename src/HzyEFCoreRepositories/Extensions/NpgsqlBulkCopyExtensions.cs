@@ -32,11 +32,15 @@ namespace HzyEFCoreRepositories.Extensions
             }
             var dbConnection = (NpgsqlConnection)database.GetDbConnection();
 
-            //忽略某列
-            foreach (var item in ignoreColumns)
+            if (ignoreColumns != null || ignoreColumns.Length > 0)
             {
-                if (!dataTable.Columns.Contains(item)) continue;
-                dataTable.Columns.Remove(item);
+                //忽略某列
+                foreach (var item in ignoreColumns)
+                {
+                    if (string.IsNullOrWhiteSpace(item)) continue;
+                    if (!dataTable.Columns.Contains(item)) continue;
+                    dataTable.Columns.Remove(item);
+                }
             }
 
             var fields = new List<string>();
@@ -96,11 +100,15 @@ namespace HzyEFCoreRepositories.Extensions
             }
             var dbConnection = (NpgsqlConnection)database.GetDbConnection();
 
-            //忽略某列
-            foreach (var item in ignoreColumns)
+            if (ignoreColumns != null || ignoreColumns.Length > 0)
             {
-                if (!dataTable.Columns.Contains(item)) continue;
-                dataTable.Columns.Remove(item);
+                //忽略某列
+                foreach (var item in ignoreColumns)
+                {
+                    if (string.IsNullOrWhiteSpace(item)) continue;
+                    if (!dataTable.Columns.Contains(item)) continue;
+                    dataTable.Columns.Remove(item);
+                }
             }
 
             var fields = new List<string>();
