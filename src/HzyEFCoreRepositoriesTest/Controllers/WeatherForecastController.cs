@@ -91,27 +91,29 @@ namespace HzyEFCoreRepositoriesTest.Controllers
         public async Task<string> QueryBySql()
         {
             var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(@"Server=.;Database=HzyAdminSpa20220410;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
+                .UseSqlServer(@"Server=.;Database=hzy_admin_sqlserver_20220920;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
 
             contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
 
             using var context = new AppDbContext(contextOptions.Options);
 
-            var list = await context.Set<SysFunction>().FromSqlRaw("select * from SysFunction").ToListAsync();
+            var list = await context.Set<SysFunction>().FromSqlRaw("select * from sys_function").ToListAsync();
 
             var repository = new AppRepository<SysFunction>(context);
 
-            var dt = repository.QueryDataTableBySql("select * from SysFunction");
-            var dt1 = await repository.QueryDataTableBySqlAsync("select * from SysFunction");
+            var dt = repository.QueryDataTableBySql("select * from sys_function");
+            var dt1 = await repository.QueryDataTableBySqlAsync("select * from sys_function");
 
-            var listDic = repository.QueryDicBySql("select * from SysFunction");
-            var listDic1 = await repository.QueryDicBySqlAsync("select * from SysFunction");
+            var listDic = repository.QueryDicBySql("select * from sys_function");
+            var listDic1 = await repository.QueryDicBySqlAsync("select * from sys_function");
 
-            var list1 = repository.QueryBySql("select * from SysFunction");
-            var list2 = await repository.QueryBySqlAsync("select * from SysFunction");
+            var list1 = repository.QueryBySql("select * from sys_function");
+            var list2 = await repository.QueryBySqlAsync("select * from sys_function");
 
-            var id = repository.QuerySingleBySql<Guid>("select id from SysFunction");
-            var id1 = await repository.QuerySingleBySqlAsync<Guid>("select id from SysFunction");
+            var id = repository.QuerySingleBySql<Guid>("select id from sys_function");
+            var id1 = await repository.QuerySingleBySqlAsync<Guid>("select id from sys_function");
+
+            var count = await repository.QuerySingleBySqlAsync<int>("select count(1) from sys_function");
 
             var model = await repository.SelectNoTracking.FirstOrDefaultAsync();
             model.ByName = model.ByName + "1";

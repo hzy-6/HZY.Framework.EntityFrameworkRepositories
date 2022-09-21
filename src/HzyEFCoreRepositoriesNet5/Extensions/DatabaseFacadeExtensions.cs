@@ -422,12 +422,7 @@ namespace HzyEFCoreRepositories.Extensions
                     return default;
                 }
 
-                if (result is T)
-                {
-                    return (T)result;
-                }
-
-                return default;
+                return (T)result;
             }
         }
 
@@ -464,12 +459,7 @@ namespace HzyEFCoreRepositories.Extensions
                     return default;
                 }
 
-                if (result is T)
-                {
-                    return (T)result;
-                }
-
-                return default;
+                return (T)result;
 
             }
         }
