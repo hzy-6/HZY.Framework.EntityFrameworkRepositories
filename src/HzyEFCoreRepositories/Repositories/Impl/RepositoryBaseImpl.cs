@@ -102,13 +102,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int Update(T model)
         {
-            //如果未跟踪
-            if (Context.Entry(model).State == EntityState.Detached)
-            {
-                //变更实体未跟踪修改状态
-                this.SetEntityState(model, EntityState.Modified);
-            }
-
             this.UnitOfWork.DbSet<T>().Update(model);
             return this.UnitOfWork.SaveChanges();
         }
@@ -189,13 +182,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> UpdateAsync(T model)
         {
-            //如果未跟踪
-            if (Context.Entry(model).State == EntityState.Detached)
-            {
-                //变更实体未跟踪修改状态
-                this.SetEntityState(model, EntityState.Modified);
-            }
-
             this.UnitOfWork.DbSet<T>().Update(model);
             return this.UnitOfWork.SaveChangesAsync();
         }
@@ -319,13 +305,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int Delete(T model)
         {
-            //如果未跟踪
-            if (Context.Entry(model).State == EntityState.Detached)
-            {
-                //变更实体未跟踪修改状态
-                this.SetEntityState(model, EntityState.Deleted);
-            }
-
             this.UnitOfWork.DbSet<T>().Remove(model);
             return this.UnitOfWork.SaveChanges();
         }
@@ -379,7 +358,9 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int DeleteByIds<TKey>(IEnumerable<TKey> keys)
         {
-            return this.Delete(this.FindByIds(keys));
+            if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
+            var exp = ExpressionTreeExtensions.Contains<T, TKey>(_keyPropertyInfo.Name, keys);
+            return this.Delete(exp);
         }
 
         /// <summary>
@@ -389,13 +370,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> DeleteAsync(T model)
         {
-            //如果未跟踪
-            if (Context.Entry(model).State == EntityState.Detached)
-            {
-                //变更实体未跟踪修改状态
-                this.SetEntityState(model, EntityState.Deleted);
-            }
-
             this.UnitOfWork.DbSet<T>().Remove(model);
             return this.UnitOfWork.SaveChangesAsync();
         }
@@ -451,7 +425,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         {
             if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
             var exp = ExpressionTreeExtensions.Contains<T, TKey>(_keyPropertyInfo.Name, keys);
-            return await this.DeleteAsync(await this.Query().Where(exp).ToListAsync());
+            return await this.DeleteAsync(exp);
         }
 
         #endregion

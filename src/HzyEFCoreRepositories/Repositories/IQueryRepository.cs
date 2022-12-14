@@ -73,13 +73,6 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="key"></param>
         /// <returns></returns>
         T FindById<TKey>(TKey key);
-        /// <summary>
-        /// 查询 根据id集合
-        /// </summary>
-        /// <typeparam name="TKey"></typeparam>
-        /// <param name="keys"></param>
-        /// <returns></returns>
-        T FindByIds<TKey>(IEnumerable<TKey> keys);
 
         /// <summary>
         /// 查询 根据条件
@@ -94,13 +87,6 @@ namespace HzyEFCoreRepositories.Repositories
         /// <param name="key"></param>
         /// <returns></returns>
         Task<T> FindByIdAsync<TKey>(TKey key);
-        /// <summary>
-        /// 查询 根据id集合
-        /// </summary>
-        /// <typeparam name="TKey"></typeparam>
-        /// <param name="keys"></param>
-        /// <returns></returns>
-        Task<T> FindByIdsAsync<TKey>(IEnumerable<TKey> keys);
 
         #endregion
 

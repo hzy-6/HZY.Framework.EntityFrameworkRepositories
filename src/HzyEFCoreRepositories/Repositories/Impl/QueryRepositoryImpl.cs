@@ -80,7 +80,7 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <param name="isTracking">是否追踪</param>
         /// <returns></returns>
         public virtual IQueryable<T> Query(bool? isTracking = null)
-            => (isTracking == null ? _isTracking : isTracking.Value) ?
+            => (isTracking == null ? true : isTracking.Value) ?
             this.UnitOfWork.DbSet<T>().WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsQueryable() :
             this.UnitOfWork.DbSet<T>().WhereIf(!isIgnoreQueryFilter && _filter != null, _filter).AsNoTracking();
 
@@ -116,19 +116,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
             => this.Query().FirstOrDefault(this.GetKeyExpression(key));
 
         /// <summary>
-        /// 查询 根据id集合
-        /// </summary>
-        /// <param name="keys"></param>
-        /// <typeparam name="TKey"></typeparam>
-        /// <returns></returns>
-        public virtual T FindByIds<TKey>(IEnumerable<TKey> keys)
-        {
-            if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
-            var exp = ExpressionTreeExtensions.Contains<T, TKey>(_keyPropertyInfo.Name, keys);
-            return this.Find(exp);
-        }
-
-        /// <summary>
         /// 查询 根据条件
         /// </summary>
         /// <param name="expWhere"></param>
@@ -144,19 +131,6 @@ namespace HzyEFCoreRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<T> FindByIdAsync<TKey>(TKey key)
             => this.Query().FirstOrDefaultAsync(this.GetKeyExpression(key));
-
-        /// <summary>
-        /// /查询 根据id集合
-        /// </summary>
-        /// <param name="keys"></param>
-        /// <typeparam name="TKey"></typeparam>
-        /// <returns></returns>
-        public virtual Task<T> FindByIdsAsync<TKey>(IEnumerable<TKey> keys)
-        {
-            if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
-            var exp = ExpressionTreeExtensions.Contains<T, TKey>(_keyPropertyInfo.Name, keys);
-            return this.FindAsync(exp);
-        }
 
         #endregion
 
