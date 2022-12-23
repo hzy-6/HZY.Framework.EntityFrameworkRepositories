@@ -1,5 +1,6 @@
 using HzyEFCoreRepositories.ExpressionTree;
 using HzyEFCoreRepositories.Extensions;
+using HzyEFCoreRepositories.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -230,34 +231,6 @@ namespace HzyEFCoreRepositories.Extensions
         {
             return propertyName.Field<T, object>(lambdaParameterName);
         }
-
-        /// <summary>
-        /// 解析多字段排序
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="queryable"></param>
-        /// <param name="orderBySelector">string=排序的字段,bool=true降序/false升序</param>
-        /// <returns></returns>
-        // public static IQueryable<TEntity> GetIQueryableOrderBy<TEntity>(this IQueryable<TEntity> queryable, Dictionary<string, QueryOrderBy> orderBySelector)
-        // {
-        //     string[] orderByKeys = orderBySelector.Select(x => x.Key).ToArray();
-        //     if (orderByKeys == null || orderByKeys.Length == 0) return queryable;
-
-        //     IOrderedQueryable<TEntity> queryableOrderBy = null;
-        //     //  string orderByKey = orderByKeys[^1];
-        //     string orderByKey = orderByKeys[orderByKeys.Length - 1];
-        //     queryableOrderBy = orderBySelector[orderByKey] == QueryOrderBy.Desc
-        //         ? queryableOrderBy = queryable.OrderByDescending(orderByKey.GetExpression<TEntity>())
-        //         : queryable.OrderBy(orderByKey.GetExpression<TEntity>());
-
-        //     for (int i = orderByKeys.Length - 2; i >= 0; i--)
-        //     {
-        //         queryableOrderBy = orderBySelector[orderByKeys[i]] == QueryOrderBy.Desc
-        //             ? queryableOrderBy.ThenByDescending(orderByKeys[i].GetExpression<TEntity>())
-        //             : queryableOrderBy.ThenBy(orderByKeys[i].GetExpression<TEntity>());
-        //     }
-        //     return queryableOrderBy;
-        // }
 
 
 

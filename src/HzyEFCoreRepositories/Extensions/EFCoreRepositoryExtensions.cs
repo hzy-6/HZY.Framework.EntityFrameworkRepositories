@@ -103,7 +103,7 @@ namespace HzyEFCoreRepositories.Extensions
             return (TableAttribute)Attribute.GetCustomAttributes(type, true).Where(item => item is TableAttribute).FirstOrDefault();
         }
 
-        #region LINQ 扩展
+        #region LINQ TO SQL 扩展
 
         /// <summary>
         /// WhereIf
@@ -114,17 +114,6 @@ namespace HzyEFCoreRepositories.Extensions
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool @if, Expression<Func<T, bool>> expWhere)
-            => @if ? query.Where(expWhere) : query;
-
-        /// <summary>
-        /// WhereIf
-        /// </summary>
-        /// <param name="query"></param>
-        /// <param name="if"></param>
-        /// <param name="expWhere"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> query, bool @if, Func<T, bool> expWhere)
             => @if ? query.Where(expWhere) : query;
 
         /// <summary>
@@ -168,6 +157,59 @@ namespace HzyEFCoreRepositories.Extensions
 
             return query.AsTable(oldName, newName);
         }
+
+        /// <summary>
+        /// 解析获取多字段排序 IQueryable<?> 对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="paginationSearchSorts">string=排序的字段,order=排序方式 >descend | ascend | null</param>
+        /// <returns></returns>
+        public static IQueryable<T> GetOrderBy<T>(this IQueryable<T> query, List<PaginationSearchSort> paginationSearchSorts)
+        {
+            if (paginationSearchSorts == null || paginationSearchSorts.Count == 0) return query;
+
+            //处理 OrderBy
+            var lastPaginationSearchSort = paginationSearchSorts.LastOrDefault();
+
+            if (lastPaginationSearchSort.IsOrderEmpty() || string.IsNullOrWhiteSpace(lastPaginationSearchSort.Field))
+            {
+                return query;
+            }
+
+            IOrderedQueryable<T> result;
+            result = lastPaginationSearchSort.IsDesc()
+               ? query.OrderByDescending(lastPaginationSearchSort.Field.Field<T>())
+               : query.OrderBy(lastPaginationSearchSort.Field.Field<T>());
+
+            // 处理 ThenBy
+            foreach (var item in paginationSearchSorts)
+            {
+                if (string.IsNullOrWhiteSpace(item.Field)) continue;
+                if (item.Field == lastPaginationSearchSort.Field) continue;
+
+                result = item.IsDesc()
+               ? result.ThenByDescending(item.Field.Field<T>())
+               : result.ThenBy(item.Field.Field<T>());
+            }
+
+            return result ?? query;
+        }
+
+        #endregion
+
+        #region LINQ TO OBJECT 扩展
+
+        /// <summary>
+        /// WhereIf
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="if"></param>
+        /// <param name="expWhere"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> query, bool @if, Func<T, bool> expWhere)
+            => @if ? query.Where(expWhere) : query;
 
         #endregion
 
