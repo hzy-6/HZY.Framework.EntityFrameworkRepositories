@@ -1,14 +1,12 @@
 # HzyEFCoreRepositories
 
 #### 介绍
-基于 EFCore6、EFCore5、EFCore3 封装仓储
+基于 EFCore6、EFCore7 封装仓储
 
 文档地址:https://gitee.com/hzy6/hzy-efcore-repositories/wikis/pages
 
 #### 安装
-1、Nuget 搜索 HzyEFCoreRepositories 此包针对 EFCore6
-
-2、Nuget 搜索 HzyEFCoreRepositoriesNet5 此包针对 EFCore5、EFCore3
+1、Nuget 搜索 HzyEFCoreRepositories
 
 ![输入图片说明](doc/image3.png)
 
@@ -29,6 +27,8 @@
 5、批量数据拷贝 目前支持 mysql 和 sqlserver
 
 6、Sql 字符串查询
+
+7、动态OrderBy()
 
 
 #### 1、SQL 字符串查询
