@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HzyEFCoreRepositories", "Hz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HzyEFCoreRepositoriesTest", "HzyEFCoreRepositoriesTest\HzyEFCoreRepositoriesTest.csproj", "{6C37B8A3-D02E-4BDE-98C2-0426EEB84681}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HzyEFCoreRepositoriesNet5", "HzyEFCoreRepositoriesNet5\HzyEFCoreRepositoriesNet5.csproj", "{52110762-7130-4DBE-8AC0-DAE55D904C9F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HzyEFCoreRepositoriesTestNet5", "HzyEFCoreRepositoriesTestNet5\HzyEFCoreRepositoriesTestNet5.csproj", "{B48C5B21-E127-4701-85B5-C1795E7C960D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,14 +21,6 @@ Global
 		{6C37B8A3-D02E-4BDE-98C2-0426EEB84681}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C37B8A3-D02E-4BDE-98C2-0426EEB84681}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C37B8A3-D02E-4BDE-98C2-0426EEB84681}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52110762-7130-4DBE-8AC0-DAE55D904C9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52110762-7130-4DBE-8AC0-DAE55D904C9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52110762-7130-4DBE-8AC0-DAE55D904C9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52110762-7130-4DBE-8AC0-DAE55D904C9F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B48C5B21-E127-4701-85B5-C1795E7C960D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B48C5B21-E127-4701-85B5-C1795E7C960D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B48C5B21-E127-4701-85B5-C1795E7C960D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B48C5B21-E127-4701-85B5-C1795E7C960D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
