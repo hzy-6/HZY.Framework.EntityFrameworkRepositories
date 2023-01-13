@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<!--<ImplicitUsings>enable</ImplicitUsings>-->
+		<!--<Nullable>enable</Nullable>-->
+		<Description>
+			EFCore、Repositories
+
+			1、动态表名查询
+			2、监控EFCore 连接、事务、Sql、Sql耗时等统计信息
+			3、仓储多租户 查询过滤
+			4、批量数据拷贝 目前支持 mysql 和 sqlserver
+			5、Sql 字符串查询
+			6、仓储具有基本的 CRUD
+
+			目前框架使用案例：https://gitee.com/hzy6/HzyAdmin
+		</Description>
+		<Authors>HZY</Authors>
+		<Company>HZY</Company>
+		<Copyright>HZY</Copyright>
+		<PackageProjectUrl>https://gitee.com/hzy6/HZY.Framework.EntityFrameworkRepositories</PackageProjectUrl>
+		<RepositoryUrl>https://gitee.com/hzy6/HZY.Framework.EntityFrameworkRepositories</RepositoryUrl>
+		<RepositoryType>gitee</RepositoryType>
+		<Version>1.2.2.6</Version>
+		<FileVersion>1.2.2.6</FileVersion>
+		<AssemblyVersion>1.2.2.6</AssemblyVersion>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<PackageIcon>hzy.jpg</PackageIcon>
+		<!--带有调试-->
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="E:\5-Gitee\HZY.Framework.EntityFrameworkRepositories\src\HZY.Framework.EntityFrameworkRepositories\hzy.jpg">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />		
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.2" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.1" />
+		<PackageReference Include="Oracle.EntityFrameworkCore" Version="7.21.8" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0-silver.1" />
+	</ItemGroup>
+	
+	<!--<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.1" />
+	</ItemGroup>-->
+	
+	<ItemGroup>
+		<None Update="hzy.jpg">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>
