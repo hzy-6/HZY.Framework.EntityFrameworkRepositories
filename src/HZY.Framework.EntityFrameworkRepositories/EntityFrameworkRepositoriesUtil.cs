@@ -13,8 +13,8 @@ namespace HZY.Framework.EntityFrameworkRepositories
     /// </summary>
     public static class EntityFrameworkRepositoriesUtil
     {
-        private static Dictionary<string, Type> _dbContextTypes = null;
-        private static List<Type> _allDbContextTypes = null;
+        private static readonly Dictionary<string, Type> _dbContextTypes = null;
+        private static readonly List<Type> _allDbContextTypes = null;
 
         static EntityFrameworkRepositoriesUtil()
         {
@@ -108,6 +108,16 @@ namespace HZY.Framework.EntityFrameworkRepositories
                 }
             }
 
+        }
+
+        /// <summary>
+        /// 使用 EntityFrameworkRepositories
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        public static void UseEntityFrameworkRepositories<T>(this IApplicationBuilder app)
+        {
+            app.UseEntityFrameworkRepositories(typeof(T));
         }
 
         #endregion

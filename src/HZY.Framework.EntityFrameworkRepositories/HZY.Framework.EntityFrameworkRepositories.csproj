@@ -15,9 +15,9 @@
 		<PackageProjectUrl>https://gitee.com/hzy6/HZY.Framework.EntityFrameworkRepositories</PackageProjectUrl>
 		<RepositoryUrl>https://gitee.com/hzy6/HZY.Framework.EntityFrameworkRepositories</RepositoryUrl>
 		<RepositoryType>gitee</RepositoryType>
-		<Version>1.0.0</Version>
-		<FileVersion>1.0.0</FileVersion>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<Version>1.0.1</Version>
+		<FileVersion>1.0.1</FileVersion>
+		<AssemblyVersion>1.0.1</AssemblyVersion>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<PackageIcon>hzy.jpg</PackageIcon>
 		<!--带有调试-->
@@ -36,8 +36,8 @@
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />		
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.2" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.1" />
-		<PackageReference Include="Oracle.EntityFrameworkCore" Version="7.21.8" />
-		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0-silver.1" />
+		<PackageReference Include="Oracle.EntityFrameworkCore" Version="7.21.9" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
 	</ItemGroup>
 	
 	<!--<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
