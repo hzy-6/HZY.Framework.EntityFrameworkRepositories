@@ -311,15 +311,17 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
-        void SqlServerBulkCopy(List<T> items, IDbTransaction dbTransaction = null);
+        void SqlServerBulkCopy(List<T> items, string tableName = null, IDbTransaction dbTransaction = null);
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
-        Task SqlServerBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
+        Task SqlServerBulkCopyAsync(List<T> items, string tableName = null, IDbTransaction dbTransaction = null);
 
         #endregion
 
@@ -382,8 +384,9 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories
         /// </para>
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
-        void MySqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null);
+        void MySqlBulkCopy(List<T> items, string tableName = null, IDbTransaction dbTransaction = null);
 
         /// <summary>
         /// mysql 批量拷贝数据
@@ -401,9 +404,10 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories
         /// </para>
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
         /// <returns></returns>
-        Task MySqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null);
+        Task MySqlBulkCopyAsync(List<T> items, string tableName = null, IDbTransaction dbTransaction = null);
 
         #endregion
 
@@ -430,15 +434,17 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="ignoreColumns"></param>
-        void NpgsqlBulkCopy(List<T> items, params string[] ignoreColumns);
+        void NpgsqlBulkCopy(List<T> items, string tableName = null, params string[] ignoreColumns);
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="ignoreColumns"></param>
-        Task NpgsqlBulkCopyAsync(List<T> items, params string[] ignoreColumns);
+        Task NpgsqlBulkCopyAsync(List<T> items, string tableName = null, params string[] ignoreColumns);
 
         #endregion
     }

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Npgsql;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Extensions
@@ -155,20 +156,26 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="ignoreColumns"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static void NpgsqlBulkCopy<T>(this DatabaseFacade database, List<T> items, params string[] ignoreColumns)
+        public static void NpgsqlBulkCopy<T>(this DatabaseFacade database, List<T> items, string tableName, params string[] ignoreColumns)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
-            var type = typeof(T);
-            var tableName = type.Name;
-            var tableAttribute = type.GetTableAttribute();
-            if (tableAttribute != null)
+
+            if (string.IsNullOrWhiteSpace(tableName))
             {
-                tableName = tableAttribute.Name;
+                var type = typeof(T);
+                tableName = tableName ?? type.Name;
+                var tableAttribute = type.GetTableAttribute();
+                if (tableAttribute != null)
+                {
+                    tableName = tableAttribute.Name;
+                }
             }
+
             database.NpgsqlBulkCopy(dataTable, tableName, ignoreColumns);
         }
 
@@ -177,19 +184,24 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="ignoreColumns"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Task NpgsqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, params string[] ignoreColumns)
+        public static Task NpgsqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, string tableName, params string[] ignoreColumns)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
-            var type = typeof(T);
-            var tableName = type.Name;
-            var tableAttribute = type.GetTableAttribute();
-            if (tableAttribute != null)
+
+            if (string.IsNullOrWhiteSpace(tableName))
             {
-                tableName = tableAttribute.Name;
+                var type = typeof(T);
+                tableName = tableName ?? type.Name;
+                var tableAttribute = type.GetTableAttribute();
+                if (tableAttribute != null)
+                {
+                    tableName = tableAttribute.Name;
+                }
             }
 
             return database.NpgsqlBulkCopyAsync(dataTable, tableName, default, ignoreColumns);

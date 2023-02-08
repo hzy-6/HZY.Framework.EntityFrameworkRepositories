@@ -137,20 +137,26 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static void MySqlBulkCopy<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
+        public static void MySqlBulkCopy<T>(this DatabaseFacade database, List<T> items, string tableName, IDbTransaction dbTransaction)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
-            var type = typeof(T);
-            var tableName = type.Name;
-            var tableAttribute = type.GetTableAttribute();
-            if (tableAttribute != null)
+
+            if (string.IsNullOrWhiteSpace(tableName))
             {
-                tableName = tableAttribute.Name;
+                var type = typeof(T);
+                tableName = tableName ?? type.Name;
+                var tableAttribute = type.GetTableAttribute();
+                if (tableAttribute != null)
+                {
+                    tableName = tableAttribute.Name;
+                }
             }
+
             database.MySqlBulkCopy(dataTable, tableName, dbTransaction);
         }
 
@@ -168,19 +174,24 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// </summary>
         /// <param name="database"></param>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Task MySqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, IDbTransaction dbTransaction)
+        public static Task MySqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, string tableName, IDbTransaction dbTransaction)
             where T : class, new()
         {
             var dataTable = items.ToDataTable();
-            var type = typeof(T);
-            var tableName = type.Name;
-            var tableAttribute = type.GetTableAttribute();
-            if (tableAttribute != null)
+
+            if (string.IsNullOrWhiteSpace(tableName))
             {
-                tableName = tableAttribute.Name;
+                var type = typeof(T);
+                tableName = tableName ?? type.Name;
+                var tableAttribute = type.GetTableAttribute();
+                if (tableAttribute != null)
+                {
+                    tableName = tableAttribute.Name;
+                }
             }
 
             return database.MySqlBulkCopyAsync(dataTable, tableName, dbTransaction);

@@ -518,20 +518,22 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
-        public virtual void SqlServerBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
+        public virtual void SqlServerBulkCopy(List<T> items, string tableName = null, IDbTransaction dbTransaction = null)
         {
-            Context.Database.SqlServerBulkCopy(items, dbTransaction);
+            Context.Database.SqlServerBulkCopy(items, tableName, dbTransaction);
         }
 
         /// <summary>
         /// Sqlserver 数据拷贝
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
-        public virtual Task SqlServerBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
+        public virtual Task SqlServerBulkCopyAsync(List<T> items, string tableName = null, IDbTransaction dbTransaction = null)
         {
-            return Context.Database.SqlServerBulkCopyAsync(items, dbTransaction);
+            return Context.Database.SqlServerBulkCopyAsync(items, tableName, dbTransaction);
         }
 
         #endregion
@@ -602,10 +604,11 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         /// </para>
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
-        public virtual void MySqlBulkCopy(List<T> items, IDbTransaction dbTransaction = null)
+        public virtual void MySqlBulkCopy(List<T> items, string tableName = null, IDbTransaction dbTransaction = null)
         {
-            Context.Database.MySqlBulkCopy(items, dbTransaction);
+            Context.Database.MySqlBulkCopy(items, tableName, dbTransaction);
         }
 
         /// <summary>
@@ -624,11 +627,12 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         /// </para>
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="dbTransaction"></param>
         /// <returns></returns>
-        public virtual Task MySqlBulkCopyAsync(List<T> items, IDbTransaction dbTransaction = null)
+        public virtual Task MySqlBulkCopyAsync(List<T> items, string tableName = null, IDbTransaction dbTransaction = null)
         {
-            return Context.Database.MySqlBulkCopyAsync(items, dbTransaction);
+            return Context.Database.MySqlBulkCopyAsync(items, tableName, dbTransaction);
         }
 
         #endregion
@@ -662,20 +666,22 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         /// Npgsql 数据拷贝
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="ignoreColumns"></param>
-        public virtual void NpgsqlBulkCopy(List<T> items, params string[] ignoreColumns)
+        public virtual void NpgsqlBulkCopy(List<T> items, string tableName = null, params string[] ignoreColumns)
         {
-            Context.Database.NpgsqlBulkCopy(items, ignoreColumns);
+            Context.Database.NpgsqlBulkCopy(items, tableName, ignoreColumns);
         }
 
         /// <summary>
         /// Npgsql 数据拷贝
         /// </summary>
         /// <param name="items"></param>
+        /// <param name="tableName"></param>
         /// <param name="ignoreColumns"></param>
-        public virtual Task NpgsqlBulkCopyAsync(List<T> items, params string[] ignoreColumns)
+        public virtual Task NpgsqlBulkCopyAsync(List<T> items, string tableName = null, params string[] ignoreColumns)
         {
-            return Context.Database.NpgsqlBulkCopyAsync(items, ignoreColumns);
+            return Context.Database.NpgsqlBulkCopyAsync(items, tableName, ignoreColumns);
         }
 
         #endregion
