@@ -8,6 +8,10 @@ using HZY.Framework.EntityFrameworkRepositories.Test.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
+using System.Data.OleDb;
+using System.Data;
+using HZY.Framework.EntityFrameworkRepositories.Databases;
+using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 {
@@ -217,28 +221,20 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
             return EntityFrameworkRepositoriesMonitorCache.SqlContext;
         }
 
-        /// <summary>
-        /// 获取所有表信息
-        /// 
-        /// 
-        /// https://www.cnblogs.com/osmeteor/p/3429229.html
-        /// 
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("GetTabls")]
-        public bool GetTabls()
+        [HttpGet("GetTablsOleDbConnection")]
+        public bool GetTablsOleDbConnection()
         {
             var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(@"Server=.;Database=hzy_admin_sqlserver_20221213;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
+                   .UseSqlServer(@"Server=.;Database=hzy_admin_sqlserver_20221213;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
 
             contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
 
             using var context = new AppDbContext(contextOptions.Options);
 
-            context.Database.OpenConnection();
-            var tables = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Tables);
-            var columns = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            var oleDbConnection = new OleDbConnection(context.Database.GetConnectionString());
+
+            var tables = oleDbConnection.GetSchema(SqlClientMetaDataCollectionNames.Tables);
+            var columns = oleDbConnection.GetSchema(SqlClientMetaDataCollectionNames.Columns);
             var str = "";
             foreach (var item in columns.Columns)
             {
@@ -248,55 +244,180 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
             Console.WriteLine(str + "\r\n\r\n\r\n");
 
 
-            var contextOptions1 = new DbContextOptionsBuilder<AppDbContext>()
-               .UseMySql(@"Server=localhost; port=3306; Database=hzy_admin_mysql_20221213; uid=root; pwd=123456; Convert Zero Datetime=False", MySqlServerVersion.LatestSupportedServerVersion);
+            return true;
+        }
 
-            contextOptions1.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+        /// <summary>
+        /// 获取所有表信息
+        /// 
+        /// 
+        /// https://www.cnblogs.com/osmeteor/p/3429229.html
+        /// 
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTabls_SqlServer")]
+        public bool GetTabls_SqlServer()
+        {
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlServer(@"Server=.;Database=hzy_admin_sqlserver_20221213;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
 
-            using var context1 = new AppDbContext(contextOptions1.Options);
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
 
-            context1.Database.OpenConnection();
-            var tables1 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Tables);
-            var columns1 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Columns);
-            var str1 = "";
-            foreach (var item in columns1.Columns)
+            using var context = new AppDbContext(contextOptions.Options);
+
+            context.Database.OpenConnection();
+
+            var conn = context.Database.GetDbConnection();
+
+            var tables = conn.GetSchema(SqlClientMetaDataCollectionNames.Tables);
+            var columns = conn.GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            var dataType = conn.GetSchema("DataTypes");
+            var str = "";
+            foreach (var item in columns.Columns)
             {
-                str1 += item + ",";
+                str += item + ",";
             }
 
-            Console.WriteLine(str1 + "\r\n\r\n\r\n");
-
-
-
-
-
-            var contextOptions2 = new DbContextOptionsBuilder<AppDbContext>()
-          .UseNpgsql(@"User ID=postgres;Password=123456;Host=localhost;Port=5432;Database=hzy_admin_pgsql_20221213;Pooling=true;TimeZone=Asia/Shanghai");
-
-            contextOptions2.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
-
-            using var context2 = new AppDbContext(contextOptions2.Options);
-
-            context2.Database.OpenConnection();
-            var tables2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Tables, new string[] { null, null, null, "Table" });
-            var columns2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Columns);
-            var ColumnSetColumns2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.ColumnSetColumns);
-            var ProcedureParameters2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.ProcedureParameters);
-            var Procedures2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Procedures);
-            var StructuredTypeMembers2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.StructuredTypeMembers);
-
-            var str2 = "";
-            foreach (var item in columns2.Columns)
+            var metaDataCollections = conn.GetSchema("MetaDataCollections");
+            foreach (DataRow item in metaDataCollections.Rows)
             {
-                str2 += item + ",";
+                var s = item[0];
+                var dts = conn.GetSchema(s.ToString());
+
             }
 
-            Console.WriteLine(str2 + "\r\n\r\n\r\n");
+            Console.WriteLine(str + "\r\n\r\n\r\n");
+
+            IDatabaseSchema databaseSchema = new DatabaseSchemaImpl(context);
+            var dataTypes = databaseSchema.GetDataTypes();
+
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// 获取所有表信息
+        /// 
+        /// 
+        /// https://www.cnblogs.com/osmeteor/p/3429229.html
+        /// 
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTabls_MySql")]
+        public bool GetTabls_MySql()
+        {
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                .UseMySql(@"Server=localhost; port=3306; Database=hzy_admin_mysql_20221213; uid=root; pwd=123456; Convert Zero Datetime=False", MySqlServerVersion.LatestSupportedServerVersion);
+
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+
+            using var context = new AppDbContext(contextOptions.Options);
+
+            context.Database.OpenConnection();
+
+            var sqlConection = context.Database.GetDbConnection();
+
+            var tables = sqlConection.GetSchema(SqlClientMetaDataCollectionNames.Tables);
+            var columns = sqlConection.GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            var dataType = sqlConection.GetSchema("DataTypes");
+            var str = "";
+            foreach (var item in columns.Columns)
+            {
+                str += item + ",";
+            }
+
+            var metaDataCollections = sqlConection.GetSchema("MetaDataCollections");
+            foreach (DataRow item in metaDataCollections.Rows)
+            {
+                var s = item[0];
+                var dts = sqlConection.GetSchema(s.ToString());
+            }
+
+            Console.WriteLine(str + "\r\n\r\n\r\n");
+
+
+            IDatabaseSchema databaseSchema = new DatabaseSchemaImpl(context);
+            var dataTypes = databaseSchema.GetDataTypes();
+
+            return true;
+        }
+
+        /// <summary>
+        /// 获取所有表信息
+        /// 
+        /// 
+        /// https://www.cnblogs.com/osmeteor/p/3429229.html
+        /// 
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTabls_NPgsql")]
+        public bool GetTabls_NPgsql()
+        {
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+               .UseNpgsql(@"User ID=postgres;Password=123456;Host=localhost;Port=5432;Database=hzy_admin_pgsql_20221213;Pooling=true;TimeZone=Asia/Shanghai");
+
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+
+            using var context = new AppDbContext(contextOptions.Options);
+
+            context.Database.OpenConnection();
+
+            var conn = context.Database.GetDbConnection();
+
+            var tables = conn.GetSchema(SqlClientMetaDataCollectionNames.Tables);
+            var columns = conn.GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            var dataType = conn.GetSchema("DataTypes");
+            var str = "";
+            foreach (var item in columns.Columns)
+            {
+                str += item + ",";
+            }
+
+            var metaDataCollections = conn.GetSchema("MetaDataCollections");
+            foreach (DataRow item in metaDataCollections.Rows)
+            {
+                var s = item[0];
+                var dts = conn.GetSchema(s.ToString());
+
+            }
+
+            Console.WriteLine(str + "\r\n\r\n\r\n");
+
+
+            IDatabaseSchema databaseSchema = new DatabaseSchemaImpl(context);
+            var dataTypes = databaseSchema.GetDataTypes();
 
 
 
             return true;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }

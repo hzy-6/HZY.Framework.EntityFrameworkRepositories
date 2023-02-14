@@ -7,7 +7,10 @@ using System.Web;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Databases
 {
-    public class ColumnInfo
+    /// <summary>
+    /// 列信息
+    /// </summary>
+    public class Column
     {
 
         //TABLE_CATALOG,
