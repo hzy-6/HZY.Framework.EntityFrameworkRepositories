@@ -15,9 +15,9 @@
 		<PackageProjectUrl>https://gitee.com/hzy6/HZY.Framework.EntityFrameworkRepositories</PackageProjectUrl>
 		<RepositoryUrl>https://gitee.com/hzy6/HZY.Framework.EntityFrameworkRepositories</RepositoryUrl>
 		<RepositoryType>gitee</RepositoryType>
-		<Version>1.0.2.1</Version>
-		<FileVersion>1.0.2.1</FileVersion>
-		<AssemblyVersion>1.0.2.1</AssemblyVersion>
+		<Version>1.0.2.2</Version>
+		<FileVersion>1.0.2.2</FileVersion>
+		<AssemblyVersion>1.0.2.2</AssemblyVersion>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<PackageIcon>hzy.jpg</PackageIcon>
 		<!--带有调试-->

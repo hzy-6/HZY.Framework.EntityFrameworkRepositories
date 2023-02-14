@@ -12,12 +12,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using HZY.Framework.EntityFrameworkRepositories.Extensions.Parser;
 using HZY.Framework.EntityFrameworkRepositories.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
 {
@@ -146,33 +145,12 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         /// <summary>
         /// 更新部分字段 根据where 条件
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="setPropertyCalls"></param>
         /// <param name="where"></param>
-        /// <param name="ignoreCols"></param>
         /// <returns></returns>
-        public virtual int UpdateBulk(Expression<Func<T, T>> model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null)
+        public virtual int UpdateBulk(Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> setPropertyCalls, Expression<Func<T, bool>> where)
         {
-            var updateIgnoreParser = new UpdateIgnoreParser<T>();
-            ignoreCols?.Invoke(updateIgnoreParser);
-
-            var updateParser = new UpdateParser(Context, Select.Where(where).ToQueryString(), model.Body as MemberInitExpression, updateIgnoreParser.GetIgnoreColumns());
-            return ExecuteSqlRaw(updateParser.Parser(), updateParser.GetDataParameters());
-        }
-
-        /// <summary>
-        /// 更新部分字段 根据where 条件
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="where"></param>
-        /// <param name="ignoreCols"></param>
-        /// <returns></returns>
-        public virtual int UpdateBulk(T model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null)
-        {
-            var updateIgnoreParser = new UpdateIgnoreParser<T>();
-            ignoreCols?.Invoke(updateIgnoreParser);
-
-            var updateParser = new UpdateParser(Context, Select.Where(where).ToQueryString(), ExpressionTreeExtensions.ModelToMemberInitExpression(model), updateIgnoreParser.GetIgnoreColumns());
-            return ExecuteSqlRaw(updateParser.Parser(), updateParser.GetDataParameters());
+            return Select.Where(where).ExecuteUpdate(setPropertyCalls);
         }
 
         /// <summary>
@@ -226,33 +204,12 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         /// <summary>
         /// 更新部分字段 根据where 条件
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="setPropertyCalls"></param>
         /// <param name="where"></param>
-        /// <param name="ignoreCols"></param>
         /// <returns></returns>
-        public virtual Task<int> UpdateBulkAsync(Expression<Func<T, T>> model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null)
+        public virtual Task<int> UpdateBulkAsync(Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> setPropertyCalls, Expression<Func<T, bool>> where)
         {
-            var updateIgnoreParser = new UpdateIgnoreParser<T>();
-            ignoreCols?.Invoke(updateIgnoreParser);
-
-            var updateParser = new UpdateParser(Context, Select.Where(where).ToQueryString(), model.Body as MemberInitExpression, updateIgnoreParser.GetIgnoreColumns());
-            return ExecuteSqlRawAsync(updateParser.Parser(), updateParser.GetDataParameters());
-        }
-
-        /// <summary>
-        /// 更新部分字段 根据where 条件
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="where"></param>
-        /// <param name="ignoreCols"></param>
-        /// <returns></returns>
-        public virtual Task<int> UpdateBulkAsync(T model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null)
-        {
-            var updateIgnoreParser = new UpdateIgnoreParser<T>();
-            ignoreCols?.Invoke(updateIgnoreParser);
-
-            var updateParser = new UpdateParser(Context, Select.Where(where).ToQueryString(), ExpressionTreeExtensions.ModelToMemberInitExpression(model), updateIgnoreParser.GetIgnoreColumns());
-            return ExecuteSqlRawAsync(updateParser.Parser(), updateParser.GetDataParameters());
+            return Select.Where(where).ExecuteUpdateAsync(setPropertyCalls);
         }
 
 
@@ -335,8 +292,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual int DeleteBulk(Expression<Func<T, bool>> expWhere)
         {
-            var deleteParser = new DeleteParser(Context, Select.Where(expWhere).ToQueryString());
-            return ExecuteSqlRaw(deleteParser.Parser());
+            return Select.Where(expWhere).ExecuteDelete();
         }
 
         /// <summary>
@@ -400,8 +356,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         /// <returns></returns>
         public virtual Task<int> DeleteBulkAsync(Expression<Func<T, bool>> expWhere)
         {
-            var deleteParser = new DeleteParser(Context, Select.Where(expWhere).ToQueryString());
-            return ExecuteSqlRawAsync(deleteParser.Parser());
+            return Select.Where(expWhere).ExecuteDeleteAsync();
         }
 
         /// <summary>

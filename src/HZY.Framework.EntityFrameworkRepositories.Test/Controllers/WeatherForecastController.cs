@@ -1,4 +1,3 @@
-using HZY.Framework.EntityFrameworkRepositories;
 using HZY.Framework.EntityFrameworkRepositories.Interceptor;
 using HZY.Framework.EntityFrameworkRepositoriesTest.Repositories;
 using HZY.Framework.EntityFrameworkRepositories.Extensions;
@@ -8,6 +7,7 @@ using HZY.Framework.EntityFrameworkRepositories.Test.DbContexts;
 using HZY.Framework.EntityFrameworkRepositories.Test.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 {
@@ -42,18 +42,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 
             if (sysFunction == null) return "OK";
 
-            var resultCount = repository.UpdateBulk(w => new SysFunction
-            {
-                Name = sysFunction.Name
-
-            },
-            // where 条件
-            w => w.Id == sysFunction.Id && w.Name == sysFunction.Name,
-            option =>
-            {
-                // 忽略被 set 字段
-                option.AddIgnore(w => w.Id);
-            });
+            var resultCount = repository.UpdateBulk(w => w.SetProperty(s => s.Name, s => sysFunction.Name), w => w.Id == sysFunction.Id && w.Name == sysFunction.Name);
 
             return "Ok" + resultCount;
         }
@@ -228,6 +217,86 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
             return EntityFrameworkRepositoriesMonitorCache.SqlContext;
         }
 
+        /// <summary>
+        /// 获取所有表信息
+        /// 
+        /// 
+        /// https://www.cnblogs.com/osmeteor/p/3429229.html
+        /// 
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTabls")]
+        public bool GetTabls()
+        {
+            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlServer(@"Server=.;Database=hzy_admin_sqlserver_20221213;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
+
+            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+
+            using var context = new AppDbContext(contextOptions.Options);
+
+            context.Database.OpenConnection();
+            var tables = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Tables);
+            var columns = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            var str = "";
+            foreach (var item in columns.Columns)
+            {
+                str += item + ",";
+            }
+
+            Console.WriteLine(str + "\r\n\r\n\r\n");
+
+
+            var contextOptions1 = new DbContextOptionsBuilder<AppDbContext>()
+               .UseMySql(@"Server=localhost; port=3306; Database=hzy_admin_mysql_20221213; uid=root; pwd=123456; Convert Zero Datetime=False", MySqlServerVersion.LatestSupportedServerVersion);
+
+            contextOptions1.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+
+            using var context1 = new AppDbContext(contextOptions1.Options);
+
+            context1.Database.OpenConnection();
+            var tables1 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Tables);
+            var columns1 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            var str1 = "";
+            foreach (var item in columns1.Columns)
+            {
+                str1 += item + ",";
+            }
+
+            Console.WriteLine(str1 + "\r\n\r\n\r\n");
+
+
+
+
+
+            var contextOptions2 = new DbContextOptionsBuilder<AppDbContext>()
+          .UseNpgsql(@"User ID=postgres;Password=123456;Host=localhost;Port=5432;Database=hzy_admin_pgsql_20221213;Pooling=true;TimeZone=Asia/Shanghai");
+
+            contextOptions2.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+
+            using var context2 = new AppDbContext(contextOptions2.Options);
+
+            context2.Database.OpenConnection();
+            var tables2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Tables, new string[] { null, null, null, "Table" });
+            var columns2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            var ColumnSetColumns2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.ColumnSetColumns);
+            var ProcedureParameters2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.ProcedureParameters);
+            var Procedures2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.Procedures);
+            var StructuredTypeMembers2 = context.Database.GetDbConnection().GetSchema(SqlClientMetaDataCollectionNames.StructuredTypeMembers);
+
+            var str2 = "";
+            foreach (var item in columns2.Columns)
+            {
+                str2 += item + ",";
+            }
+
+            Console.WriteLine(str2 + "\r\n\r\n\r\n");
+
+
+
+            return true;
+        }
 
     }
 }

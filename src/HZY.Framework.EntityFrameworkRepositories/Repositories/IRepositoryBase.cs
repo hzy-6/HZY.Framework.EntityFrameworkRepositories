@@ -14,7 +14,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using HZY.Framework.EntityFrameworkRepositories.Extensions.Parser;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Repositories
 {
@@ -88,20 +88,10 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories
         /// <summary>
         /// 更新部分字段 根据where 条件
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="setPropertyCalls"></param>
         /// <param name="where"></param>
-        /// <param name="ignoreCols"></param>
         /// <returns></returns>
-        int UpdateBulk(Expression<Func<T, T>> model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null);
-        /// <summary>
-        /// 更新部分字段 根据where 条件
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="where"></param>
-        /// <param name="ignoreCols"></param>
-        /// <returns></returns>
-        int UpdateBulk(T model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null);
-
+        int UpdateBulk(Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> setPropertyCalls, Expression<Func<T, bool>> where);
         /// <summary>
         /// 更新
         /// </summary>
@@ -130,19 +120,10 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories
         /// <summary>
         /// 更新部分字段 根据where 条件
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="setPropertyCalls"></param>
         /// <param name="where"></param>
-        /// <param name="ignoreCols"></param>
         /// <returns></returns>
-        Task<int> UpdateBulkAsync(Expression<Func<T, T>> model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null);
-        /// <summary>
-        /// 更新部分字段 根据where 条件
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="where"></param>
-        /// <param name="ignoreCols"></param>
-        /// <returns></returns>
-        Task<int> UpdateBulkAsync(T model, Expression<Func<T, bool>> where, Action<UpdateIgnoreParser<T>> ignoreCols = null);
+        Task<int> UpdateBulkAsync(Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> setPropertyCalls, Expression<Func<T, bool>> where);
 
         #endregion
 
