@@ -221,32 +221,6 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
             return EntityFrameworkRepositoriesMonitorCache.SqlContext;
         }
 
-        [HttpGet("GetTablsOleDbConnection")]
-        public bool GetTablsOleDbConnection()
-        {
-            var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                   .UseSqlServer(@"Server=.;Database=hzy_admin_sqlserver_20221213;User ID=sa;Password=123456;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True;");
-
-            contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
-
-            using var context = new AppDbContext(contextOptions.Options);
-
-            var oleDbConnection = new OleDbConnection(context.Database.GetConnectionString());
-
-            var tables = oleDbConnection.GetSchema(SqlClientMetaDataCollectionNames.Tables);
-            var columns = oleDbConnection.GetSchema(SqlClientMetaDataCollectionNames.Columns);
-            var str = "";
-            foreach (var item in columns.Columns)
-            {
-                str += item + ",";
-            }
-
-            Console.WriteLine(str + "\r\n\r\n\r\n");
-
-
-            return true;
-        }
-
         /// <summary>
         /// 获取所有表信息
         /// 
@@ -266,31 +240,35 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 
             using var context = new AppDbContext(contextOptions.Options);
 
-            context.Database.OpenConnection();
+            //context.Database.OpenConnection();
 
-            var conn = context.Database.GetDbConnection();
+            //var conn = context.Database.GetDbConnection();
 
-            var tables = conn.GetSchema(SqlClientMetaDataCollectionNames.Tables);
-            var columns = conn.GetSchema(SqlClientMetaDataCollectionNames.Columns);
-            var dataType = conn.GetSchema("DataTypes");
-            var str = "";
-            foreach (var item in columns.Columns)
-            {
-                str += item + ",";
-            }
+            //var tables = conn.GetSchema(SqlClientMetaDataCollectionNames.Tables);
+            //var columns = conn.GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            //var dataType = conn.GetSchema("DataTypes");
+            //var str = "";
+            //foreach (var item in columns.Columns)
+            //{
+            //    str += item + ",";
+            //}
 
-            var metaDataCollections = conn.GetSchema("MetaDataCollections");
-            foreach (DataRow item in metaDataCollections.Rows)
-            {
-                var s = item[0];
-                var dts = conn.GetSchema(s.ToString());
+            //var metaDataCollections = conn.GetSchema("MetaDataCollections");
+            //foreach (DataRow item in metaDataCollections.Rows)
+            //{
+            //    var s = item[0];
+            //    var dts = conn.GetSchema(s.ToString());
 
-            }
+            //}
 
-            Console.WriteLine(str + "\r\n\r\n\r\n");
+            //Console.WriteLine(str + "\r\n\r\n\r\n");
 
-            IDatabaseSchema databaseSchema = new DatabaseSchemaImpl(context);
+            IDatabaseSchema databaseSchema = new SqlServerDatabaseSchemaImpl(context);
+            var tables = databaseSchema.GetTables();
+            var columns = databaseSchema.GetColumns();
             var dataTypes = databaseSchema.GetDataTypes();
+
+
 
 
             return true;
@@ -316,30 +294,31 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 
             using var context = new AppDbContext(contextOptions.Options);
 
-            context.Database.OpenConnection();
+            //context.Database.OpenConnection();
 
-            var sqlConection = context.Database.GetDbConnection();
+            //var sqlConection = context.Database.GetDbConnection();
 
-            var tables = sqlConection.GetSchema(SqlClientMetaDataCollectionNames.Tables);
-            var columns = sqlConection.GetSchema(SqlClientMetaDataCollectionNames.Columns);
-            var dataType = sqlConection.GetSchema("DataTypes");
-            var str = "";
-            foreach (var item in columns.Columns)
-            {
-                str += item + ",";
-            }
+            //var tables = sqlConection.GetSchema(SqlClientMetaDataCollectionNames.Tables);
+            //var columns = sqlConection.GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            //var dataType = sqlConection.GetSchema("DataTypes");
+            //var str = "";
+            //foreach (var item in columns.Columns)
+            //{
+            //    str += item + ",";
+            //}
 
-            var metaDataCollections = sqlConection.GetSchema("MetaDataCollections");
-            foreach (DataRow item in metaDataCollections.Rows)
-            {
-                var s = item[0];
-                var dts = sqlConection.GetSchema(s.ToString());
-            }
+            //var metaDataCollections = sqlConection.GetSchema("MetaDataCollections");
+            //foreach (DataRow item in metaDataCollections.Rows)
+            //{
+            //    var s = item[0];
+            //    var dts = sqlConection.GetSchema(s.ToString());
+            //}
 
-            Console.WriteLine(str + "\r\n\r\n\r\n");
+            //Console.WriteLine(str + "\r\n\r\n\r\n");
 
-
-            IDatabaseSchema databaseSchema = new DatabaseSchemaImpl(context);
+            IDatabaseSchema databaseSchema = new MySqlDatabaseSchemaImpl(context);
+            var tables = databaseSchema.GetTables();
+            var columns = databaseSchema.GetColumns();
             var dataTypes = databaseSchema.GetDataTypes();
 
             return true;
@@ -364,31 +343,33 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 
             using var context = new AppDbContext(contextOptions.Options);
 
-            context.Database.OpenConnection();
+            //context.Database.OpenConnection();
 
-            var conn = context.Database.GetDbConnection();
+            //var conn = context.Database.GetDbConnection();
 
-            var tables = conn.GetSchema(SqlClientMetaDataCollectionNames.Tables);
-            var columns = conn.GetSchema(SqlClientMetaDataCollectionNames.Columns);
-            var dataType = conn.GetSchema("DataTypes");
-            var str = "";
-            foreach (var item in columns.Columns)
-            {
-                str += item + ",";
-            }
+            //var tables = conn.GetSchema(SqlClientMetaDataCollectionNames.Tables);
+            //var columns = conn.GetSchema(SqlClientMetaDataCollectionNames.Columns);
+            //var dataType = conn.GetSchema("DataTypes");
+            //var str = "";
+            //foreach (var item in columns.Columns)
+            //{
+            //    str += item + ",";
+            //}
 
-            var metaDataCollections = conn.GetSchema("MetaDataCollections");
-            foreach (DataRow item in metaDataCollections.Rows)
-            {
-                var s = item[0];
-                var dts = conn.GetSchema(s.ToString());
+            //var metaDataCollections = conn.GetSchema("MetaDataCollections");
+            //foreach (DataRow item in metaDataCollections.Rows)
+            //{
+            //    var s = item[0];
+            //    var dts = conn.GetSchema(s.ToString());
 
-            }
+            //}
 
-            Console.WriteLine(str + "\r\n\r\n\r\n");
+            //Console.WriteLine(str + "\r\n\r\n\r\n");
 
 
-            IDatabaseSchema databaseSchema = new DatabaseSchemaImpl(context);
+            IDatabaseSchema databaseSchema = new NPgsqlDatabaseSchemaImpl(context);
+            var tables = databaseSchema.GetTables();
+            var columns = databaseSchema.GetColumns();
             var dataTypes = databaseSchema.GetDataTypes();
 
 

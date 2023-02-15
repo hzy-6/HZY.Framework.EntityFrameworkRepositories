@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Extensions
@@ -144,7 +145,9 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
 
                     foreach (var item in columns)
                     {
-                        dic[item] = reader.GetValue(item);
+                        var value = reader.GetValue(item);
+
+                        dic[item] = value == DBNull.Value ? null : value;
                     }
 
                     result.Add(dic);
@@ -195,7 +198,10 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
 
                     foreach (var item in columns)
                     {
-                        dic[item] = reader.GetValue(item);
+
+                        var value = reader.GetValue(item);
+
+                        dic[item] = value == DBNull.Value ? null : value;
                     }
 
                     result.Add(dic);
@@ -218,52 +224,11 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         public static List<T> QueryBySql<T>(this DatabaseFacade database, string sql, params object[] parameters)
             where T : class, new()
         {
-            var dbConnection = database.GetDbConnection();
-            using (var command = dbConnection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.CommandType = CommandType.Text;
-                if (command.Connection == null) return default;
-                if (command.Connection.State != ConnectionState.Open)
-                {
-                    command.Connection.Open();
-                }
+            var dicts = QueryDicBySql(database, sql, parameters);
 
-                command.Parameters.AddRange(parameters);
+            var json = JsonConvert.SerializeObject(dicts);
 
-                var reader = command.ExecuteReader();
-
-                var fieldCount = reader.FieldCount;
-                var columns = new List<string>();
-                for (int i = 0; i < fieldCount; i++)
-                {
-                    columns.Add(reader.GetName(i));
-                }
-
-                var result = new List<T>();
-
-                while (reader.Read())
-                {
-                    var entity = new T();
-                    var type = entity.GetType();
-
-                    foreach (var propertyInfo in type.GetProperties())
-                    {
-                        if (!columns.Any(w => w == propertyInfo.Name))
-                        {
-                            continue;
-                        }
-
-                        propertyInfo.SetValue(entity, reader.GetValue(propertyInfo.Name));
-                    }
-
-                    result.Add(entity);
-                }
-
-                dbConnection.Close();
-
-                return result;
-            }
+            return JsonConvert.DeserializeObject<List<T>>(json);
         }
 
         /// <summary>
@@ -277,52 +242,11 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         public static async Task<List<T>> QueryBySqlAsync<T>(this DatabaseFacade database, string sql, params object[] parameters)
             where T : class, new()
         {
-            var dbConnection = database.GetDbConnection();
-            using (var command = dbConnection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.CommandType = CommandType.Text;
-                if (command.Connection == null) return default;
-                if (command.Connection.State != ConnectionState.Open)
-                {
-                    await command.Connection.OpenAsync();
-                }
+            var dicts = QueryDicBySqlAsync(database, sql, parameters);
 
-                command.Parameters.AddRange(parameters);
+            var json = JsonConvert.SerializeObject(dicts);
 
-                var reader = await command.ExecuteReaderAsync();
-
-                var fieldCount = reader.FieldCount;
-                var columns = new List<string>();
-                for (int i = 0; i < fieldCount; i++)
-                {
-                    columns.Add(reader.GetName(i));
-                }
-
-                var result = new List<T>();
-
-                while (reader.Read())
-                {
-                    var entity = new T();
-                    var type = entity.GetType();
-
-                    foreach (var propertyInfo in type.GetProperties())
-                    {
-                        if (!columns.Any(w => w == propertyInfo.Name))
-                        {
-                            continue;
-                        }
-
-                        propertyInfo.SetValue(entity, reader.GetValue(propertyInfo.Name));
-                    }
-
-                    result.Add(entity);
-                }
-
-                await dbConnection.CloseAsync();
-
-                return result;
-            }
+            return JsonConvert.DeserializeObject<List<T>>(json);
         }
 
         /// <summary>

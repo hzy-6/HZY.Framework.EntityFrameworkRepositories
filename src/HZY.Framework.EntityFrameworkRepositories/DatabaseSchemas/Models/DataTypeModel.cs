@@ -9,7 +9,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas
     /// <summary>
     /// 数据类型
     /// </summary>
-    public class DataType
+    public class DataTypeModel
     {
         /// <summary>
         /// 数据库中 类型名称

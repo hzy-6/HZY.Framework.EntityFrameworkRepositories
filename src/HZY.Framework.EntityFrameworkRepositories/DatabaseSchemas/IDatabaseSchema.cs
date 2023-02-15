@@ -1,9 +1,5 @@
 ﻿using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Databases
 {
@@ -17,23 +13,19 @@ namespace HZY.Framework.EntityFrameworkRepositories.Databases
         /// 获取所有的表
         /// </summary>
         /// <returns></returns>
-        public List<Table> GetTables();
+        public List<TableModel> GetTables();
 
         /// <summary>
         /// 获取所有的列
         /// </summary>
         /// <returns></returns>
-        public List<Column> GetColumns();
+        public List<ColumnModel> GetColumns();
 
         /// <summary>
         /// 获取所有的数据类型
         /// </summary>
         /// <returns></returns>
-        public List<DataType> GetDataTypes();
-
-
-
-
+        public List<DataTypeModel> GetDataTypes();
 
 
     }
