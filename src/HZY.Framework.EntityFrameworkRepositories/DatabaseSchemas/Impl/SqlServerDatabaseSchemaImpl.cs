@@ -1,7 +1,9 @@
 ﻿using HZY.Framework.EntityFrameworkRepositories.Databases;
 using HZY.Framework.EntityFrameworkRepositories.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl
 {
@@ -25,15 +27,18 @@ namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl
         /// <returns></returns>
         public override List<TableModel> GetTables()
         {
-            var sqlString = @"
+            var database = _dbContext.Database.GetDbConnection().Database;
 
-                            SELECT a.name TableName,
-                            b.value Description 
+            var sqlString = $@"
 
-                            FROM dbo.sysobjects a
-                            left join sys.extended_properties b on a.Id = b.major_id and b.minor_id=0
-                            Where a.XType='U'
+                select 
 
+                table_name TableName,
+                b.value Description 
+
+                from information_schema.tables a
+                left join sys.extended_properties b on object_id(a.table_name) = b.major_id and b.minor_id=0
+                where table_catalog ='{database}'
                             ";
 
             return _dbContext.Database.QueryBySql<TableModel>(sqlString);
@@ -41,52 +46,66 @@ namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl
 
         /// <summary>
         /// 获取所有的 列信息
-        /// 
         /// </summary>
         /// <returns></returns>
         public override List<ColumnModel> GetColumns()
         {
-            var sqlString = @"
+            var database = _dbContext.Database.GetDbConnection().Database;
 
-https://www.cnblogs.com/qy1234/p/9044275.html
+            var sqlString = $@"
 
-select value from sys.extended_properties where major_id = object_id ('Sys_User' );
+                            SELECT
 
+                                table_catalog TableCatalog,
+                                table_schema TableSchema,
+                                table_name TableName,
+                                column_name ColumnName,
+                                ordinal_position OrdinalPosition,
+                                column_default ColumnDefault,
+                                case when is_nullable='YES' then 1 else 0 end IsNullable,
+                                data_type DataType,
+                                0 IsPrimaryKey,
+                                NULL Description,
+                                OBJECT_ID(table_name) major_id
 
-select * from information_schema.columns
-
-
-select * from information_schema.tables
-
-
-
-
-select * from sys.extended_properties
-
-
-
-select * from dbo.sysobjects
-
-
-select * from sys.extended_properties
-
-
-
-
-                            SELECT 
-
-                            c.name TableName,
-                            a.name ColumnName,
-                            b.value Description
-
-                            FROM dbo.syscolumns a
-                            left join sys.extended_properties b on a.id=b.major_id and a.colid=b.minor_id
-                            left join dbo.sysobjects c on a.id = c.id AND c.xtype = 'U'
-                            where c.name is not null
+                                from information_schema.columns 
+                                where table_catalog = '{database}'
 
                             ";
 
-            return _dbContext.Database.QueryBySql<ColumnModel>(sqlString);
+            var columns = _dbContext.Database.QueryDicBySql(sqlString);
+
+            var propertes = _dbContext.Database.QueryDicBySql(@"select 
+major_id,minor_id,value,a.name
+from sys.columns a    
+left join sys.extended_properties b on a.object_id=b.major_id AND a.column_id = b.minor_id and b.minor_id>0
+where value is not null");
+
+            var keys = _dbContext.Database.QueryDicBySql("select CONSTRAINT_NAME,TABLE_NAME TableName,COLUMN_NAME ColumnName,ORDINAL_POSITION OrdinalPosition from INFORMATION_SCHEMA.key_column_usage");
+
+            foreach (var item in columns)
+            {
+                var major_id = item["major_id"].ToString();
+                var tableName = item["TableName"].ToString();
+                var columnName = item["ColumnName"].ToString();
+
+                var description = propertes
+                    .Where(w => w["major_id"].ToString() == major_id && w["name"].ToString() == columnName)
+                    .Select(w => w["value"]?.ToString())?
+                    .FirstOrDefault()
+                    ;
+
+                var primaryKey = keys
+                    .Where(w => w["TableName"].ToString() == tableName && w["ColumnName"].ToString() == columnName)
+                    .Where(w => w["CONSTRAINT_NAME"].ToString().StartsWith("PK_"))
+                    .Any()
+                    ;
+
+                item["IsPrimaryKey"] = primaryKey;
+                item["Description"] = description;
+            }
+
+            return JsonConvert.DeserializeObject<List<ColumnModel>>(JsonConvert.SerializeObject(columns));
         }
 
     }
