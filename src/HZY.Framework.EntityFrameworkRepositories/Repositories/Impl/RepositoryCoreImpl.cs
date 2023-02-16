@@ -150,6 +150,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         {
             //调用带参数的Dispose方法，释放托管和非托管资源
             Dispose(true);
+            Context.Dispose();
             //手动调用了Dispose释放资源，那么析构函数就是不必要的了，这里阻止GC调用析构函数
             GC.SuppressFinalize(this);
         }

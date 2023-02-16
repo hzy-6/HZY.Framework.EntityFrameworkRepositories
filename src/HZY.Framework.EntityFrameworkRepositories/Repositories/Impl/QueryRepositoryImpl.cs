@@ -1,12 +1,13 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.Extensions;
+﻿using HZY.Framework.EntityFrameworkRepositories.Databases;
+using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas;
+using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl;
+using HZY.Framework.EntityFrameworkRepositories.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
@@ -26,6 +27,11 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         protected readonly bool _isTracking;
 
         /// <summary>
+        /// 数据库结构操作对象
+        /// </summary>
+        IDatabaseSchema _databaseSchema = null;
+
+        /// <summary>
         /// 基础仓储 查询 实现
         /// </summary>
         /// <param name="dbContext"></param>
@@ -35,6 +41,40 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
             : base(dbContext, filter)
         {
             _isTracking = isTracking;
+
+            if (this.Context.Database.IsSqlServer())
+            {
+                _databaseSchema = new SqlServerDatabaseSchemaImpl(this.Context);
+            }
+
+            if (this.Context.Database.IsMySql())
+            {
+                _databaseSchema = new MySqlDatabaseSchemaImpl(this.Context);
+            }
+
+            if (this.Context.Database.IsNpgsql())
+            {
+                _databaseSchema = new NPgsqlDatabaseSchemaImpl(this.Context);
+            }
+
+            if (this.Context.Database.IsOracle())
+            {
+                _databaseSchema = new OracleDatabaseSchemaImpl(this.Context);
+            }
+        }
+
+        /// <summary>
+        /// 资源释放
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _databaseSchema.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         #region 过滤
@@ -380,6 +420,39 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl
         }
 
         #endregion
+
+
+        #region 查询数据库结构
+
+        /// <summary>
+        /// 获取所有的表
+        /// </summary>
+        /// <returns></returns>
+        public List<TableModel> GetTables()
+        {
+            return _databaseSchema.GetTables();
+        }
+
+        /// <summary>
+        /// 获取所有的列
+        /// </summary>
+        /// <returns></returns>
+        public List<ColumnModel> GetColumns()
+        {
+            return _databaseSchema.GetColumns();
+        }
+
+        /// <summary>
+        /// 获取所有的数据类型
+        /// </summary>
+        /// <returns></returns>
+        public List<DataTypeModel> GetDataTypes()
+        {
+            return _databaseSchema.GetDataTypes();
+        }
+
+        #endregion
+
 
 
 

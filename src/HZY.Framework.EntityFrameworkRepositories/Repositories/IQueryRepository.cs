@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HZY.Framework.EntityFrameworkRepositories.Databases;
+using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -272,6 +274,27 @@ namespace HZY.Framework.EntityFrameworkRepositories.Repositories
 
         #endregion
 
+        #region 查询数据库结构
+
+        /// <summary>
+        /// 获取所有的表
+        /// </summary>
+        /// <returns></returns>
+        List<TableModel> GetTables();
+
+        /// <summary>
+        /// 获取所有的列
+        /// </summary>
+        /// <returns></returns>
+        List<ColumnModel> GetColumns();
+
+        /// <summary>
+        /// 获取所有的数据类型
+        /// </summary>
+        /// <returns></returns>
+        List<DataTypeModel> GetDataTypes();
+
+        #endregion
 
     }
 }

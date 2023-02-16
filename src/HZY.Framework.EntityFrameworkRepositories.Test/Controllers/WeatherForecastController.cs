@@ -7,11 +7,7 @@ using HZY.Framework.EntityFrameworkRepositories.Test.DbContexts;
 using HZY.Framework.EntityFrameworkRepositories.Test.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
-using System.Data.OleDb;
 using System.Data;
-using HZY.Framework.EntityFrameworkRepositories.Databases;
-using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 {
@@ -240,36 +236,11 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 
             using var context = new AppDbContext(contextOptions.Options);
 
-            //context.Database.OpenConnection();
+            using var repository = new AppRepository<SysFunction>(context);
 
-            //var conn = context.Database.GetDbConnection();
-
-            //var tables = conn.GetSchema(SqlClientMetaDataCollectionNames.Tables);
-            //var columns = conn.GetSchema(SqlClientMetaDataCollectionNames.Columns);
-            //var dataType = conn.GetSchema("DataTypes");
-            //var str = "";
-            //foreach (var item in columns.Columns)
-            //{
-            //    str += item + ",";
-            //}
-
-            //var metaDataCollections = conn.GetSchema("MetaDataCollections");
-            //foreach (DataRow item in metaDataCollections.Rows)
-            //{
-            //    var s = item[0];
-            //    var dts = conn.GetSchema(s.ToString());
-
-            //}
-
-            //Console.WriteLine(str + "\r\n\r\n\r\n");
-
-            IDatabaseSchema databaseSchema = new SqlServerDatabaseSchemaImpl(context);
-            var tables = databaseSchema.GetTables();
-            var columns = databaseSchema.GetColumns();
-            var dataTypes = databaseSchema.GetDataTypes();
-
-
-
+            var tables = repository.GetTables();
+            var columns = repository.GetColumns();
+            var dataTypes = repository.GetDataTypes();
 
             return true;
         }
@@ -294,32 +265,11 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 
             using var context = new AppDbContext(contextOptions.Options);
 
-            //context.Database.OpenConnection();
+            var repository = new AppRepository<SysFunction>(context);
 
-            //var sqlConection = context.Database.GetDbConnection();
-
-            //var tables = sqlConection.GetSchema(SqlClientMetaDataCollectionNames.Tables);
-            //var columns = sqlConection.GetSchema(SqlClientMetaDataCollectionNames.Columns);
-            //var dataType = sqlConection.GetSchema("DataTypes");
-            //var str = "";
-            //foreach (var item in columns.Columns)
-            //{
-            //    str += item + ",";
-            //}
-
-            //var metaDataCollections = sqlConection.GetSchema("MetaDataCollections");
-            //foreach (DataRow item in metaDataCollections.Rows)
-            //{
-            //    var s = item[0];
-            //    var dts = sqlConection.GetSchema(s.ToString());
-            //}
-
-            //Console.WriteLine(str + "\r\n\r\n\r\n");
-
-            IDatabaseSchema databaseSchema = new MySqlDatabaseSchemaImpl(context);
-            var tables = databaseSchema.GetTables();
-            var columns = databaseSchema.GetColumns();
-            var dataTypes = databaseSchema.GetDataTypes();
+            var tables = repository.GetTables();
+            var columns = repository.GetColumns();
+            var dataTypes = repository.GetDataTypes();
 
             return true;
         }
@@ -343,36 +293,11 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 
             using var context = new AppDbContext(contextOptions.Options);
 
-            //context.Database.OpenConnection();
+            var repository = new AppRepository<SysFunction>(context);
 
-            //var conn = context.Database.GetDbConnection();
-
-            //var tables = conn.GetSchema(SqlClientMetaDataCollectionNames.Tables);
-            //var columns = conn.GetSchema(SqlClientMetaDataCollectionNames.Columns);
-            //var dataType = conn.GetSchema("DataTypes");
-            //var str = "";
-            //foreach (var item in columns.Columns)
-            //{
-            //    str += item + ",";
-            //}
-
-            //var metaDataCollections = conn.GetSchema("MetaDataCollections");
-            //foreach (DataRow item in metaDataCollections.Rows)
-            //{
-            //    var s = item[0];
-            //    var dts = conn.GetSchema(s.ToString());
-
-            //}
-
-            //Console.WriteLine(str + "\r\n\r\n\r\n");
-
-
-            IDatabaseSchema databaseSchema = new NPgsqlDatabaseSchemaImpl(context);
-            var tables = databaseSchema.GetTables();
-            var columns = databaseSchema.GetColumns();
-            var dataTypes = databaseSchema.GetDataTypes();
-
-
+            var tables = repository.GetTables();
+            var columns = repository.GetColumns();
+            var dataTypes = repository.GetDataTypes();
 
             return true;
         }

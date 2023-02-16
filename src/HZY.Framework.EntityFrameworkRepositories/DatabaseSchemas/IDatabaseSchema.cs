@@ -1,4 +1,5 @@
 ﻿using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas;
+using System;
 using System.Collections.Generic;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Databases
@@ -6,7 +7,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Databases
     /// <summary>
     /// 数据库结构
     /// </summary>
-    public interface IDatabaseSchema
+    public interface IDatabaseSchema : IDisposable, IAsyncDisposable
     {
 
         /// <summary>

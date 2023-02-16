@@ -23,41 +23,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// <returns></returns>
         public static DataTable QueryDataTableBySql(this DatabaseFacade database, string sql, params object[] parameters)
         {
-            var dbConnection = database.GetDbConnection();
-            using (var command = dbConnection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.CommandType = CommandType.Text;
-                if (command.Connection == null) return null;
-                if (command.Connection.State != ConnectionState.Open)
-                {
-                    command.Connection.Open();
-                }
-
-                command.Parameters.AddRange(parameters);
-
-                var reader = command.ExecuteReader();
-                var dt = new DataTable();
-
-                int fieldCount = reader.FieldCount;
-                for (int i = 0; i < fieldCount; i++)
-                {
-                    dt.Columns.Add(reader.GetName(i), reader.GetFieldType(i));
-                }
-
-                dt.BeginLoadData();
-
-                object[] objValues = new object[fieldCount];
-                while (reader.Read())
-                {
-                    reader.GetValues(objValues);
-                    dt.LoadDataRow(objValues, true);
-                }
-
-                dbConnection.Close();
-                return dt;
-            }
-
+            return QueryDataTableBySqlAsync(database, sql, parameters).Result;
         }
 
         /// <summary>
@@ -115,48 +81,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// <returns></returns>
         public static List<Dictionary<string, object>> QueryDicBySql(this DatabaseFacade database, string sql, params object[] parameters)
         {
-            var dbConnection = database.GetDbConnection();
-            using (var command = dbConnection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.CommandType = CommandType.Text;
-                if (command.Connection == null) return default;
-                if (command.Connection.State != ConnectionState.Open)
-                {
-                    command.Connection.Open();
-                }
-
-                command.Parameters.AddRange(parameters);
-
-                var reader = command.ExecuteReader();
-
-                var fieldCount = reader.FieldCount;
-                var columns = new List<string>();
-                for (int i = 0; i < fieldCount; i++)
-                {
-                    columns.Add(reader.GetName(i));
-                }
-
-                var result = new List<Dictionary<string, object>>();
-
-                while (reader.Read())
-                {
-                    var dic = new Dictionary<string, object>();
-
-                    foreach (var item in columns)
-                    {
-                        var value = reader.GetValue(item);
-
-                        dic[item] = value == DBNull.Value ? null : value;
-                    }
-
-                    result.Add(dic);
-                }
-
-                dbConnection.Close();
-
-                return result;
-            }
+            return QueryDicBySqlAsync(database, sql, parameters).Result;
         }
 
         /// <summary>
@@ -242,7 +167,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         public static async Task<List<T>> QueryBySqlAsync<T>(this DatabaseFacade database, string sql, params object[] parameters)
             where T : class, new()
         {
-            var dicts = QueryDicBySqlAsync(database, sql, parameters);
+            var dicts = await QueryDicBySqlAsync(database, sql, parameters);
 
             var json = JsonConvert.SerializeObject(dicts);
 
@@ -258,25 +183,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// <returns></returns>
         public static object QuerySingleBySql(this DatabaseFacade database, string sql, params object[] parameters)
         {
-            var dbConnection = database.GetDbConnection();
-            using (var command = dbConnection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.CommandType = CommandType.Text;
-                if (command.Connection == null) return default;
-                if (command.Connection.State != ConnectionState.Open)
-                {
-                    command.Connection.Open();
-                }
-
-                command.Parameters.AddRange(parameters);
-
-                var result = command.ExecuteScalar();
-
-                dbConnection.Close();
-
-                return result;
-            }
+            return QuerySingleBySql<object>(database, sql, parameters);
         }
 
         /// <summary>
@@ -288,25 +195,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// <returns></returns>
         public static async Task<object> QuerySingleBySqlAsync(this DatabaseFacade database, string sql, params object[] parameters)
         {
-            var dbConnection = database.GetDbConnection();
-            using (var command = dbConnection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.CommandType = CommandType.Text;
-                if (command.Connection == null) return default;
-                if (command.Connection.State != ConnectionState.Open)
-                {
-                    await command.Connection.OpenAsync();
-                }
-
-                command.Parameters.AddRange(parameters);
-
-                var result = await command.ExecuteScalarAsync();
-
-                await dbConnection.CloseAsync();
-
-                return result;
-            }
+            return await QuerySingleBySqlAsync<object>(database, sql, parameters);
         }
 
         /// <summary>
@@ -318,32 +207,8 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// <param name="parameters"></param>
         /// <returns></returns>
         public static T QuerySingleBySql<T>(this DatabaseFacade database, string sql, params object[] parameters)
-            where T : struct
         {
-            var dbConnection = database.GetDbConnection();
-            using (var command = dbConnection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.CommandType = CommandType.Text;
-                if (command.Connection == null) return default;
-                if (command.Connection.State != ConnectionState.Open)
-                {
-                    command.Connection.Open();
-                }
-
-                command.Parameters.AddRange(parameters);
-
-                var result = command.ExecuteScalar();
-
-                dbConnection.Close();
-
-                if (result == null)
-                {
-                    return default;
-                }
-
-                return (T)result;
-            }
+            return QuerySingleBySqlAsync<T>(database, sql, parameters).Result;
         }
 
         /// <summary>
@@ -355,7 +220,6 @@ namespace HZY.Framework.EntityFrameworkRepositories.Extensions
         /// <param name="parameters"></param>
         /// <returns></returns>
         public static async Task<T> QuerySingleBySqlAsync<T>(this DatabaseFacade database, string sql, params object[] parameters)
-            where T : struct
         {
             var dbConnection = database.GetDbConnection();
             using (var command = dbConnection.CreateCommand())

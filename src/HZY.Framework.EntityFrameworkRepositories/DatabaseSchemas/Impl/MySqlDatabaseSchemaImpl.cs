@@ -25,7 +25,8 @@ namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl
         /// <returns></returns>
         public override List<TableModel> GetTables()
         {
-            var database = _dbContext.Database.GetDbConnection().Database;
+            var dbConnection = _dbContext.Database.GetDbConnection();
+            var database = dbConnection.Database;
 
             var sqlString = $@"
 
@@ -48,7 +49,8 @@ namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl
         /// <returns></returns>
         public override List<ColumnModel> GetColumns()
         {
-            var database = _dbContext.Database.GetDbConnection().Database;
+            var dbConnection = _dbContext.Database.GetDbConnection();
+            var database = dbConnection.Database;
 
             var sqlString = $@"
 
