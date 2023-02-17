@@ -13,14 +13,20 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class TestController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<TestController> _logger;
         private readonly AppDbContext _appDbContext;
         private readonly AppDbContext1 _appDbContext1;
         private readonly IServiceProvider _serviceProvider;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, AppDbContext appDbContext, IServiceProvider serviceProvider)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="appDbContext"></param>
+        /// <param name="serviceProvider"></param>
+        public TestController(ILogger<TestController> logger, AppDbContext appDbContext, IServiceProvider serviceProvider)
         {
             _logger = logger;
             _appDbContext = appDbContext;
@@ -36,13 +42,23 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
         public async Task<string> Update()
         {
             var repository = new AppRepository<SysFunction>(_appDbContext);
-            var sysFunction = await repository.Query().FirstOrDefaultAsync();
+            var sysFunction = await repository.Select.FirstOrDefaultAsync();
             sysFunction.CreationTime = DateTime.Now;
             repository.Update(sysFunction);
 
             if (sysFunction == null) return "OK";
 
-            var resultCount = repository.UpdateBulk(w => w.SetProperty(s => s.Name, s => sysFunction.Name), w => w.Id == sysFunction.Id && w.Name == sysFunction.Name);
+            var resultCount = repository.UpdateBulk(
+
+                w => w
+                .SetProperty(s => s.Name, s => sysFunction.Name)
+                .SetProperty(s => s.Number, s => 1000)
+
+                ,
+
+                w => w.Id == sysFunction.Id && w.Name == sysFunction.Name
+
+                );
 
             return "Ok" + resultCount;
         }
@@ -61,7 +77,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
             contextOptions.AddInterceptors(new ShardingDbCommandInterceptor());
             using var context = new AppDbContext(contextOptions.Options);
             var repository = new AppRepository<SysFunction>(context);
-            var sysFunction = await repository.Query().AsTable("sys_function").FirstOrDefaultAsync();
+            var sysFunction = await repository.Select.AsTable("sys_function").FirstOrDefaultAsync();
 
             if (sysFunction == null) return "OK";
 
@@ -108,7 +124,6 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
             model.ByName = model.ByName + "1";
             repository.DettachWhenExist(w => w.Id == model.Id);
             repository.Update(model);
-
 
             return "Ok" + list.Count();
 

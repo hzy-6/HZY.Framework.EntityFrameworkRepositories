@@ -1,11 +1,7 @@
 ﻿using HZY.Framework.EntityFrameworkRepositories.Databases;
-using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Models;
+using HZY.Framework.EntityFrameworkRepositories.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl
 {
@@ -22,14 +18,65 @@ namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl
         {
         }
 
-        public override List<ColumnModel> GetColumns()
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// 获取所有的表信息
+        /// </summary>
+        /// <returns></returns>
         public override List<TableModel> GetTables()
         {
-            throw new NotImplementedException();
+            //var dbConnection = _dbContext.Database.GetDbConnection();
+            //var database = dbConnection.Database;
+
+            var sqlString = $@"
+
+                            select 
+                                a.tablename TableName,
+                                d.description Description 
+                            from pg_tables a
+                            inner join pg_namespace b on b.nspname = a.schemaname
+                            inner join pg_class c on c.relnamespace = b.oid and c.relname = a.tablename
+                            left join pg_description d on d.objoid = c.oid and objsubid = 0
+
+                            where a.schemaname not in ('pg_catalog', 'information_schema', 'topology')
+                            and b.nspname || '.' || a.tablename not in ('public.spatial_ref_sys')
+
+                            ";
+
+            return _dbContext.Database.QueryBySql<TableModel>(sqlString);
         }
+
+        /// <summary>
+        /// 获取所有的 列信息
+        /// </summary>
+        /// <returns></returns>
+        public override List<ColumnModel> GetColumns()
+        {
+            var dbConnection = _dbContext.Database.GetDbConnection();
+            var database = dbConnection.Database;
+
+            var sqlString = $@"
+
+                            SELECT
+                            table_catalog TableCatalog,
+                            table_schema TableSchema,
+                            table_name TableName,
+                            column_name ColumnName,
+                            ordinal_position OrdinalPosition,
+                            column_default ColumnDefault,
+                            IF(is_nullable='YES',TRUE,FALSE) IsNullable,
+                            data_type DataType,
+                            IF(column_key='PRI',TRUE,FALSE) IsPrimaryKey,
+                            column_comment Description
+
+                            from information_schema.columns 
+                            where table_schema = '{database}'
+
+                            ";
+
+            return _dbContext.Database.QueryBySql<ColumnModel>(sqlString);
+        }
+
+
+
     }
 }
