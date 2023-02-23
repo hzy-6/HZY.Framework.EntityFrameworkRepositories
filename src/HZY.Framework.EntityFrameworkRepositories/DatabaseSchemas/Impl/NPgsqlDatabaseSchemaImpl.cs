@@ -1,6 +1,7 @@
 ﻿using HZY.Framework.EntityFrameworkRepositories.Databases;
 using HZY.Framework.EntityFrameworkRepositories.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl
@@ -54,26 +55,79 @@ namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl
             var dbConnection = _dbContext.Database.GetDbConnection();
             var database = dbConnection.Database;
 
+            // 查询列数据
             var sqlString = $@"
-
-                            SELECT
-                            table_catalog TableCatalog,
+                            SELECT table_catalog TableCatalog,
                             table_schema TableSchema,
                             table_name TableName,
                             column_name ColumnName,
                             ordinal_position OrdinalPosition,
                             column_default ColumnDefault,
-                            IF(is_nullable='YES',TRUE,FALSE) IsNullable,
-                            data_type DataType,
-                            IF(column_key='PRI',TRUE,FALSE) IsPrimaryKey,
-                            column_comment Description
-
-                            from information_schema.columns 
-                            where table_schema = '{database}'
-
+                            is_nullable IsNullable,
+                            udt_name DataType,
+                            is_identity IsPrimaryKey
+                            from information_schema.columns
+                            where table_schema = 'public'
                             ";
 
-            return _dbContext.Database.QueryBySql<ColumnModel>(sqlString);
+            var columns = _dbContext.Database.QueryDicBySql(sqlString);
+
+            // 查询表名及关联oid
+            var tableSql = $@"
+                                    SELECT oid,relname FROM pg_catalog.pg_class
+                                    where relkind = 'r' and relname not like 'pg_%' and relname not like 'sql_%' order by relname;
+                                    ";
+            var tables = _dbContext.Database.QueryDicBySql(tableSql);
+
+            // 查询oid及描述
+            var desSql = $@"
+                                select objoid,objsubid,description from pg_description as ""b""
+                                where ""b"".""objoid"" in (SELECT ""c"".""oid"" FROM pg_catalog.pg_class as ""c"")
+                                and ""b"".""objsubid"" > 0
+                                order by ""b"".""objsubid""
+                                ";
+            var descriptions = _dbContext.Database.QueryDicBySql(desSql);
+
+            foreach (var column in columns)
+            {
+                // 查询列对应的表
+                var table = tables.Where(t => t["relname"].ToString() == column["tablename"].ToString()).FirstOrDefault();
+                if (table != null)
+                {
+                    // 根据表的id和列的数据点位置，找对应的描述
+                    var oid = table["oid"].ToString();
+                    var description = descriptions.Where(d => d["objoid"].ToString() == oid && d["objsubid"].ToString() == column["ordinalposition"].ToString()).FirstOrDefault();
+                    if (description != null)
+                    {
+                        column["Description"] = description["description"];
+                    }
+                    else
+                    {
+                        column["Description"] = "";
+                    }
+                }
+
+                // 字符串转 bool
+                if (column["isnullable"].ToString().ToUpper() == "YES")
+                {
+                    column["isnullable"] = true;
+                }
+                else
+                {
+                    column["isnullable"] = false;
+                }
+
+                if (column["isprimarykey"].ToString().ToUpper() == "YES")
+                {
+                    column["isprimarykey"] = true;
+                }
+                else
+                {
+                    column["isprimarykey"] = false;
+                }
+            }
+
+            return JsonConvert.DeserializeObject<List<ColumnModel>>(JsonConvert.SerializeObject(columns));
         }
 
 

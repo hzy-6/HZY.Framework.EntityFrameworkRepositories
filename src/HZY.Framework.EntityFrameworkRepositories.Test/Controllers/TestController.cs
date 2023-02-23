@@ -302,7 +302,7 @@ namespace HZY.Framework.EntityFrameworkRepositories.Test.Controllers
         public bool GetTabls_NPgsql()
         {
             var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-               .UseNpgsql(@"User ID=postgres;Password=123456;Host=localhost;Port=5432;Database=hzy_admin_pgsql_20221213;Pooling=true;TimeZone=Asia/Shanghai");
+               .UseNpgsql(@"User ID=postgres;Password=root;Host=localhost;Port=5432;Database=ems;Pooling=true;TimeZone=Asia/Shanghai");
 
             contextOptions.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
 
