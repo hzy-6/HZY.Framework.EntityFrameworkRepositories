@@ -1,30 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Models;
 
-namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Models
+/// <summary>
+/// 说明
+/// </summary>
+public class DescriptionModel
 {
     /// <summary>
-    /// 说明
+    /// 表名称
     /// </summary>
-    public class DescriptionModel
-    {
-        /// <summary>
-        /// 表名称
-        /// </summary>
-        public string TableName { get; set; }
+    public string TableName { get; set; }
 
-        /// <summary>
-        /// 列名称
-        /// </summary>
-        public string ColumnName { get; set; }
+    /// <summary>
+    /// 列名称
+    /// </summary>
+    public string ColumnName { get; set; }
 
-        /// <summary>
-        /// 字段或者表说明
-        /// </summary>
-        public string Description { get; set; }
+    /// <summary>
+    /// 字段或者表说明
+    /// </summary>
+    public string Description { get; set; }
 
-    }
 }

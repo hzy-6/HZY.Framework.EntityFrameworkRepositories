@@ -1,210 +1,203 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Npgsql;
+using System.Data;
 
-namespace HZY.Framework.EntityFrameworkRepositories.Extensions
+namespace HZY.Framework.EntityFrameworkRepositories.Extensions;
+
+/// <summary>
+/// Npgsql
+/// </summary>
+public static class NpgsqlBulkCopyExtensions
 {
+
     /// <summary>
-    /// Npgsql
+    /// Npgsql 批量拷贝数据
     /// </summary>
-    public static class NpgsqlBulkCopyExtensions
+    /// <param name="database"></param>
+    /// <param name="dataTable"></param>
+    /// <param name="tableName"></param>
+    /// <param name="ignoreColumns"></param>
+    /// <exception cref="Exception"></exception>
+    public static void NpgsqlBulkCopy(this DatabaseFacade database, DataTable dataTable, string tableName, params string[] ignoreColumns)
     {
-
-        /// <summary>
-        /// Npgsql 批量拷贝数据
-        /// </summary>
-        /// <param name="database"></param>
-        /// <param name="dataTable"></param>
-        /// <param name="tableName"></param>
-        /// <param name="ignoreColumns"></param>
-        /// <exception cref="Exception"></exception>
-        public static void NpgsqlBulkCopy(this DatabaseFacade database, DataTable dataTable, string tableName, params string[] ignoreColumns)
+        if (!database.IsNpgsql())
         {
-            if (!database.IsNpgsql())
-            {
-                throw new Exception("当前不是 Npgsql 数据库无法调用此函数!");
-            }
-            var dbConnection = (NpgsqlConnection)database.GetDbConnection();
+            throw new Exception("当前不是 Npgsql 数据库无法调用此函数!");
+        }
+        var dbConnection = (NpgsqlConnection)database.GetDbConnection();
 
-            if (ignoreColumns != null || ignoreColumns.Length > 0)
+        if (ignoreColumns != null || ignoreColumns.Length > 0)
+        {
+            //忽略某列
+            foreach (var item in ignoreColumns)
             {
-                //忽略某列
-                foreach (var item in ignoreColumns)
-                {
-                    if (string.IsNullOrWhiteSpace(item)) continue;
-                    if (!dataTable.Columns.Contains(item)) continue;
-                    dataTable.Columns.Remove(item);
-                }
-            }
-
-            var fields = new List<string>();
-            foreach (DataColumn item in dataTable.Columns)
-            {
-                fields.Add($"\"{item.ColumnName}\"");
-            }
-
-            try
-            {
-                // 构建导入SQL
-                var commandFormat = string.Format("COPY \"{0}\"({1}) FROM STDIN BINARY", tableName, string.Join(",", fields));
-
-                if (dbConnection.State != ConnectionState.Open)
-                {
-                    dbConnection.Open();
-                }
-
-                using (var writer = dbConnection.BeginBinaryImport(commandFormat))
-                {
-                    foreach (DataRow item in dataTable.Rows)
-                    {
-                        writer.WriteRow(item.ItemArray);
-                    }
-
-                    writer.Complete();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (dbConnection.State == ConnectionState.Open)
-                {
-                    dbConnection.Close();
-                }
+                if (string.IsNullOrWhiteSpace(item)) continue;
+                if (!dataTable.Columns.Contains(item)) continue;
+                dataTable.Columns.Remove(item);
             }
         }
 
-        /// <summary>
-        /// Npgsql 批量拷贝数据
-        /// </summary>
-        /// <param name="database"></param>
-        /// <param name="dataTable"></param>
-        /// <param name="tableName"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="ignoreColumns"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static async Task NpgsqlBulkCopyAsync(this DatabaseFacade database, DataTable dataTable, string tableName, CancellationToken cancellationToken = default, params string[] ignoreColumns)
+        var fields = new List<string>();
+        foreach (DataColumn item in dataTable.Columns)
         {
-            if (!database.IsNpgsql())
-            {
-                throw new Exception("当前不是 Npgsql 数据库无法调用此函数!");
-            }
-            var dbConnection = (NpgsqlConnection)database.GetDbConnection();
+            fields.Add($"\"{item.ColumnName}\"");
+        }
 
-            if (ignoreColumns != null || ignoreColumns.Length > 0)
+        try
+        {
+            // 构建导入SQL
+            var commandFormat = string.Format("COPY \"{0}\"({1}) FROM STDIN BINARY", tableName, string.Join(",", fields));
+
+            if (dbConnection.State != ConnectionState.Open)
             {
-                //忽略某列
-                foreach (var item in ignoreColumns)
+                dbConnection.Open();
+            }
+
+            using (var writer = dbConnection.BeginBinaryImport(commandFormat))
+            {
+                foreach (DataRow item in dataTable.Rows)
                 {
-                    if (string.IsNullOrWhiteSpace(item)) continue;
-                    if (!dataTable.Columns.Contains(item)) continue;
-                    dataTable.Columns.Remove(item);
-                }
-            }
-
-            var fields = new List<string>();
-            foreach (DataColumn item in dataTable.Columns)
-            {
-                fields.Add($"\"{item.ColumnName}\"");
-            }
-
-            try
-            {
-                // 构建导入SQL
-                var commandFormat = string.Format("COPY \"{0}\"({1}) FROM STDIN BINARY", tableName, string.Join(",", fields));
-
-                if (dbConnection.State != ConnectionState.Open)
-                {
-                    await dbConnection.OpenAsync();
+                    writer.WriteRow(item.ItemArray);
                 }
 
-                using (var writer = dbConnection.BeginBinaryImport(commandFormat))
-                {
-                    foreach (DataRow item in dataTable.Rows)
-                    {
-                        await writer.WriteRowAsync(cancellationToken, item.ItemArray);
-                    }
+                writer.Complete();
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+        finally
+        {
+            if (dbConnection.State == ConnectionState.Open)
+            {
+                dbConnection.Close();
+            }
+        }
+    }
 
-                    await writer.CompleteAsync(cancellationToken);
-                }
-            }
-            catch (Exception)
+    /// <summary>
+    /// Npgsql 批量拷贝数据
+    /// </summary>
+    /// <param name="database"></param>
+    /// <param name="dataTable"></param>
+    /// <param name="tableName"></param>
+    /// <param name="cancellationToken"></param>
+    /// <param name="ignoreColumns"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static async Task NpgsqlBulkCopyAsync(this DatabaseFacade database, DataTable dataTable, string tableName, CancellationToken cancellationToken = default, params string[] ignoreColumns)
+    {
+        if (!database.IsNpgsql())
+        {
+            throw new Exception("当前不是 Npgsql 数据库无法调用此函数!");
+        }
+        var dbConnection = (NpgsqlConnection)database.GetDbConnection();
+
+        if (ignoreColumns != null || ignoreColumns.Length > 0)
+        {
+            //忽略某列
+            foreach (var item in ignoreColumns)
             {
-                throw;
-            }
-            finally
-            {
-                if (dbConnection.State == ConnectionState.Open)
-                {
-                    await dbConnection.CloseAsync();
-                }
+                if (string.IsNullOrWhiteSpace(item)) continue;
+                if (!dataTable.Columns.Contains(item)) continue;
+                dataTable.Columns.Remove(item);
             }
         }
 
-        /// <summary>
-        /// Npgsql 批量拷贝数据
-        /// </summary>
-        /// <param name="database"></param>
-        /// <param name="items"></param>
-        /// <param name="tableName"></param>
-        /// <param name="ignoreColumns"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static void NpgsqlBulkCopy<T>(this DatabaseFacade database, List<T> items, string tableName, params string[] ignoreColumns)
-            where T : class, new()
+        var fields = new List<string>();
+        foreach (DataColumn item in dataTable.Columns)
         {
-            var dataTable = items.ToDataTable();
-
-            if (string.IsNullOrWhiteSpace(tableName))
-            {
-                var type = typeof(T);
-                tableName = tableName ?? type.Name;
-                var tableAttribute = type.GetTableAttribute();
-                if (tableAttribute != null)
-                {
-                    tableName = tableAttribute.Name;
-                }
-            }
-
-            database.NpgsqlBulkCopy(dataTable, tableName, ignoreColumns);
+            fields.Add($"\"{item.ColumnName}\"");
         }
 
-        /// <summary>
-        /// Npgsql 批量拷贝数据
-        /// </summary>
-        /// <param name="database"></param>
-        /// <param name="items"></param>
-        /// <param name="tableName"></param>
-        /// <param name="ignoreColumns"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static Task NpgsqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, string tableName, params string[] ignoreColumns)
-            where T : class, new()
+        try
         {
-            var dataTable = items.ToDataTable();
+            // 构建导入SQL
+            var commandFormat = string.Format("COPY \"{0}\"({1}) FROM STDIN BINARY", tableName, string.Join(",", fields));
 
-            if (string.IsNullOrWhiteSpace(tableName))
+            if (dbConnection.State != ConnectionState.Open)
             {
-                var type = typeof(T);
-                tableName = tableName ?? type.Name;
-                var tableAttribute = type.GetTableAttribute();
-                if (tableAttribute != null)
-                {
-                    tableName = tableAttribute.Name;
-                }
+                await dbConnection.OpenAsync();
             }
 
-            return database.NpgsqlBulkCopyAsync(dataTable, tableName, default, ignoreColumns);
+            using (var writer = dbConnection.BeginBinaryImport(commandFormat))
+            {
+                foreach (DataRow item in dataTable.Rows)
+                {
+                    await writer.WriteRowAsync(cancellationToken, item.ItemArray);
+                }
+
+                await writer.CompleteAsync(cancellationToken);
+            }
         }
+        catch (Exception)
+        {
+            throw;
+        }
+        finally
+        {
+            if (dbConnection.State == ConnectionState.Open)
+            {
+                await dbConnection.CloseAsync();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Npgsql 批量拷贝数据
+    /// </summary>
+    /// <param name="database"></param>
+    /// <param name="items"></param>
+    /// <param name="tableName"></param>
+    /// <param name="ignoreColumns"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static void NpgsqlBulkCopy<T>(this DatabaseFacade database, List<T> items, string tableName, params string[] ignoreColumns)
+        where T : class, new()
+    {
+        var dataTable = items.ToDataTable();
+
+        if (string.IsNullOrWhiteSpace(tableName))
+        {
+            var type = typeof(T);
+            tableName = tableName ?? type.Name;
+            var tableAttribute = type.GetTableAttribute();
+            if (tableAttribute != null)
+            {
+                tableName = tableAttribute.Name;
+            }
+        }
+
+        database.NpgsqlBulkCopy(dataTable, tableName, ignoreColumns);
+    }
+
+    /// <summary>
+    /// Npgsql 批量拷贝数据
+    /// </summary>
+    /// <param name="database"></param>
+    /// <param name="items"></param>
+    /// <param name="tableName"></param>
+    /// <param name="ignoreColumns"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static Task NpgsqlBulkCopyAsync<T>(this DatabaseFacade database, List<T> items, string tableName, params string[] ignoreColumns)
+        where T : class, new()
+    {
+        var dataTable = items.ToDataTable();
+
+        if (string.IsNullOrWhiteSpace(tableName))
+        {
+            var type = typeof(T);
+            tableName = tableName ?? type.Name;
+            var tableAttribute = type.GetTableAttribute();
+            if (tableAttribute != null)
+            {
+                tableName = tableAttribute.Name;
+            }
+        }
+
+        return database.NpgsqlBulkCopyAsync(dataTable, tableName, default, ignoreColumns);
     }
 }

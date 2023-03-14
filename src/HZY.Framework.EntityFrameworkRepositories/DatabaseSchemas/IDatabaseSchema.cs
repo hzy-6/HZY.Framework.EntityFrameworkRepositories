@@ -1,33 +1,30 @@
 ﻿using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas;
-using System;
-using System.Collections.Generic;
 
-namespace HZY.Framework.EntityFrameworkRepositories.Databases
+namespace HZY.Framework.EntityFrameworkRepositories.Databases;
+
+/// <summary>
+/// 数据库结构
+/// </summary>
+public interface IDatabaseSchema : IDisposable, IAsyncDisposable
 {
+
     /// <summary>
-    /// 数据库结构
+    /// 获取所有的表
     /// </summary>
-    public interface IDatabaseSchema : IDisposable, IAsyncDisposable
-    {
+    /// <returns></returns>
+    public List<TableModel> GetTables();
 
-        /// <summary>
-        /// 获取所有的表
-        /// </summary>
-        /// <returns></returns>
-        public List<TableModel> GetTables();
+    /// <summary>
+    /// 获取所有的列
+    /// </summary>
+    /// <returns></returns>
+    public List<ColumnModel> GetColumns();
 
-        /// <summary>
-        /// 获取所有的列
-        /// </summary>
-        /// <returns></returns>
-        public List<ColumnModel> GetColumns();
-
-        /// <summary>
-        /// 获取所有的数据类型
-        /// </summary>
-        /// <returns></returns>
-        public List<DataTypeModel> GetDataTypes();
+    /// <summary>
+    /// 获取所有的数据类型
+    /// </summary>
+    /// <returns></returns>
+    public List<DataTypeModel> GetDataTypes();
 
 
-    }
 }
