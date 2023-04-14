@@ -10,14 +10,18 @@ namespace HZY.Framework.EntityFrameworkRepositories;
 /// </summary>
 public static class EntityFrameworkRepositoriesUtil
 {
-    private static readonly Dictionary<string, Type> _dbContextTypes = null;
+    /// <summary>
+    /// key 是 dbset 得type fullname
+    /// value 是 dbcontext 的 type
+    /// </summary>
+    private static readonly Dictionary<string, Type> _dbSetTypeFullNames = null;
     private static readonly List<Type> _allDbContextTypes = null;
 
     static EntityFrameworkRepositoriesUtil()
     {
-        if (_dbContextTypes == null)
+        if (_dbSetTypeFullNames == null)
         {
-            _dbContextTypes = new Dictionary<string, Type>();
+            _dbSetTypeFullNames = new Dictionary<string, Type>();
         }
         if (_allDbContextTypes == null)
         {
@@ -30,9 +34,12 @@ public static class EntityFrameworkRepositoriesUtil
     /// </summary>
     /// <param name="key"></param>
     /// <param name="dbContextType"></param>
-    public static void AddDbContextTypeByKey(string key, Type dbContextType)
+    public static void AddDbContextTypeByDbSetTypeFullName(string key, Type dbContextType)
     {
-        _dbContextTypes.Add(key, dbContextType);
+        if (!_dbSetTypeFullNames.ContainsKey(key))
+        {
+            _dbSetTypeFullNames.Add(key, dbContextType);
+        }
     }
 
     /// <summary>
@@ -40,16 +47,27 @@ public static class EntityFrameworkRepositoriesUtil
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public static Type GetDbContextTypeByKey(string key)
+    public static Type Get_DbSetTypeFullName_DbContextType(string key)
     {
-        return _dbContextTypes[key];
+        if (!_dbSetTypeFullNames.ContainsKey(key))
+        {
+            return _allDbContextTypes?.FirstOrDefault();
+        }
+
+        return _dbSetTypeFullNames[key];
     }
+
+    /// <summary>
+    /// 获取缓存的 dbcontext 类型
+    /// </summary>
+    /// <returns></returns>
+    public static Dictionary<string, Type> Get_DbSetTypeFullName_DbContextType_All() => _dbSetTypeFullNames;
 
     /// <summary>
     /// 获取所有的 dbcontext
     /// </summary>
     /// <returns></returns>
-    public static List<Type> GetAllDbContextType()
+    public static List<Type> GetDbContextTypeAll()
     {
         return _allDbContextTypes;
     }
@@ -64,6 +82,8 @@ public static class EntityFrameworkRepositoriesUtil
     /// <returns></returns>
     public static DbContextOptionsBuilder AddEntityFrameworkRepositories(this DbContextOptionsBuilder dbContextOptionsBuilder, bool _isMonitor = true)
     {
+        UseEntityFrameworkRepositories(dbContextOptionsBuilder.Options.ContextType);
+
         dbContextOptionsBuilder.AddInterceptors(new ShardingDbCommandInterceptor());
         //注册监控程序
         if (_isMonitor)
@@ -79,10 +99,9 @@ public static class EntityFrameworkRepositoriesUtil
     /// <summary>
     /// 使用 EntityFrameworkRepositories
     /// </summary>
-    /// <param name="app"></param>
     /// <param name="dbContextTypes">数据上下文类型</param>
     /// <returns></returns>
-    public static void UseEntityFrameworkRepositories(this IApplicationBuilder app, params Type[] dbContextTypes)
+    public static void UseEntityFrameworkRepositories(params Type[] dbContextTypes)
     {
         foreach (var item in dbContextTypes)
         {
@@ -101,25 +120,22 @@ public static class EntityFrameworkRepositoriesUtil
                 if (dbset.PropertyType.GenericTypeArguments.Length <= 0) continue;
 
                 var model = dbset.PropertyType.GenericTypeArguments[0];
-                AddDbContextTypeByKey(model.FullName, item);
+                AddDbContextTypeByDbSetTypeFullName(model.FullName, item);
             }
         }
-
     }
 
     /// <summary>
     /// 使用 EntityFrameworkRepositories
     /// </summary>
-    /// <param name="app"></param>
+    /// <param name="webApplicationBuilder"></param>
     /// <returns></returns>
-    public static void UseEntityFrameworkRepositories<T>(this IApplicationBuilder app)
+    public static void UseEntityFrameworkRepositories<T>(this WebApplicationBuilder webApplicationBuilder)
     {
-        app.UseEntityFrameworkRepositories(typeof(T));
+        UseEntityFrameworkRepositories(typeof(T));
     }
 
     #endregion
-
-
 
 
 }

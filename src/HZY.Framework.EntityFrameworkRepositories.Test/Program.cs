@@ -32,7 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseEntityFrameworkRepositories(typeof(AppDbContext1));
+EntityFrameworkRepositoriesUtil.UseEntityFrameworkRepositories(typeof(AppDbContext1));
 
 app.UseHttpsRedirection();
 
