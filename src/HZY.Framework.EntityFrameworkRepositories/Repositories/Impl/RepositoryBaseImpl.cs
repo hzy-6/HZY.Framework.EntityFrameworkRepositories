@@ -46,6 +46,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual T Insert(T model, params string[] ignorePropertyNames)
     {
+        if (model == null) throw new ArgumentNullException(nameof(model));
+
         var entry = UnitOfWork.DbSet<T>().Add(model);
 
         if (ignorePropertyNames != null && ignorePropertyNames.Length > 0)
@@ -68,6 +70,10 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual int InsertRange(IEnumerable<T> model)
     {
+        if (model == null) throw new ArgumentNullException(nameof(model));
+
+        if (model.Count() == 0) return 0;
+
         UnitOfWork.DbSet<T>().AddRange(model);
         return UnitOfWork.SaveChanges();
     }
@@ -80,6 +86,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual async Task<T> InsertAsync(T model, params string[] ignorePropertyNames)
     {
+        if (model == null) throw new ArgumentNullException(nameof(model));
+
         var entry = await UnitOfWork.DbSet<T>().AddAsync(model);
 
         if (ignorePropertyNames != null && ignorePropertyNames.Length > 0)
@@ -102,6 +110,10 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual Task<int> InsertRangeAsync(IEnumerable<T> model)
     {
+        if (model == null) throw new ArgumentNullException(nameof(model));
+
+        if (model.Count() == 0) return Task.FromResult(0);
+
         UnitOfWork.DbSet<T>().AddRangeAsync(model);
         return UnitOfWork.SaveChangesAsync();
     }
@@ -118,6 +130,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual int Update(T model, params string[] ignorePropertyNames)
     {
+        if (model == null) return 0;
+
         var entry = UnitOfWork.DbSet<T>().Update(model);
 
         if (ignorePropertyNames != null && ignorePropertyNames.Length > 0)
@@ -142,9 +156,12 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     public virtual int UpdateById(T model, params string[] ignorePropertyNames)
     {
         if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
+
+        if (model == null) return 0;
+
         var value = _keyPropertyInfo.GetValue(model);
         var oldModel = FindById(value);
-        if (oldModel == null) return -1;
+        if (oldModel == null) return 0;
         return Update(oldModel, model, ignorePropertyNames);
     }
 
@@ -157,6 +174,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual int Update(T oldModel, T newModel, params string[] ignorePropertyNames)
     {
+        if (oldModel == null || newModel == null) return 0;
+
         var entry = Context.Entry(oldModel);
         entry.CurrentValues.SetValues(newModel);
 
@@ -179,6 +198,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual int UpdateRange(IEnumerable<T> models)
     {
+        if (models == null || models.Count() == 0) return 0;
+
         UnitOfWork.DbSet<T>().UpdateRange(models);
         return UnitOfWork.SaveChanges();
     }
@@ -202,6 +223,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual Task<int> UpdateAsync(T model, params string[] ignorePropertyNames)
     {
+        if (model == null) return Task.FromResult(0);
+
         var entry = UnitOfWork.DbSet<T>().Update(model);
 
         if (ignorePropertyNames != null && ignorePropertyNames.Length > 0)
@@ -226,9 +249,12 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     public virtual async Task<int> UpdateByIdAsync(T model, params string[] ignorePropertyNames)
     {
         if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
+
+        if (model == null) return 0;
+
         var value = _keyPropertyInfo.GetValue(model);
         var oldModel = await Query().FirstOrDefaultAsync(GetKeyExpression(value));
-        if (oldModel == null) return -1;
+        if (oldModel == null) return 0;
         return await UpdateAsync(oldModel, model, ignorePropertyNames);
     }
 
@@ -241,6 +267,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual Task<int> UpdateAsync(T oldModel, T newModel, params string[] ignorePropertyNames)
     {
+        if (oldModel == null || newModel == null) return Task.FromResult(0);
+
         var entry = Context.Entry(oldModel);
         entry.CurrentValues.SetValues(newModel);
 
@@ -263,6 +291,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual Task<int> UpdateRangeAsync(IEnumerable<T> models)
     {
+        if (models == null || models.Count() == 0) return Task.FromResult(0);
+
         UnitOfWork.DbSet<T>().UpdateRange(models);
         return UnitOfWork.SaveChangesAsync();
     }
@@ -293,6 +323,9 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     public virtual T InsertOrUpdate(T model, params string[] ignorePropertyNames)
     {
         if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
+
+        if (model == null) throw new ArgumentNullException(nameof(model));
+
         var value = _keyPropertyInfo.GetValue(model);
         var oldModel = FindById(value);
         if (oldModel == null)
@@ -312,6 +345,9 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     public virtual async Task<T> InsertOrUpdateAsync(T model, params string[] ignorePropertyNames)
     {
         if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
+
+        if (model == null) throw new ArgumentNullException(nameof(model));
+
         var value = _keyPropertyInfo.GetValue(model);
         var oldModel = await FindByIdAsync(value);
         if (oldModel == null)
@@ -332,6 +368,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual int Delete(T model)
     {
+        if (model == null) return 0;
+
         UnitOfWork.DbSet<T>().Remove(model);
         return UnitOfWork.SaveChanges();
     }
@@ -343,6 +381,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual int Delete(IEnumerable<T> models)
     {
+        if (models == null || models.Count() == 0) return 0;
+
         UnitOfWork.DbSet<T>().RemoveRange(models);
         return UnitOfWork.SaveChanges();
     }
@@ -373,6 +413,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual int DeleteById<TKey>(TKey key)
     {
+        if (key == null) return 0;
+
         return Delete(FindById(key));
     }
 
@@ -385,6 +427,9 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     public virtual int DeleteByIds<TKey>(IEnumerable<TKey> keys)
     {
         if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
+
+        if (keys == null || keys.Count() == 0) return 0;
+
         var exp = ExpressionTreeExtensions.Contains<T, TKey>(_keyPropertyInfo.Name, keys);
         return Delete(exp);
     }
@@ -396,6 +441,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual Task<int> DeleteAsync(T model)
     {
+        if (model == null) return Task.FromResult(0);
+
         UnitOfWork.DbSet<T>().Remove(model);
         return UnitOfWork.SaveChangesAsync();
     }
@@ -407,6 +454,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual Task<int> DeleteAsync(IEnumerable<T> models)
     {
+        if (models == null || models.Count() == 0) return Task.FromResult(0);
+
         UnitOfWork.DbSet<T>().RemoveRange(models);
         return UnitOfWork.SaveChangesAsync();
     }
@@ -437,6 +486,8 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     /// <returns></returns>
     public virtual async Task<int> DeleteByIdAsync<TKey>(TKey key)
     {
+        if (key == null) return 0;
+
         return await DeleteAsync(await FindByIdAsync(key));
     }
 
@@ -449,6 +500,9 @@ public abstract class RepositoryBaseImpl<T, TDbContext> : QueryRepositoryImpl<T,
     public virtual async Task<int> DeleteByIdsAsync<TKey>(IEnumerable<TKey> keys)
     {
         if (_keyPropertyInfo == null) throw new Exception("模型未设置主键特性标记!");
+
+        if (keys == null || keys.Count() == 0) return 0;
+
         var exp = ExpressionTreeExtensions.Contains<T, TKey>(_keyPropertyInfo.Name, keys);
         return await DeleteAsync(exp);
     }
