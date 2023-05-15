@@ -1,9 +1,4 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.Monitor;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Data.Common;
-using System.Diagnostics;
-
-namespace HZY.Framework.EntityFrameworkRepositories.Interceptor;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.Interceptor;
 
 /// <summary>
 /// 监控 command 

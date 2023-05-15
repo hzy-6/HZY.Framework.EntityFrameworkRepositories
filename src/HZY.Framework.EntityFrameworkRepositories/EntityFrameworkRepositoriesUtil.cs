@@ -1,9 +1,4 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.Interceptor;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-
-namespace HZY.Framework.EntityFrameworkRepositories;
+﻿namespace HZY.Framework.EntityFrameworkRepositories;
 
 /// <summary>
 /// EntityFrameworkRepositories 工具类

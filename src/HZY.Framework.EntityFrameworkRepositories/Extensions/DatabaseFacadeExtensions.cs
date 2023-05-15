@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Newtonsoft.Json;
-using System.Data;
-
-namespace HZY.Framework.EntityFrameworkRepositories.Extensions;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.Extensions;
 
 
 /// <summary>

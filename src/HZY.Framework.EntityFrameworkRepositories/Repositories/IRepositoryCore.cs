@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-
-namespace HZY.Framework.EntityFrameworkRepositories.Repositories;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.Repositories;
 
 /// <summary>
 /// 仓储基础

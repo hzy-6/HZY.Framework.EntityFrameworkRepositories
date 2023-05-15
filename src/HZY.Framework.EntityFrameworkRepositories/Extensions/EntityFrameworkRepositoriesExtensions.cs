@@ -1,12 +1,4 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.Models;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Linq.Expressions;
-using System.Reflection;
-
-namespace HZY.Framework.EntityFrameworkRepositories.Extensions;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.Extensions;
 
 
 /// <summary>

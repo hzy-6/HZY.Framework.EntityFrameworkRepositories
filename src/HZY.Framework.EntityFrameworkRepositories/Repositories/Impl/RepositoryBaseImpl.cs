@@ -7,12 +7,6 @@
  *
  * *******************************************************
  */
-using HZY.Framework.EntityFrameworkRepositories.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Data;
-using System.Linq.Expressions;
-
 namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl;
 
 /// <summary>

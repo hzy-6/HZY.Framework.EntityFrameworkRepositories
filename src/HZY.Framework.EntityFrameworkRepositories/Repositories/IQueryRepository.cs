@@ -1,9 +1,4 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.Databases;
-using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas;
-using System.Data;
-using System.Linq.Expressions;
-
-namespace HZY.Framework.EntityFrameworkRepositories.Repositories;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.Repositories;
 
 /// <summary>
 /// 基础仓储 查询 实现
@@ -52,6 +47,13 @@ public interface IQueryRepository<T, TDbContext> : IRepositoryCore<T, TDbContext
     /// </summary>
     IQueryable<T> SelectNoTracking => Query(false);
 
+    /// <summary>
+    /// 查询
+    /// </summary>
+    /// <param name="isTracking"></param>
+    /// <returns></returns>
+    IQueryable<T> GetAll(bool isTracking);
+
     #endregion
 
     #region 查询 单条
@@ -62,6 +64,14 @@ public interface IQueryRepository<T, TDbContext> : IRepositoryCore<T, TDbContext
     /// <param name="expWhere"></param>
     /// <returns></returns>
     T Find(Expression<Func<T, bool>> expWhere);
+
+    /// <summary>
+    /// 查询 根据条件
+    /// </summary>
+    /// <param name="expWhere"></param>
+    /// <returns></returns>
+    T Get(Expression<Func<T, bool>> expWhere);
+
     /// <summary>
     /// 查询 根据id
     /// </summary>
@@ -71,11 +81,27 @@ public interface IQueryRepository<T, TDbContext> : IRepositoryCore<T, TDbContext
     T FindById<TKey>(TKey key);
 
     /// <summary>
+    /// 查询 根据id
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    T GetById<TKey>(TKey key);
+
+    /// <summary>
     /// 查询 根据条件
     /// </summary>
     /// <param name="expWhere"></param>
     /// <returns></returns>
     Task<T> FindAsync(Expression<Func<T, bool>> expWhere);
+
+    /// <summary>
+    /// 查询 根据条件
+    /// </summary>
+    /// <param name="expWhere"></param>
+    /// <returns></returns>
+    Task<T> GetAsync(Expression<Func<T, bool>> expWhere);
+
     /// <summary>
     /// 查询 根据id
     /// </summary>
@@ -83,6 +109,14 @@ public interface IQueryRepository<T, TDbContext> : IRepositoryCore<T, TDbContext
     /// <param name="key"></param>
     /// <returns></returns>
     Task<T> FindByIdAsync<TKey>(TKey key);
+
+    /// <summary>
+    /// 查询 根据id
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    Task<T> GetByIdAsync<TKey>(TKey key);
 
     #endregion
 
@@ -94,6 +128,14 @@ public interface IQueryRepository<T, TDbContext> : IRepositoryCore<T, TDbContext
     /// <param name="expWhere"></param>
     /// <returns></returns>
     List<T> ToList(Expression<Func<T, bool>> expWhere);
+
+    /// <summary>
+    /// 获取列表 根据查询条件
+    /// </summary>
+    /// <param name="expWhere"></param>
+    /// <returns></returns>
+    List<T> GetAllList(Expression<Func<T, bool>> expWhere);
+
     /// <summary>
     /// 获取所有数据
     /// </summary>
@@ -101,16 +143,36 @@ public interface IQueryRepository<T, TDbContext> : IRepositoryCore<T, TDbContext
     List<T> ToListAll();
 
     /// <summary>
+    /// 获取所有数据
+    /// </summary>
+    /// <returns></returns>
+    List<T> GetAllList();
+
+    /// <summary>
     /// 获取列表 根据查询条件
     /// </summary>
     /// <param name="expWhere"></param>
     /// <returns></returns>
     Task<List<T>> ToListAsync(Expression<Func<T, bool>> expWhere);
+
+    /// <summary>
+    /// 获取列表 根据查询条件
+    /// </summary>
+    /// <param name="expWhere"></param>
+    /// <returns></returns>
+    Task<List<T>> GetAllListAsync(Expression<Func<T, bool>> expWhere);
+
     /// <summary>
     /// 获取所有数据
     /// </summary>
     /// <returns></returns>
     Task<List<T>> ToListAllAsync();
+
+    /// <summary>
+    /// 获取所有数据
+    /// </summary>
+    /// <returns></returns>
+    Task<List<T>> GetAllListAsync();
 
     #endregion
 

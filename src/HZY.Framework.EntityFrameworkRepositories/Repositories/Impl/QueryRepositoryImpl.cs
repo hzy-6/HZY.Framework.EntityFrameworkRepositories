@@ -1,12 +1,4 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.Databases;
-using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas;
-using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl;
-using HZY.Framework.EntityFrameworkRepositories.Extensions;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Linq.Expressions;
-
-namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.Repositories.Impl;
 
 /// <summary>
 /// 基础仓储 查询 实现
@@ -135,6 +127,13 @@ public abstract class QueryRepositoryImpl<T, TDbContext> : RepositoryCoreImpl<T,
     /// </summary>
     public virtual IQueryable<T> SelectNoTracking => Query(false);
 
+    /// <summary>
+    /// 查询
+    /// </summary>
+    /// <param name="isTracking"></param>
+    /// <returns></returns>
+    public virtual IQueryable<T> GetAll(bool isTracking = true) => Query(isTracking);
+
     #endregion
 
     #region 查询 单条
@@ -148,6 +147,14 @@ public abstract class QueryRepositoryImpl<T, TDbContext> : RepositoryCoreImpl<T,
         => Query().Where(expWhere).FirstOrDefault();
 
     /// <summary>
+    /// 查询 根据条件
+    /// </summary>
+    /// <param name="expWhere"></param>
+    /// <returns></returns>
+    public virtual T Get(Expression<Func<T, bool>> expWhere)
+        => Find(expWhere);
+
+    /// <summary>
     /// 查询 根据id
     /// </summary>
     /// <param name="key"></param>
@@ -155,6 +162,15 @@ public abstract class QueryRepositoryImpl<T, TDbContext> : RepositoryCoreImpl<T,
     /// <returns></returns>
     public virtual T FindById<TKey>(TKey key)
         => Query().FirstOrDefault(GetKeyExpression(key));
+
+    /// <summary>
+    /// 查询 根据id
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public virtual T GetById<TKey>(TKey key)
+        => FindById(key);
 
     /// <summary>
     /// 查询 根据条件
@@ -165,6 +181,14 @@ public abstract class QueryRepositoryImpl<T, TDbContext> : RepositoryCoreImpl<T,
         => Query().Where(expWhere).FirstOrDefaultAsync();
 
     /// <summary>
+    /// 查询 根据条件
+    /// </summary>
+    /// <param name="expWhere"></param>
+    /// <returns></returns>
+    public virtual Task<T> GetAsync(Expression<Func<T, bool>> expWhere)
+        => FindAsync(expWhere);
+
+    /// <summary>
     /// 查询 根据id
     /// </summary>
     /// <param name="key"></param>
@@ -172,6 +196,15 @@ public abstract class QueryRepositoryImpl<T, TDbContext> : RepositoryCoreImpl<T,
     /// <returns></returns>
     public virtual Task<T> FindByIdAsync<TKey>(TKey key)
         => Query().FirstOrDefaultAsync(GetKeyExpression(key));
+
+    /// <summary>
+    /// 查询 根据id
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public virtual Task<T> GetByIdAsync<TKey>(TKey key)
+        => FindByIdAsync(key);
 
     #endregion
 
@@ -186,11 +219,26 @@ public abstract class QueryRepositoryImpl<T, TDbContext> : RepositoryCoreImpl<T,
         => Query().Where(expWhere).ToList();
 
     /// <summary>
+    /// 获取列表 根据查询条件
+    /// </summary>
+    /// <param name="expWhere"></param>
+    /// <returns></returns>
+    public virtual List<T> GetAllList(Expression<Func<T, bool>> expWhere)
+        => ToList(expWhere);
+
+    /// <summary>
     /// 获取所有数据
     /// </summary>
     /// <returns></returns>
     public virtual List<T> ToListAll()
         => Query().ToList();
+
+    /// <summary>
+    /// 获取所有数据
+    /// </summary>
+    /// <returns></returns>
+    public virtual List<T> GetAllList()
+        => ToListAll();
 
     /// <summary>
     /// 获取列表 根据查询条件
@@ -201,11 +249,26 @@ public abstract class QueryRepositoryImpl<T, TDbContext> : RepositoryCoreImpl<T,
         => Query().Where(expWhere).ToListAsync();
 
     /// <summary>
+    /// 获取列表 根据查询条件
+    /// </summary>
+    /// <param name="expWhere"></param>
+    /// <returns></returns>
+    public virtual Task<List<T>> GetAllListAsync(Expression<Func<T, bool>> expWhere)
+        => ToListAsync(expWhere);
+
+    /// <summary>
     /// 获取所有数据
     /// </summary>
     /// <returns></returns>
     public virtual Task<List<T>> ToListAllAsync()
         => Query().ToListAsync();
+
+    /// <summary>
+    /// 获取所有数据
+    /// </summary>
+    /// <returns></returns>
+    public virtual Task<List<T>> GetAllListAsync()
+        => ToListAllAsync();
 
     #endregion
 

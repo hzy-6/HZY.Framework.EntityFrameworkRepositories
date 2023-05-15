@@ -1,8 +1,4 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.Databases;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
-
-namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas.Impl;
 
 /// <summary>
 /// 数据库结构实现类

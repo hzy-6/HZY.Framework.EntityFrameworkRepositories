@@ -1,8 +1,3 @@
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using System.Data;
-
 namespace HZY.Framework.EntityFrameworkRepositories.Extensions;
 
 /// <summary>

@@ -1,6 +1,4 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.DatabaseSchemas;
-
-namespace HZY.Framework.EntityFrameworkRepositories.Databases;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.Databases;
 
 /// <summary>
 /// 数据库结构

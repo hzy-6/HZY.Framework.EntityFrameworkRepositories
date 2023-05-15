@@ -1,7 +1,3 @@
-using HZY.Framework.EntityFrameworkRepositories.Interceptor.Extensions;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Data.Common;
-
 namespace HZY.Framework.EntityFrameworkRepositories.Interceptor;
 
 

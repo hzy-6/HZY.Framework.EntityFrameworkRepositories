@@ -1,7 +1,4 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.Models;
-using System.Data.Common;
-
-namespace HZY.Framework.EntityFrameworkRepositories.Interceptor.Extensions;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.Interceptor.Extensions;
 
 /// <summary>
 /// DbCommandInterceptor 扩展

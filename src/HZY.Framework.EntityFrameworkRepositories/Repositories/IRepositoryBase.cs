@@ -7,9 +7,6 @@
  *
  * *******************************************************
  */
-using Microsoft.EntityFrameworkCore.Query;
-using System.Data;
-using System.Linq.Expressions;
 
 namespace HZY.Framework.EntityFrameworkRepositories.Repositories;
 

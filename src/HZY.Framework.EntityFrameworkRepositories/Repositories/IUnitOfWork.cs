@@ -8,10 +8,6 @@
  * *******************************************************
  */
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System.Data;
-
 namespace HZY.Framework.EntityFrameworkRepositories.Repositories;
 
 /// <summary>

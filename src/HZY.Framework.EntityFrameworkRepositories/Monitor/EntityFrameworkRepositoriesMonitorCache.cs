@@ -1,8 +1,4 @@
-﻿using HZY.Framework.EntityFrameworkRepositories.Monitor.Models;
-using Microsoft.Extensions.Caching.Memory;
-using System.Data.Common;
-
-namespace HZY.Framework.EntityFrameworkRepositories.Monitor;
+﻿namespace HZY.Framework.EntityFrameworkRepositories.Monitor;
 
 /// <summary>
 /// 监控EFCore缓存
